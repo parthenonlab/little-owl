@@ -1,6 +1,6 @@
 {
   "name": "little-owl",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "private": true,
   "main": "index.ts",
   "repository": "git@github.com:devthena/little-owl.git",
