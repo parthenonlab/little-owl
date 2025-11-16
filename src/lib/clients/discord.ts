@@ -13,6 +13,7 @@ const discord = new Client({
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.GuildModeration,
     GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.GuildScheduledEvents,
     GatewayIntentBits.Guilds,
     GatewayIntentBits.MessageContent,
   ],
