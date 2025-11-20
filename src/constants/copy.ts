@@ -109,6 +109,12 @@ export const COPY = {
     NAME: 'profile',
     DESCRIPTION: 'Display your profile',
   },
+  REDEEM: {
+    NAME: 'redeem',
+    DESCRIPTION: 'Select from the available rewards to redeem',
+    OPTION_NAME: 'reward',
+    OPTION_DESCRIPTION: 'The cost of these rewards are the same as in Twitch',
+  },
   SLEEP: {
     NAME: 'sleep',
     DESCRIPTION: 'Sleep time for Little Owl',
