@@ -87,6 +87,9 @@ export const CONFIG = {
     PROFILE: {
       ENABLED: true,
     },
+    REDEEM: {
+      ENABLED: true,
+    },
     SLEEP: {
       ENABLED: true,
     },
