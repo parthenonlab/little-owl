@@ -1,4 +1,4 @@
-import { Client, Events, GatewayIntentBits } from 'discord.js';
+import { ActivityType, Client, Events, GatewayIntentBits } from 'discord.js';
 
 if (!process.env.DISCORD_TOKEN) {
   console.error('🦉 Error: Discord.js Missing Environment Variables');
@@ -23,8 +23,10 @@ discord.on(Events.ClientReady, () => {
   console.log('🦉 Little Owl: Discord.js Connected');
 
   discord.user?.setActivity({
-    name: process.env.STAGING ? 'TEST MODE' : 'with Chat',
-    type: 0,
+    name: !process.env.STAGING
+      ? 'IN DEV MODE'
+      : `I'm Athena's little companion <3`,
+    type: ActivityType.Custom,
   });
 });
 
