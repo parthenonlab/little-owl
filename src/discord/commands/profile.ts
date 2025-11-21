@@ -180,9 +180,7 @@ export const Profile = {
     `;
 
     const browser = await puppeteer.launch({
-      executablePath: process.env.STAGING
-        ? undefined
-        : '/usr/bin/chromium-browser',
+      executablePath: process.env.STAGING ? undefined : '/usr/bin/chromium',
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
 
