@@ -23,7 +23,7 @@ discord.on(Events.ClientReady, () => {
   console.log('🦉 Little Owl: Discord.js Connected');
 
   discord.user?.setActivity({
-    name: !process.env.STAGING
+    name: process.env.STAGING
       ? 'IN DEV MODE'
       : `I'm Athena's little companion <3`,
     type: ActivityType.Custom,
