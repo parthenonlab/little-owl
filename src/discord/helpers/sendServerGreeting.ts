@@ -13,7 +13,13 @@ export const sendServerGreeting = async () => {
 
     if (channel && channel.isTextBased()) {
       const today = DAY_MAP[new Date().getDay()];
-      await channel.send(`Happy ${today}, everyone! ${EMOJIS.CUSTOM.ARRIVE}`);
+      const events = await server.scheduledEvents.fetch();
+      const firstEvent = events.first();
+
+      let eventMessage = `Happy ${today}, everyone! ${EMOJIS.CUSTOM.ARRIVE}`;
+      if (firstEvent) eventMessage += `\n### TODAY'S EVENT\n${firstEvent.url}`;
+
+      await channel.send(eventMessage);
     }
   }
 };

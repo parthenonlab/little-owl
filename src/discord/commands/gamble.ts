@@ -166,7 +166,7 @@ export const Gamble = {
       return;
     }
 
-    setDiscordUser(interaction.user.id, { cash: points });
+    await setDiscordUser(interaction.user.id, { cash: points });
   },
   getName: (): string => {
     return COPY.GAMBLE.NAME;

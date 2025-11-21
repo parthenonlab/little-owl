@@ -38,3 +38,9 @@ export const MONTH_MAP = [
   'NOV',
   'DEC',
 ];
+
+export const REWARD_MAP = [
+  { name: 'Join Athena QP Only', cost: 1000 },
+  { name: 'Join Athena Competitive', cost: 3000 },
+  { name: 'Movie Night Request', cost: 17000 },
+];

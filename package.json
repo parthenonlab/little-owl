@@ -1,29 +1,29 @@
 {
   "name": "little-owl",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "private": true,
   "main": "index.ts",
   "repository": "git@github.com:devthena/little-owl.git",
   "author": "athena@parthenon.app",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^14.21.0",
-    "mongoose": "^8.17.0",
-    "puppeteer": "^24.15.0",
+    "discord.js": "^14.25.0",
+    "mongoose": "^8.20.1",
+    "puppeteer": "^24.31.0",
     "tmi.js": "^1.8.5",
-    "uuid": "^11.1.0"
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
-    "@discordjs/rest": "^2.5.1",
-    "@types/node": "^24.1.0",
+    "@discordjs/rest": "^2.6.0",
+    "@types/node": "^24.10.1",
     "@types/node-cron": "^3.0.11",
     "@types/tmi.js": "^1.8.6",
-    "@types/uuid": "^10.0.0",
-    "dotenv": "^17.2.1",
+    "@types/uuid": "^11.0.0",
+    "dotenv": "^17.2.3",
     "node-cron": "^4.2.1",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   },
   "scripts": {
     "dev": "STAGING=true ts-node -r tsconfig-paths/register src/index.ts",

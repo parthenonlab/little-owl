@@ -20,6 +20,9 @@ export const EMOJIS = {
     SECOND: ':second_place:',
     THIRD: ':third_place:',
   },
+  REDEEM: {
+    INVALID: ':neutral_face:',
+  },
   STAR: {
     EMBED: ':sparkles:',
     INVALID: ':neutral_face:',
@@ -38,6 +41,9 @@ export const EMOTES = {
   },
   LURK: {
     DEFAULT: 'ScaredyCat',
+  },
+  REDEEM: {
+    DEFAULT: 'athena1Cheer',
   },
   REMINDER: {
     POSITIVITY: 'DinoDance',

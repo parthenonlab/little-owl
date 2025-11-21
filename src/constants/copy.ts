@@ -3,6 +3,18 @@ import { EMOTES } from './emojis';
 import { URLS } from './urls';
 
 export const COPY = {
+  ACTIVITIES: [
+    'She might be an AI...',
+    'Watching Athena VODs',
+    'I need a lot of coffee',
+    'Good luck today!',
+    'Processing 1s and 0s',
+    'Compiling some Athena code',
+    'Lowkey watching everyone gamble',
+    'When Athena goes live <3',
+    'Those keyboard clicks tho...',
+    `Did someone say ${CONFIG.CURRENCY.PLURAL}?`,
+  ],
   DISABLED: 'This command is not enabled in the server.',
   BONUS: {
     NAME: 'bonus',
@@ -108,6 +120,12 @@ export const COPY = {
   PROFILE: {
     NAME: 'profile',
     DESCRIPTION: 'Display your profile',
+  },
+  REDEEM: {
+    NAME: 'redeem',
+    DESCRIPTION: 'Select from the available rewards to redeem',
+    OPTION_NAME: 'reward',
+    OPTION_DESCRIPTION: 'The cost of these rewards are the same as in Twitch',
   },
   SLEEP: {
     NAME: 'sleep',
