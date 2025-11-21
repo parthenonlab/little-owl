@@ -1,18 +1,4 @@
 export const CONFIG = {
-  ACTIVITIES: [
-    { name: 'with Chat', type: 0 },
-    { name: 'keyboard clicks', type: 2 },
-    { name: 'Athena VODs', type: 3 },
-    { name: 'with a controller', type: 0 },
-    { name: 'Athena sing', type: 2 },
-    { name: 'you gamble points', type: 3 },
-    { name: 'with fire', type: 0 },
-    { name: 'video game music', type: 2 },
-    { name: 'you succeed <3', type: 3 },
-    { name: 'with 1s and 0s', type: 0 },
-    { name: 'ambient sounds', type: 2 },
-    { name: 'Athena code', type: 3 },
-  ],
   ALERTS: {
     LIVE: {
       ENABLED: true,
