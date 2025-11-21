@@ -1,2 +1,2 @@
 export * from './Silver';
-export * from './star';
+export * from './StarIcon';
