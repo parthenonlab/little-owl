@@ -206,7 +206,7 @@ export const Profile = {
           })
         );
 
-        await browser.close();
+        await page.close();
 
         const attachment = new AttachmentBuilder(buffer, {
           name: 'profile.png',
