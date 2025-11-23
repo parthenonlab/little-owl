@@ -4,8 +4,6 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 
-import puppeteer from 'puppeteer';
-
 import { CONFIG, COPY, MONTH_MAP } from '@/constants';
 import { LogCode } from '@/enums/logs';
 import { SilverIcon, StarIcon } from '@/icons';
@@ -14,7 +12,7 @@ import { UserDocument } from '@/interfaces/user';
 import { parseHexToRGB } from '@/lib/utils';
 import { getUserRank, setDiscordUser } from '@/services/user';
 
-import { log, reply } from '../helpers';
+import { getBrowser, log, reply } from '../helpers';
 
 export const Profile = {
   data: new SlashCommandBuilder()
@@ -179,13 +177,7 @@ export const Profile = {
       </html>
     `;
 
-    const browser = await puppeteer.launch({
-      executablePath: process.env.STAGING
-        ? undefined
-        : '/usr/lib/chromium/chromium',
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    });
-
+    const browser = await getBrowser();
     const page = await browser.newPage();
 
     await page.setViewport({
@@ -214,7 +206,7 @@ export const Profile = {
           })
         );
 
-        await browser.close();
+        await page.close();
 
         const attachment = new AttachmentBuilder(buffer, {
           name: 'profile.png',
@@ -239,7 +231,8 @@ export const Profile = {
       }
     }
 
-    await browser.close();
+    await page.close();
+
     await interaction.editReply({
       content: 'Failed to generate profile image.',
     });
