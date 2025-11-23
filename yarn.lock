@@ -241,6 +241,13 @@
   dependencies:
     undici-types "~7.16.0"
 
+"@types/puppeteer@^7.0.4":
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/@types/puppeteer/-/puppeteer-7.0.4.tgz#6eb4081323e9075c1f4c353f93ee2ed6eed99487"
+  integrity sha512-ja78vquZc8y+GM2al07GZqWDKQskQXygCDiu0e3uO0DMRKqE0MjrFBFmTulfPYzLB6WnL7Kl2tFPy0WXSpPomg==
+  dependencies:
+    puppeteer "*"
+
 "@types/tmi.js@^1.8.6":
   version "1.8.6"
   resolved "https://registry.yarnpkg.com/@types/tmi.js/-/tmi.js-1.8.6.tgz#f95a397d20398d0e1333a2eb8b7c3c494ce96b55"
@@ -979,7 +986,7 @@ puppeteer-core@24.31.0:
     webdriver-bidi-protocol "0.3.9"
     ws "^8.18.3"
 
-puppeteer@^24.31.0:
+puppeteer@*, puppeteer@^24.31.0:
   version "24.31.0"
   resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-24.31.0.tgz#cacd8c4563ff8bd49ee62bd03ae80e11944e698a"
   integrity sha512-q8y5yLxLD8xdZdzNWqdOL43NbfvUOp60SYhaLZQwHC9CdKldxQKXOyJAciOr7oUJfyAH/KgB2wKvqT2sFKoVXA==
