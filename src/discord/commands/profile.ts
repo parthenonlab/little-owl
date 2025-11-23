@@ -12,7 +12,7 @@ import { UserDocument } from '@/interfaces/user';
 import { parseHexToRGB } from '@/lib/utils';
 import { getUserRank, setDiscordUser } from '@/services/user';
 
-import { getBrowser, log, reply } from '../helpers';
+import { log, reply, useBrowser } from '../helpers';
 
 export const Profile = {
   data: new SlashCommandBuilder()
@@ -177,64 +177,65 @@ export const Profile = {
       </html>
     `;
 
-    const browser = await getBrowser();
-    const page = await browser.newPage();
+    await useBrowser(async browser => {
+      const page = await browser.newPage();
 
-    await page.setViewport({
-      width: 2560,
-      height: 1440,
-      deviceScaleFactor: 2,
-    });
+      await page.setViewport({
+        width: 2560,
+        height: 1440,
+        deviceScaleFactor: 2,
+      });
 
-    await page.setContent(htmlContent);
+      await page.setContent(htmlContent);
 
-    await page.evaluate(async () => {
-      await document.fonts.ready;
-    });
+      await page.evaluate(async () => {
+        await document.fonts.ready;
+      });
 
-    await page.waitForSelector('#profile');
-    const element = await page.$('#profile');
+      await page.waitForSelector('#profile');
+      const element = await page.$('#profile');
 
-    if (element) {
-      const boundingBox = await element.boundingBox();
-      if (boundingBox) {
-        const buffer = Buffer.from(
-          await page.screenshot({
-            clip: boundingBox,
-            type: 'png',
-            fullPage: false,
-          })
-        );
+      if (element) {
+        const boundingBox = await element.boundingBox();
+        if (boundingBox) {
+          const buffer = Buffer.from(
+            await page.screenshot({
+              clip: boundingBox,
+              type: 'png',
+              fullPage: false,
+            })
+          );
 
-        await page.close();
+          await page.close();
 
-        const attachment = new AttachmentBuilder(buffer, {
-          name: 'profile.png',
-        });
+          const attachment = new AttachmentBuilder(buffer, {
+            name: 'profile.png',
+          });
 
-        try {
-          await interaction.editReply({ files: [attachment] });
+          try {
+            await interaction.editReply({ files: [attachment] });
 
-          if (user.discord_name !== member.displayName) {
-            await setDiscordUser(interaction.user.id, {
-              discord_name: member.displayName,
+            if (user.discord_name !== member.displayName) {
+              await setDiscordUser(interaction.user.id, {
+                discord_name: member.displayName,
+              });
+            }
+          } catch (error) {
+            log({
+              type: LogCode.Error,
+              description: JSON.stringify(error),
             });
           }
-        } catch (error) {
-          log({
-            type: LogCode.Error,
-            description: JSON.stringify(error),
-          });
-        } finally {
+
           return;
         }
       }
-    }
 
-    await page.close();
+      await page.close();
 
-    await interaction.editReply({
-      content: 'Failed to generate profile image.',
+      await interaction.editReply({
+        content: 'Failed to generate profile image.',
+      });
     });
   },
   getName: (): string => {
