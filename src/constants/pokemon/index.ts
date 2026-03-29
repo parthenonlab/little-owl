@@ -1,7 +1,9 @@
 import { kantoPokemon } from './kanto';
 
-export const BASE_POKEMON_IMAGE_URL =
-  'https://raw.githubusercontent.com/parthenonlab/assets/main/pokemon';
+export const POKEMON_IMAGE_URLS = {
+  base: 'https://raw.githubusercontent.com/parthenonlab/assets/main/pokemon',
+  icon: 'https://img.pokemondb.net/sprites/go',
+};
 
 export const POKEMON_LIST = [...kantoPokemon];
 

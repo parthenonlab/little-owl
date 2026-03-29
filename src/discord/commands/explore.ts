@@ -11,7 +11,7 @@ import {
 import { CONFIG, COPY, EMOJIS } from '@/constants';
 
 import {
-  BASE_POKEMON_IMAGE_URL,
+  POKEMON_IMAGE_URLS,
   POKEMON_LIST,
   POKEMON_RARITY_WEIGHTS,
   POKEMON_SHINY_WEIGHTS,
@@ -49,9 +49,11 @@ export const Explore = {
     const isShiny = variant === 'shiny';
 
     let imageName = variant;
+    let iconName = selectedPokemon.slug;
 
     if (gender === 'female' && selectedPokemon.hasFemaleImage) {
       imageName = isShiny ? `${gender}-shiny` : gender;
+      iconName = `${selectedPokemon.slug}-f`;
     }
 
     const row = new ActionRowBuilder<ButtonBuilder>()
@@ -94,7 +96,8 @@ export const Explore = {
       const authorText = `Exploring...`;
       const titleText = `You found a wild ${isShiny ? 'Shiny ' : ''}${selectedPokemon.name}!`;
 
-      const pokemonImage = `${BASE_POKEMON_IMAGE_URL}/${selectedPokemon.id}/${imageName}.gif`;
+      const pokemonImage = `${POKEMON_IMAGE_URLS.base}/${selectedPokemon.id}/${imageName}.gif`;
+      const pokemonIcon = `${POKEMON_IMAGE_URLS.icon}/${variant}/${iconName}.png`;
 
       const rarityLabel = capitalize(rarity);
       const genderLabel = gender ? capitalize(gender) : 'N/A';
@@ -110,6 +113,7 @@ export const Explore = {
         })
         .setTitle(titleText)
         .setDescription('Catch it or run away with the buttons below!')
+        .setThumbnail(pokemonIcon)
         .setImage(pokemonImage)
         .setFooter({
           text: footerText,
