@@ -12,7 +12,7 @@ import { reply } from './reply';
 
 export const handleCommandInteraction = async (
   state: BotState,
-  interaction: ChatInputCommandInteraction
+  interaction: ChatInputCommandInteraction,
 ) => {
   if (interaction.user.bot) return;
 
@@ -85,6 +85,11 @@ export const handleCommandInteraction = async (
     if (!user) return;
 
     return dc.Points.execute(interaction, user);
+  }
+
+  // command: explore
+  else if (interaction.commandName === dc.Explore.getName()) {
+    return dc.Explore.execute(interaction);
   }
 
   // command: gamble

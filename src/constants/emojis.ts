@@ -20,6 +20,12 @@ export const EMOJIS = {
     SECOND: ':second_place:',
     THIRD: ':third_place:',
   },
+  POKEMON: {
+    POKEBALL: '<:pokeball:1487196742410571907>',
+    GREATBALL: '<:greatball:1487196739621617665>',
+    ULTRABALL: '<:ultraball:1487196743593361548>',
+    MASTERBALL: '<:masterball:1487196740988960829>',
+  },
   REDEEM: {
     INVALID: ':neutral_face:',
   },

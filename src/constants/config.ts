@@ -50,6 +50,9 @@ export const CONFIG = {
     EIGHTBALL: {
       ENABLED: true,
     },
+    EXPLORE: {
+      ENABLED: true,
+    },
     GAMBLE: {
       ENABLED: true,
       LIMIT: 10000,

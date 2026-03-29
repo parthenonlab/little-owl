@@ -19,6 +19,7 @@ export interface PokemonObject {
     male: number;
     female: number;
   } | null;
+  hasFemaleImage: boolean;
   activeSpawn: ActiveSpawn;
   variants: string[];
 }
