@@ -18,6 +18,7 @@ import {
 } from '@/constants/pokemon';
 
 import { LogCode } from '@/enums/logs';
+import { BotState } from '@/interfaces/bot';
 import { capitalize, weightedRandom } from '@/lib/utils';
 
 import { log, reply } from '../helpers';
@@ -26,7 +27,10 @@ export const Explore = {
   data: new SlashCommandBuilder()
     .setName(COPY.EXPLORE.NAME)
     .setDescription(COPY.EXPLORE.DESCRIPTION),
-  execute: async (interaction: ChatInputCommandInteraction) => {
+  execute: async (
+    state: BotState,
+    interaction: ChatInputCommandInteraction,
+  ) => {
     if (!CONFIG.FEATURES.EXPLORE.ENABLED) {
       reply({
         content: COPY.DISABLED,
@@ -35,6 +39,17 @@ export const Explore = {
       });
       return;
     }
+
+    if (state.exploreList.includes(interaction.user.id)) {
+      reply({
+        content: 'There is currently a Pokémon in front of you!',
+        ephemeral: true,
+        interaction: interaction,
+      });
+      return;
+    }
+
+    state.exploreList.push(interaction.user.id);
 
     const rarity = weightedRandom(POKEMON_RARITY_WEIGHTS);
     const pokemonPool = POKEMON_LIST.filter(p => p.rarity === rarity);

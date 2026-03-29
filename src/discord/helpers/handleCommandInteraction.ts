@@ -89,7 +89,7 @@ export const handleCommandInteraction = async (
 
   // command: explore
   else if (interaction.commandName === dc.Explore.getName()) {
-    return dc.Explore.execute(interaction);
+    return dc.Explore.execute(state, interaction);
   }
 
   // command: gamble
