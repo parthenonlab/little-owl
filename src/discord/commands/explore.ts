@@ -13,12 +13,12 @@ import { CONFIG, COPY, EMOJIS } from '@/constants';
 import {
   BASE_POKEMON_IMAGE_URL,
   POKEMON_LIST,
-  POKEMON_RARITY,
-  POKEMON_SHINY,
+  POKEMON_RARITY_WEIGHTS,
+  POKEMON_SHINY_WEIGHTS,
 } from '@/constants/pokemon';
 
 import { LogCode } from '@/enums/logs';
-import { weightedRandom } from '@/lib/utils';
+import { capitalize, weightedRandom } from '@/lib/utils';
 
 import { log, reply } from '../helpers';
 
@@ -26,10 +26,7 @@ export const Explore = {
   data: new SlashCommandBuilder()
     .setName(COPY.EXPLORE.NAME)
     .setDescription(COPY.EXPLORE.DESCRIPTION),
-  execute: async (
-    interaction: ChatInputCommandInteraction,
-    // user: UserDocument,
-  ) => {
+  execute: async (interaction: ChatInputCommandInteraction) => {
     if (!CONFIG.FEATURES.EXPLORE.ENABLED) {
       reply({
         content: COPY.DISABLED,
@@ -39,7 +36,7 @@ export const Explore = {
       return;
     }
 
-    const rarity = weightedRandom(POKEMON_RARITY);
+    const rarity = weightedRandom(POKEMON_RARITY_WEIGHTS);
     const pokemonPool = POKEMON_LIST.filter(p => p.rarity === rarity);
     const selectedPokemon =
       pokemonPool[Math.floor(Math.random() * pokemonPool.length)];
@@ -48,7 +45,7 @@ export const Explore = {
       ? weightedRandom(selectedPokemon.genderRatio)
       : null;
 
-    const variant = weightedRandom(POKEMON_SHINY);
+    const variant = weightedRandom(POKEMON_SHINY_WEIGHTS);
     const isShiny = variant === 'shiny';
 
     let imageName = variant;
@@ -60,22 +57,36 @@ export const Explore = {
     const row = new ActionRowBuilder<ButtonBuilder>()
       .addComponents(
         new ButtonBuilder()
-          .setCustomId('catch_pokeball')
+          .setCustomId('use_pokeball')
           .setEmoji(EMOJIS.POKEMON.POKEBALL)
           .setLabel('Use (17)')
           .setStyle(ButtonStyle.Secondary),
       )
       .addComponents(
         new ButtonBuilder()
-          .setCustomId('catch_greatball')
+          .setCustomId('use_greatball')
           .setEmoji(EMOJIS.POKEMON.GREATBALL)
           .setLabel('Use (3)')
           .setStyle(ButtonStyle.Secondary),
       )
       .addComponents(
         new ButtonBuilder()
+          .setCustomId('use_ultraball')
+          .setEmoji(EMOJIS.POKEMON.ULTRABALL)
+          .setLabel('Use (87)')
+          .setStyle(ButtonStyle.Secondary),
+      )
+      .addComponents(
+        new ButtonBuilder()
+          .setCustomId('use_masterball')
+          .setEmoji(EMOJIS.POKEMON.MASTERBALL)
+          .setLabel('Use (1)')
+          .setStyle(ButtonStyle.Secondary),
+      )
+      .addComponents(
+        new ButtonBuilder()
           .setCustomId('run')
-          .setLabel('Run Away')
+          .setLabel('Run')
           .setStyle(ButtonStyle.Secondary),
       );
 
@@ -85,7 +96,11 @@ export const Explore = {
 
       const pokemonImage = `${BASE_POKEMON_IMAGE_URL}/${selectedPokemon.id}/${imageName}.gif`;
 
-      const footerText = `Rarity: ${rarity} | Gender: ${gender || 'N/A'} | Variant: ${variant}`;
+      const rarityLabel = capitalize(rarity);
+      const genderLabel = gender ? capitalize(gender) : 'N/A';
+      const variantLabel = capitalize(variant);
+
+      const footerText = `Rarity: ${rarityLabel}  |  Gender: ${genderLabel}  |  Variant: ${variantLabel}`;
 
       const botEmbed = new EmbedBuilder()
         .setColor(CONFIG.COLORS.GREEN as ColorResolvable)
@@ -94,7 +109,7 @@ export const Explore = {
           iconURL: interaction.user.displayAvatarURL(),
         })
         .setTitle(titleText)
-        .setDescription('Catch it or run away by reacting below.')
+        .setDescription('Catch it or run away with the buttons below!')
         .setImage(pokemonImage)
         .setFooter({
           text: footerText,
