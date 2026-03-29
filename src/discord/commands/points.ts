@@ -11,7 +11,7 @@ export const Points = {
     .setDescription(COPY.POINTS.DESCRIPTION),
   execute: async (
     interaction: ChatInputCommandInteraction,
-    user: UserDocument
+    user: UserDocument,
   ) => {
     if (!CONFIG.FEATURES.POINTS.ENABLED) {
       reply({

@@ -63,6 +63,10 @@ export const COPY = {
     EXPIRED: 'This interaction has expired.',
     GENERIC: 'Something went wrong. Please try again later.',
   },
+  EXPLORE: {
+    NAME: 'explore',
+    DESCRIPTION: 'Explore the wild and find some Pokemon!',
+  },
   GAMBLE: {
     NAME: 'gamble',
     DESCRIPTION: `Play your ${CONFIG.CURRENCY.PLURAL} for a chance to double it`,

@@ -8,6 +8,7 @@ export interface BotState {
   cooldowns: {
     stream: Date;
   };
+  exploreList: string[];
   reminderIndex: number;
   timers: ScheduledTask[];
   twitchChatQueue: number;

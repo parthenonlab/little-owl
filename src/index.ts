@@ -23,6 +23,7 @@ const state: BotState = {
   cooldowns: {
     stream: new Date(),
   },
+  exploreList: [],
   reminderIndex: 0,
   timers: [],
   twitchChatQueue: 0,
