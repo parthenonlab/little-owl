@@ -1,14 +1,11 @@
 import {
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
   ChatInputCommandInteraction,
   ColorResolvable,
   EmbedBuilder,
   SlashCommandBuilder,
 } from 'discord.js';
 
-import { CONFIG, COPY, EMOJIS } from '@/constants';
+import { CONFIG, COPY } from '@/constants';
 
 import {
   POKEMON_IMAGE_URLS,
@@ -19,7 +16,7 @@ import {
 
 import { LogCode } from '@/enums/logs';
 import { BotState } from '@/interfaces/bot';
-import { capitalize, weightedRandom } from '@/lib/utils';
+import { capitalize, getExploreActions, weightedRandom } from '@/lib/utils';
 
 import { log, reply } from '../helpers';
 
@@ -51,6 +48,8 @@ export const Explore = {
 
     state.exploreList.push(interaction.user.id);
 
+    const row = await getExploreActions(interaction.user.id);
+
     const rarity = weightedRandom(POKEMON_RARITY_WEIGHTS);
     const pokemonPool = POKEMON_LIST.filter(p => p.rarity === rarity);
     const selectedPokemon =
@@ -71,44 +70,7 @@ export const Explore = {
       iconName = `${selectedPokemon.slug}-f`;
     }
 
-    const row = new ActionRowBuilder<ButtonBuilder>()
-      .addComponents(
-        new ButtonBuilder()
-          .setCustomId('use_pokeball')
-          .setEmoji(EMOJIS.POKEMON.POKEBALL)
-          .setLabel('Use (17)')
-          .setStyle(ButtonStyle.Secondary),
-      )
-      .addComponents(
-        new ButtonBuilder()
-          .setCustomId('use_greatball')
-          .setEmoji(EMOJIS.POKEMON.GREATBALL)
-          .setLabel('Use (3)')
-          .setStyle(ButtonStyle.Secondary),
-      )
-      .addComponents(
-        new ButtonBuilder()
-          .setCustomId('use_ultraball')
-          .setEmoji(EMOJIS.POKEMON.ULTRABALL)
-          .setLabel('Use (87)')
-          .setStyle(ButtonStyle.Secondary),
-      )
-      .addComponents(
-        new ButtonBuilder()
-          .setCustomId('use_masterball')
-          .setEmoji(EMOJIS.POKEMON.MASTERBALL)
-          .setLabel('Use (1)')
-          .setStyle(ButtonStyle.Secondary),
-      )
-      .addComponents(
-        new ButtonBuilder()
-          .setCustomId('run')
-          .setLabel('Run')
-          .setStyle(ButtonStyle.Secondary),
-      );
-
     const titleText = `You found a wild ${isShiny ? 'Shiny ' : ''}${selectedPokemon.name}!`;
-
     const pokemonImage = `${POKEMON_IMAGE_URLS.base}/pokemon/${selectedPokemon.id}/${imageName}.gif`;
     const pokemonIcon = `${POKEMON_IMAGE_URLS.pokemondb}/${variant}/${iconName}.png`;
 

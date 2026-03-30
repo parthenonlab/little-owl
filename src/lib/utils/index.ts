@@ -1,5 +1,6 @@
 export * from './capitalize';
 export * from './getCurrency';
+export * from './getExploreActions';
 export * from './getTotalBalls';
 export * from './getUpgradePrice';
 export * from './hasInventoryCapacity';

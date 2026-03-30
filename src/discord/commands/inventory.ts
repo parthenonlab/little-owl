@@ -23,9 +23,9 @@ import { setDiscordUser } from '@/services/user';
 import { log, reply } from '../helpers';
 
 const renderInventory = async (
+  user: UserDocument,
   inventory: InventoryDocument,
   avatarUrl: string,
-  userCash: number,
 ) => {
   const nextUpgrade = getUpgradePrice(inventory.capacity);
 
@@ -34,7 +34,7 @@ const renderInventory = async (
   if (nextUpgrade > 0) {
     row = new ActionRowBuilder<ButtonBuilder>().addComponents(
       new ButtonBuilder()
-        .setCustomId(`inventory:upgrade:${nextUpgrade}`)
+        .setCustomId(`${user.discord_id}:inventory:upgrade:${nextUpgrade}`)
         .setLabel(`Upgrade (+1 Slot) - Cost: ${nextUpgrade}`)
         .setStyle(ButtonStyle.Success),
     );
@@ -82,7 +82,7 @@ const renderInventory = async (
     )
     .setThumbnail(inventoryIcon)
     .setFooter({
-      text: `CASH BALANCE: ${userCash}`,
+      text: `CASH BALANCE: ${user.cash}`,
       iconURL: POKEMON_IMAGE_URLS.base + '/currency/silver.png',
     });
 
@@ -118,9 +118,9 @@ export const Inventory = {
     }
 
     const { botEmbed, row } = await renderInventory(
+      user,
       inventory,
       interaction.user.displayAvatarURL(),
-      user.cash,
     );
 
     try {
@@ -168,9 +168,9 @@ export const Inventory = {
     }
 
     const { botEmbed } = await renderInventory(
+      updatedUser ?? user,
       inventory,
       interaction.user.displayAvatarURL(),
-      updatedUser ? updatedUser.cash : user.cash,
     );
 
     try {

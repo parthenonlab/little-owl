@@ -13,7 +13,10 @@ export const handleButtonInteraction = async (
 
   await interaction.deferUpdate();
 
-  const [command, _action, payload] = interaction.customId.split(':');
+  const [originalUserId, command, _action, payload] =
+    interaction.customId.split(':');
+
+  if (originalUserId !== interaction.user.id) return;
 
   // command: inventory
   if (command === dc.Inventory.getName()) {
