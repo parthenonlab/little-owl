@@ -1,21 +1,21 @@
-type PokemonRarity =
+type PokeballType = 'pokeball' | 'greatball' | 'ultraball' | 'masterball';
+
+export type ActiveSpawn = 'day' | 'night' | 'both';
+
+export interface PokeballObject {
+  type: PokeballType;
+  emoji: string;
+  label: string;
+  price: number;
+}
+
+export type PokemonRarity =
   | 'common'
   | 'uncommon'
   | 'rare'
   | 'very rare'
   | 'legendary'
   | 'mythical';
-
-export type BallType = 'pokeball' | 'greatball' | 'ultraball' | 'masterball';
-
-export type ActiveSpawn = 'day' | 'night' | 'both';
-
-export interface PokeballObject {
-  type: BallType;
-  emoji: string;
-  label: string;
-  price: number;
-}
 
 export interface PokemonObject {
   id: number;
@@ -36,8 +36,8 @@ export interface PokemonObject {
 export interface PokemonExplorePayload {
   id: number;
   name: string;
-  rarity: string;
-  gender: string;
+  rarity: PokemonRarity;
+  gender: string | null;
   variant: string;
   shiny: boolean;
   pokemonIcon: string;

@@ -14,11 +14,12 @@ import {
   POKEMON_LIST,
   POKEMON_RARITY_WEIGHTS,
   POKEMON_SHINY_WEIGHTS,
+  RUN_PROMPTS,
 } from '@/constants/pokemon';
 
 import { LogCode } from '@/enums/logs';
 import { BotState } from '@/interfaces/bot';
-import { PokemonExplorePayload } from '@/interfaces/pokemon';
+import { PokemonExplorePayload, PokemonRarity } from '@/interfaces/pokemon';
 import { capitalize, weightedRandom } from '@/lib/utils';
 
 import { getActiveSpawn, getExploreActions, log, reply } from '../helpers';
@@ -70,7 +71,7 @@ export const Explore = {
     }
 
     const activeSpawn = getActiveSpawn();
-    const rarity = weightedRandom(POKEMON_RARITY_WEIGHTS);
+    const rarity = weightedRandom(POKEMON_RARITY_WEIGHTS) as PokemonRarity;
 
     const pokemonPool = POKEMON_LIST.filter(pokemon => {
       return (
@@ -107,9 +108,9 @@ export const Explore = {
     const payload: PokemonExplorePayload = {
       id: selectedPokemon.id,
       name: selectedPokemon.name,
-      rarity: rarityLabel,
-      gender: genderLabel,
-      variant: variantLabel,
+      rarity,
+      gender,
+      variant,
       shiny: isShiny,
       pokemonIcon,
       authorIcon: interaction.user.displayAvatarURL(),
@@ -155,7 +156,7 @@ export const Explore = {
 
     const embed = await renderEmbedHeader(payload);
 
-    embed.setDescription('Got away safely!').setFooter({
+    embed.setDescription(RUN_PROMPTS[payload.rarity]).setFooter({
       text: `Encountered: ${new Date()}`,
     });
 
