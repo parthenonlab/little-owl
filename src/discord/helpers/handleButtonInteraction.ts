@@ -16,6 +16,11 @@ export const handleButtonInteraction = async (
 
   if (originalUserId !== interaction.user.id) return;
 
+  // command: explore
+  if (command === dc.Explore.getName()) {
+    if (option === 'run') return dc.Explore.onRunClick(state, interaction);
+  }
+
   // command: shop
   if (command === dc.Shop.getName()) {
     const pokeball = POKEBALLS.find(ball => ball.type === option);

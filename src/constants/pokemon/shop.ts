@@ -1,7 +1,7 @@
+import { PokeballObject } from '@/interfaces/pokemon';
 import { ShopState } from '@/interfaces/shop';
 
 import { EMOJIS } from '../emojis';
-import { PokeballObject } from './types';
 
 export const DEFAULT_SHOP_STATE: ShopState = {
   pokeball: 250,

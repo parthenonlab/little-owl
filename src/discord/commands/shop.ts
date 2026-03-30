@@ -13,15 +13,13 @@ import {
 } from 'discord.js';
 
 import { CONFIG, COPY } from '@/constants';
-import {
-  PokeballObject,
-  POKEBALLS,
-  POKEMON_IMAGE_URLS,
-} from '@/constants/pokemon';
+import { POKEBALLS, POKEMON_IMAGE_URLS } from '@/constants/pokemon';
 import { LogCode } from '@/enums/logs';
 
 import { BotState } from '@/interfaces/bot';
+import { PokeballObject } from '@/interfaces/pokemon';
 import { UserDocument } from '@/interfaces/user';
+
 import { getInventory, updateBalls } from '@/services/inventory';
 import { setDiscordUser } from '@/services/user';
 
@@ -50,7 +48,7 @@ const renderShop = async (
 ) => {
   const shopIcon = `${POKEMON_IMAGE_URLS.base}/inventory/pokemart.png`;
 
-  const shopLines = POKEBALLS.map(ball => {
+  const shopLines = POKEBALLS.map((ball: PokeballObject) => {
     return {
       ...ball,
       label: ball.label.toUpperCase(),
@@ -59,7 +57,7 @@ const renderShop = async (
   })
     .map(ball => {
       const header = `${ball.emoji} ${ball.label}`;
-      const description = `Stock: \`${ball.stock}\` - Price: \`${ball.price}\``;
+      const description = `Stock: \`${ball.stock}\` - Price: \`${ball.price.toLocaleString('en-US')}\``;
 
       return `${header}\n\u2003\u2002${description}`;
     })
@@ -77,7 +75,7 @@ const renderShop = async (
   }
 
   const botEmbed = new EmbedBuilder()
-    .setColor(CONFIG.COLORS.BLUE as ColorResolvable)
+    .setColor(CONFIG.COLORS.POKEMON.RED as ColorResolvable)
     .setAuthor({
       name: 'Shopping...',
       iconURL: avatarUrl,
@@ -113,7 +111,7 @@ export const Shop = {
       return;
     }
 
-    if (state.exploreList.includes(interaction.user.id)) {
+    if (state.exploreList.has(interaction.user.id)) {
       reply({
         content: 'There is currently a Pokémon in front of you!',
         ephemeral: true,

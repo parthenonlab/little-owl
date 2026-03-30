@@ -1,7 +1,9 @@
 import {
+  ButtonInteraction,
   ChatInputCommandInteraction,
   ColorResolvable,
   EmbedBuilder,
+  MessageFlags,
   SlashCommandBuilder,
 } from 'discord.js';
 
@@ -16,9 +18,30 @@ import {
 
 import { LogCode } from '@/enums/logs';
 import { BotState } from '@/interfaces/bot';
+import { PokemonExplorePayload } from '@/interfaces/pokemon';
 import { capitalize, weightedRandom } from '@/lib/utils';
 
-import { getExploreActions, log, reply } from '../helpers';
+import { getActiveSpawn, getExploreActions, log, reply } from '../helpers';
+
+const renderEmbedHeader = async ({
+  authorIcon,
+  name,
+  pokemonIcon,
+  shiny,
+}: PokemonExplorePayload) => {
+  const title = `You found a wild ${shiny ? 'Shiny ' : ''}${name}!`;
+
+  const embed = new EmbedBuilder()
+    .setColor(CONFIG.COLORS.POKEMON.RED as ColorResolvable)
+    .setAuthor({
+      name: 'Exploring...',
+      iconURL: authorIcon,
+    })
+    .setTitle(title)
+    .setThumbnail(pokemonIcon);
+
+  return embed;
+};
 
 export const Explore = {
   data: new SlashCommandBuilder()
@@ -37,7 +60,7 @@ export const Explore = {
       return;
     }
 
-    if (state.exploreList.includes(interaction.user.id)) {
+    if (state.exploreList.has(interaction.user.id)) {
       reply({
         content: 'There is currently a Pokémon in front of you!',
         ephemeral: true,
@@ -46,12 +69,16 @@ export const Explore = {
       return;
     }
 
-    state.exploreList.push(interaction.user.id);
-
-    const row = await getExploreActions(interaction.user.id);
-
+    const activeSpawn = getActiveSpawn();
     const rarity = weightedRandom(POKEMON_RARITY_WEIGHTS);
-    const pokemonPool = POKEMON_LIST.filter(p => p.rarity === rarity);
+
+    const pokemonPool = POKEMON_LIST.filter(pokemon => {
+      return (
+        pokemon.rarity === rarity &&
+        (pokemon.activeSpawn === 'both' || pokemon.activeSpawn === activeSpawn)
+      );
+    });
+
     const selectedPokemon =
       pokemonPool[Math.floor(Math.random() * pokemonPool.length)];
 
@@ -70,7 +97,6 @@ export const Explore = {
       iconName = `${selectedPokemon.slug}-f`;
     }
 
-    const titleText = `You found a wild ${isShiny ? 'Shiny ' : ''}${selectedPokemon.name}!`;
     const pokemonImage = `${POKEMON_IMAGE_URLS.base}/pokemon/${selectedPokemon.id}/${imageName}.gif`;
     const pokemonIcon = `${POKEMON_IMAGE_URLS.pokemondb}/${variant}/${iconName}.png`;
 
@@ -78,25 +104,32 @@ export const Explore = {
     const genderLabel = gender ? capitalize(gender) : 'N/A';
     const variantLabel = capitalize(variant);
 
-    const footerText = `Rarity: ${rarityLabel}  |  Gender: ${genderLabel}  |  Variant: ${variantLabel}`;
+    const payload: PokemonExplorePayload = {
+      id: selectedPokemon.id,
+      name: selectedPokemon.name,
+      rarity: rarityLabel,
+      gender: genderLabel,
+      variant: variantLabel,
+      shiny: isShiny,
+      pokemonIcon,
+      authorIcon: interaction.user.displayAvatarURL(),
+    };
+
+    state.exploreList.set(interaction.user.id, payload);
 
     try {
-      const botEmbed = new EmbedBuilder()
-        .setColor(CONFIG.COLORS.BLUE as ColorResolvable)
-        .setAuthor({
-          name: 'Exploring...',
-          iconURL: interaction.user.displayAvatarURL(),
-        })
-        .setTitle(titleText)
+      const row = await getExploreActions(interaction.user.id);
+      const embed = await renderEmbedHeader(payload);
+
+      embed
         .setDescription('Catch it or run away with the buttons below!')
-        .setThumbnail(pokemonIcon)
         .setImage(pokemonImage)
         .setFooter({
-          text: footerText,
+          text: `Rarity: ${rarityLabel}  |  Gender: ${genderLabel}  |  Variant: ${variantLabel}`,
         });
 
       await interaction.reply({
-        embeds: [botEmbed],
+        embeds: [embed],
         components: [row],
       });
     } catch (error) {
@@ -108,5 +141,30 @@ export const Explore = {
   },
   getName: (): string => {
     return COPY.EXPLORE.NAME;
+  },
+  onRunClick: async (state: BotState, interaction: ButtonInteraction) => {
+    const payload = state.exploreList.get(interaction.user.id);
+
+    if (!payload) {
+      await interaction.reply({
+        content: COPY.ERROR.GENERIC,
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
+
+    const embed = await renderEmbedHeader(payload);
+
+    embed.setDescription('Got away safely!').setFooter({
+      text: `Encountered: ${new Date()}`,
+    });
+
+    state.exploreList.delete(interaction.user.id);
+
+    await interaction.deferUpdate();
+    await interaction.editReply({
+      embeds: [embed],
+      components: [],
+    });
   },
 };

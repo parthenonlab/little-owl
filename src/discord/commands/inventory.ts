@@ -13,7 +13,9 @@ import {
 import { CONFIG, COPY } from '@/constants';
 import { POKEBALLS, POKEMON_IMAGE_URLS } from '@/constants/pokemon';
 import { LogCode } from '@/enums/logs';
+
 import { InventoryDocument } from '@/interfaces/inventory';
+import { PokeballObject } from '@/interfaces/pokemon';
 import { UserDocument } from '@/interfaces/user';
 
 import { getInventory, updateCapacity } from '@/services/inventory';
@@ -42,7 +44,7 @@ const renderInventory = async (
   const inventoryIcon = `${POKEMON_IMAGE_URLS.base}/inventory/backpack.png`;
 
   const balls = inventory.balls;
-  const ballLines = POKEBALLS.map(ball => {
+  const ballLines = POKEBALLS.map((ball: PokeballObject) => {
     return {
       ...ball,
       count: balls[ball.type],
@@ -55,7 +57,7 @@ const renderInventory = async (
   const capacityLine = `Total Capacity: \`${inventory.capacity}\` • Available Slots: \`${inventory.capacity - getTotalBalls(inventory.balls)}\``;
 
   const botEmbed = new EmbedBuilder()
-    .setColor(CONFIG.COLORS.BLUE as ColorResolvable)
+    .setColor(CONFIG.COLORS.POKEMON.RED as ColorResolvable)
     .setAuthor({
       name: 'Inventory',
       iconURL: avatarUrl,

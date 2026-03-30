@@ -1,5 +1,3 @@
-type ActiveSpawn = 'day' | 'night' | 'both';
-
 type PokemonRarity =
   | 'common'
   | 'uncommon'
@@ -8,7 +6,9 @@ type PokemonRarity =
   | 'legendary'
   | 'mythical';
 
-type BallType = 'pokeball' | 'greatball' | 'ultraball' | 'masterball';
+export type BallType = 'pokeball' | 'greatball' | 'ultraball' | 'masterball';
+
+export type ActiveSpawn = 'day' | 'night' | 'both';
 
 export interface PokeballObject {
   type: BallType;
@@ -31,4 +31,15 @@ export interface PokemonObject {
   hasFemaleImage: boolean;
   activeSpawn: ActiveSpawn;
   variants: string[];
+}
+
+export interface PokemonExplorePayload {
+  id: number;
+  name: string;
+  rarity: string;
+  gender: string;
+  variant: string;
+  shiny: boolean;
+  pokemonIcon: string;
+  authorIcon: string;
 }

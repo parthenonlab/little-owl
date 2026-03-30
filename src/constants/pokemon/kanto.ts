@@ -1,4 +1,4 @@
-import { PokemonObject } from './types';
+import { PokemonObject } from '@/interfaces/pokemon';
 
 export const kantoPokemon: PokemonObject[] = [
   {
