@@ -12,15 +12,13 @@ import {
   TextInputStyle,
 } from 'discord.js';
 
-import { CONFIG, COPY, EMOJIS } from '@/constants';
-import { LogCode } from '@/enums/logs';
-
+import { CONFIG, COPY } from '@/constants';
 import {
-  BALL_LABELS,
-  BallType,
+  PokeballObject,
+  POKEBALLS,
   POKEMON_IMAGE_URLS,
-  SHOP_PRICES,
 } from '@/constants/pokemon';
+import { LogCode } from '@/enums/logs';
 
 import { BotState } from '@/interfaces/bot';
 import { UserDocument } from '@/interfaces/user';
@@ -52,32 +50,13 @@ const renderShop = async (
 ) => {
   const shopIcon = `${POKEMON_IMAGE_URLS.base}/inventory/pokemart.png`;
 
-  const shopLines = [
-    {
-      emoji: EMOJIS.POKEMON.POKEBALL,
-      label: BALL_LABELS.pokeball.toUpperCase(),
-      stock: state.shop.pokeball,
-      price: SHOP_PRICES.pokeball,
-    },
-    {
-      emoji: EMOJIS.POKEMON.GREATBALL,
-      label: BALL_LABELS.greatball.toUpperCase(),
-      stock: state.shop.greatball,
-      price: SHOP_PRICES.greatball,
-    },
-    {
-      emoji: EMOJIS.POKEMON.ULTRABALL,
-      label: BALL_LABELS.ultraball.toUpperCase(),
-      stock: state.shop.ultraball,
-      price: SHOP_PRICES.ultraball,
-    },
-    {
-      emoji: EMOJIS.POKEMON.MASTERBALL,
-      label: BALL_LABELS.masterball.toUpperCase(),
-      stock: state.shop.masterball,
-      price: '1,000,000',
-    },
-  ]
+  const shopLines = POKEBALLS.map(ball => {
+    return {
+      ...ball,
+      label: ball.label.toUpperCase(),
+      stock: state.shop[ball.type],
+    };
+  })
     .map(ball => {
       const header = `${ball.emoji} ${ball.label}`;
       const description = `Stock: \`${ball.stock}\` - Price: \`${ball.price}\``;
@@ -172,11 +151,11 @@ export const Shop = {
   onBuyClick: async (
     state: BotState,
     interaction: ButtonInteraction,
-    ball: BallType,
+    pokeball: PokeballObject,
   ) => {
     const modal = new ModalBuilder({
-      custom_id: `${interaction.user.id}:shop:${ball}:`,
-      title: `Buy ${BALL_LABELS[ball]}`,
+      custom_id: `${interaction.user.id}:shop:${pokeball.type}:`,
+      title: `Buy ${pokeball.label}`,
       components: [
         new ActionRowBuilder<TextInputBuilder>({
           components: [
@@ -184,7 +163,7 @@ export const Shop = {
               custom_id: 'amount',
               label: 'How many would you like to buy?',
               style: TextInputStyle.Short,
-              placeholder: `Enter amount (Max: ${state.shop[ball]})`,
+              placeholder: `Enter amount (max: ${state.shop[pokeball.type]})`,
               min_length: 1,
               max_length: 7,
               required: true,
@@ -200,7 +179,7 @@ export const Shop = {
     state: BotState,
     interaction: ModalSubmitInteraction,
     user: UserDocument,
-    ball: BallType,
+    pokeball: PokeballObject,
   ) => {
     const raw = interaction.fields.getTextInputValue('amount');
     const amount = parseInt(raw);
@@ -213,19 +192,19 @@ export const Shop = {
       return;
     }
 
-    if (amount > state.shop[ball]) {
+    if (amount > state.shop[pokeball.type]) {
       await interaction.reply({
-        content: `Sorry, we only have ${state.shop[ball]} ${BALL_LABELS[ball]} in stock.`,
+        content: `Sorry, we only have ${state.shop[pokeball.type]} ${pokeball.label} in stock.`,
         flags: MessageFlags.Ephemeral,
       });
       return;
     }
 
-    const totalPrice = amount * SHOP_PRICES[ball];
+    const totalPrice = amount * pokeball.price;
 
     if (totalPrice > user.cash) {
       await interaction.reply({
-        content: `You don't have enough ${CONFIG.CURRENCY.PLURAL} to buy ${amount} ${BALL_LABELS[ball]}.`,
+        content: `You don't have enough ${CONFIG.CURRENCY.PLURAL} to buy ${amount} ${pokeball.label}.`,
         flags: MessageFlags.Ephemeral,
       });
       return;
@@ -233,29 +212,45 @@ export const Shop = {
 
     const inventory = await getInventory(interaction.user.id);
 
-    if (amount > getInventorySpace(inventory!)) {
+    if (!inventory) {
       await interaction.reply({
-        content: `You don't have enough inventory space to buy ${amount} ${BALL_LABELS[ball]}.`,
+        content: COPY.ERROR.GENERIC,
         flags: MessageFlags.Ephemeral,
       });
       return;
     }
 
-    state.shop[ball] -= amount;
+    if (amount > getInventorySpace(inventory!)) {
+      await interaction.reply({
+        content: `You don't have enough inventory space to buy ${amount} ${pokeball.label}.`,
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
+
+    state.shop[pokeball.type] -= amount;
 
     const updatedUser = await setDiscordUser(interaction.user.id, {
       cash: user.cash - totalPrice,
     });
 
     const updatedInventory = await updateBalls(interaction.user.id, {
-      [ball]: inventory!.balls[ball] + amount,
+      [pokeball.type]: inventory.balls[pokeball.type] + amount,
     });
 
-    const availableSpace = getInventorySpace(updatedInventory!);
+    if (!updatedUser || !updatedInventory) {
+      await interaction.reply({
+        content: COPY.ERROR.GENERIC,
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
+
+    const availableSpace = getInventorySpace(updatedInventory);
 
     const { botEmbed, row } = await renderShop(
       state,
-      updatedUser!,
+      updatedUser,
       availableSpace,
       interaction.user.displayAvatarURL(),
     );

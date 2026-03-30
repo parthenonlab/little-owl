@@ -1,6 +1,6 @@
 import { ButtonInteraction } from 'discord.js';
 
-import { BallType } from '@/constants/pokemon';
+import { POKEBALLS } from '@/constants/pokemon';
 import { BotState } from '@/interfaces/bot';
 import { findOrCreateDiscordUser } from '@/services/user';
 
@@ -12,17 +12,15 @@ export const handleButtonInteraction = async (
 ) => {
   if (interaction.user.bot) return;
 
-  const [originalUserId, command, option, payload] =
-    interaction.customId.split(':');
+  const [originalUserId, command, option] = interaction.customId.split(':');
 
   if (originalUserId !== interaction.user.id) return;
 
   // command: shop
   if (command === dc.Shop.getName()) {
-    const user = await findOrCreateDiscordUser(interaction.user);
-    if (!user) return;
+    const pokeball = POKEBALLS.find(ball => ball.type === option);
 
-    return dc.Shop.onBuyClick(state, interaction, option as BallType);
+    return dc.Shop.onBuyClick(state, interaction, pokeball ?? POKEBALLS[0]);
   }
 
   // avoid deferring buttons that trigger modals
@@ -33,6 +31,6 @@ export const handleButtonInteraction = async (
     const user = await findOrCreateDiscordUser(interaction.user);
     if (!user) return;
 
-    return dc.Inventory.onUpgradeClick(interaction, user, payload);
+    return dc.Inventory.onUpgradeClick(interaction, user);
   }
 };

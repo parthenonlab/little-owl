@@ -1,5 +1,4 @@
 import { Interaction } from 'discord.js';
-
 import { BotState } from '@/interfaces/bot';
 
 import {

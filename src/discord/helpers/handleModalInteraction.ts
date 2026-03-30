@@ -1,6 +1,6 @@
 import { ModalSubmitInteraction } from 'discord.js';
 
-import { BallType } from '@/constants/pokemon';
+import { POKEBALLS } from '@/constants/pokemon';
 import { BotState } from '@/interfaces/bot';
 import { findOrCreateDiscordUser } from '@/services/user';
 
@@ -21,6 +21,13 @@ export const handleModalInteraction = async (
     const user = await findOrCreateDiscordUser(interaction.user);
     if (!user) return;
 
-    return dc.Shop.onModalSubmit(state, interaction, user, option as BallType);
+    const pokeball = POKEBALLS.find(ball => ball.type === option);
+
+    return dc.Shop.onModalSubmit(
+      state,
+      interaction,
+      user,
+      pokeball ?? POKEBALLS[0],
+    );
   }
 };

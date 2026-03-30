@@ -1,5 +1,7 @@
 import { ShopState } from '@/interfaces/shop';
-import { BallType } from './types';
+
+import { EMOJIS } from '../emojis';
+import { PokeballObject } from './types';
 
 export const DEFAULT_SHOP_STATE: ShopState = {
   pokeball: 250,
@@ -10,16 +12,29 @@ export const DEFAULT_SHOP_STATE: ShopState = {
   lastWeeklyRestock: new Date(),
 };
 
-export const BALL_LABELS: Record<BallType, string> = {
-  pokeball: 'Poké Balls',
-  greatball: 'Great Balls',
-  ultraball: 'Ultra Balls',
-  masterball: 'Master Balls',
-};
-
-export const SHOP_PRICES: Record<BallType, number> = {
-  pokeball: 200,
-  greatball: 400,
-  ultraball: 800,
-  masterball: 1000000,
-};
+export const POKEBALLS: PokeballObject[] = [
+  {
+    type: 'pokeball',
+    emoji: EMOJIS.POKEMON.POKEBALL,
+    label: 'Poké Balls',
+    price: 200,
+  },
+  {
+    type: 'greatball',
+    emoji: EMOJIS.POKEMON.GREATBALL,
+    label: 'Great Balls',
+    price: 400,
+  },
+  {
+    type: 'ultraball',
+    emoji: EMOJIS.POKEMON.ULTRABALL,
+    label: 'Ultra Balls',
+    price: 800,
+  },
+  {
+    type: 'masterball',
+    emoji: EMOJIS.POKEMON.MASTERBALL,
+    label: 'Master Balls',
+    price: 1_000_000,
+  },
+];
