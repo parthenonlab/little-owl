@@ -2,6 +2,7 @@ import { CommandInteraction } from 'discord.js';
 import { ScheduledTask } from 'node-cron';
 
 import { LogCode } from '@/enums/logs';
+import { ShopState } from './shop';
 
 export interface BotState {
   activityIndex: number;
@@ -10,6 +11,7 @@ export interface BotState {
   };
   exploreList: string[];
   reminderIndex: number;
+  shop: ShopState;
   timers: ScheduledTask[];
   twitchChatQueue: number;
 }

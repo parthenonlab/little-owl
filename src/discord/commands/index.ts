@@ -11,6 +11,7 @@ export * from './link';
 export * from './points';
 export * from './profile';
 export * from './redeem';
+export * from './shop';
 export * from './sleep';
 export * from './star';
 export * from './unlink';

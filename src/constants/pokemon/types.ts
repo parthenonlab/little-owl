@@ -8,6 +8,8 @@ type PokemonRarity =
   | 'legendary'
   | 'mythical';
 
+export type BallType = 'pokeball' | 'greatball' | 'ultraball' | 'masterball';
+
 export interface PokemonObject {
   id: number;
   name: string;

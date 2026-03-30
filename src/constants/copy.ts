@@ -135,6 +135,10 @@ export const COPY = {
     OPTION_NAME: 'reward',
     OPTION_DESCRIPTION: 'The cost of these rewards are the same as in Twitch',
   },
+  SHOP: {
+    NAME: 'shop',
+    DESCRIPTION: `Browse the shop and buy items with your ${CONFIG.CURRENCY.PLURAL}!`,
+  },
   SLEEP: {
     NAME: 'sleep',
     DESCRIPTION: 'Sleep time for Little Owl',

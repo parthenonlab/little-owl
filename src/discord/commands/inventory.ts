@@ -11,16 +11,15 @@ import {
 } from 'discord.js';
 
 import { CONFIG, COPY, EMOJIS } from '@/constants';
-import { POKEMON_IMAGE_URLS } from '@/constants/pokemon';
+import { BALL_LABELS, POKEMON_IMAGE_URLS } from '@/constants/pokemon';
 import { LogCode } from '@/enums/logs';
 import { InventoryDocument } from '@/interfaces/inventory';
 import { UserDocument } from '@/interfaces/user';
 
-import { getTotalBalls, getUpgradePrice } from '@/lib/utils';
 import { getInventory, updateCapacity } from '@/services/inventory';
 import { setDiscordUser } from '@/services/user';
 
-import { log, reply } from '../helpers';
+import { getTotalBalls, getUpgradePrice, log, reply } from '../helpers';
 
 const renderInventory = async (
   user: UserDocument,
@@ -46,22 +45,22 @@ const renderInventory = async (
   const ballLines = [
     {
       emoji: EMOJIS.POKEMON.POKEBALL,
-      label: 'Poké Balls',
+      label: BALL_LABELS.pokeball,
       count: balls.pokeball,
     },
     {
       emoji: EMOJIS.POKEMON.GREATBALL,
-      label: 'Great Balls',
+      label: BALL_LABELS.greatball,
       count: balls.greatball,
     },
     {
       emoji: EMOJIS.POKEMON.ULTRABALL,
-      label: 'Ultra Balls',
+      label: BALL_LABELS.ultraball,
       count: balls.ultraball,
     },
     {
       emoji: EMOJIS.POKEMON.MASTERBALL,
-      label: 'Master Balls',
+      label: BALL_LABELS.masterball,
       count: balls.masterball,
     },
   ]
