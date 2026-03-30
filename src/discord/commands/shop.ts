@@ -4,26 +4,30 @@ import {
   ChatInputCommandInteraction,
   ColorResolvable,
   EmbedBuilder,
+  MessageFlags,
   ModalBuilder,
+  ModalSubmitInteraction,
   SlashCommandBuilder,
   TextInputBuilder,
   TextInputStyle,
 } from 'discord.js';
 
 import { CONFIG, COPY, EMOJIS } from '@/constants';
+import { LogCode } from '@/enums/logs';
+
 import {
   BALL_LABELS,
   BallType,
   POKEMON_IMAGE_URLS,
   SHOP_PRICES,
 } from '@/constants/pokemon';
-import { LogCode } from '@/enums/logs';
 
 import { BotState } from '@/interfaces/bot';
 import { UserDocument } from '@/interfaces/user';
-import { getInventory } from '@/services/inventory';
+import { getInventory, updateBalls } from '@/services/inventory';
+import { setDiscordUser } from '@/services/user';
 
-import { getShopActions, getTotalBalls, log, reply } from '../helpers';
+import { getInventorySpace, getShopActions, log, reply } from '../helpers';
 
 const getNextDailyRestock = (lastRestock: Date): number => {
   const next = new Date(lastRestock);
@@ -141,7 +145,7 @@ export const Shop = {
       return;
     }
 
-    const availableSpace = inventory.capacity - getTotalBalls(inventory.balls);
+    const availableSpace = getInventorySpace(inventory);
 
     const { botEmbed, row } = await renderShop(
       state,
@@ -171,7 +175,7 @@ export const Shop = {
     ball: BallType,
   ) => {
     const modal = new ModalBuilder({
-      custom_id: `${interaction.user.id}:shop:modal:${ball}:`,
+      custom_id: `${interaction.user.id}:shop:${ball}:`,
       title: `Buy ${BALL_LABELS[ball]}`,
       components: [
         new ActionRowBuilder<TextInputBuilder>({
@@ -191,5 +195,91 @@ export const Shop = {
     });
 
     await interaction.showModal(modal);
+  },
+  onModalSubmit: async (
+    state: BotState,
+    interaction: ModalSubmitInteraction,
+    user: UserDocument,
+    ball: BallType,
+  ) => {
+    const raw = interaction.fields.getTextInputValue('amount');
+    const amount = parseInt(raw);
+
+    if (isNaN(amount) || amount <= 0) {
+      await interaction.reply({
+        content: 'Please enter a valid amount.',
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
+
+    if (amount > state.shop[ball]) {
+      await interaction.reply({
+        content: `Sorry, we only have ${state.shop[ball]} ${BALL_LABELS[ball]} in stock.`,
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
+
+    const totalPrice = amount * SHOP_PRICES[ball];
+
+    if (totalPrice > user.cash) {
+      await interaction.reply({
+        content: `You don't have enough ${CONFIG.CURRENCY.PLURAL} to buy ${amount} ${BALL_LABELS[ball]}.`,
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
+
+    const inventory = await getInventory(interaction.user.id);
+
+    if (amount > getInventorySpace(inventory!)) {
+      await interaction.reply({
+        content: `You don't have enough inventory space to buy ${amount} ${BALL_LABELS[ball]}.`,
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
+
+    state.shop[ball] -= amount;
+
+    const updatedUser = await setDiscordUser(interaction.user.id, {
+      cash: user.cash - totalPrice,
+    });
+
+    const updatedInventory = await updateBalls(interaction.user.id, {
+      [ball]: inventory!.balls[ball] + amount,
+    });
+
+    const availableSpace = getInventorySpace(updatedInventory!);
+
+    const { botEmbed, row } = await renderShop(
+      state,
+      updatedUser!,
+      availableSpace,
+      interaction.user.displayAvatarURL(),
+    );
+
+    try {
+      if (!interaction.message) {
+        await interaction.reply({
+          embeds: [botEmbed],
+          components: row ? [row] : [],
+        });
+        return;
+      }
+
+      await interaction.deferUpdate();
+
+      await interaction.message.edit({
+        embeds: [botEmbed],
+        components: row ? [row] : [],
+      });
+    } catch (error) {
+      log({
+        type: LogCode.Error,
+        description: JSON.stringify(error),
+      });
+    }
   },
 };

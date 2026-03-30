@@ -40,7 +40,7 @@ export const getInventory = async (
  * Adjust ball counts in a user's inventory.
  *
  * @param discordId - Discord user id that owns the inventory.
- * @param ballUpdates - Ball deltas (positive to add, negative to remove).
+ * @param ballUpdates - Updated values for ball counts.
  * @returns Updated inventory document or undefined on failure.
  */
 export const updateBalls = async (
@@ -59,6 +59,7 @@ export const updateBalls = async (
     const inventory = await InventoryModel.findOneAndUpdate(
       { discord_id: discordId },
       { $set: updatedBallValues },
+      { new: true },
     );
 
     return inventory;
