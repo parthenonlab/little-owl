@@ -159,13 +159,15 @@ export const Inventory = {
       return;
     }
 
-    const { botEmbed } = await renderInventory(
-      updatedUser,
-      updatedInventory,
-      interaction.user.displayAvatarURL(),
-    );
-
     try {
+      const { botEmbed } = await renderInventory(
+        updatedUser,
+        updatedInventory,
+        interaction.user.displayAvatarURL(),
+      );
+
+      await interaction.deferUpdate();
+
       await interaction.editReply({
         embeds: [botEmbed],
         components: [],

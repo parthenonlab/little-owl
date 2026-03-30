@@ -23,9 +23,6 @@ export const handleButtonInteraction = async (
     return dc.Shop.onBuyClick(state, interaction, pokeball ?? POKEBALLS[0]);
   }
 
-  // avoid deferring buttons that trigger modals
-  await interaction.deferUpdate();
-
   // command: inventory
   if (command === dc.Inventory.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);

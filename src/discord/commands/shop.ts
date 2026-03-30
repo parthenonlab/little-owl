@@ -257,14 +257,14 @@ export const Shop = {
 
     const availableSpace = getInventorySpace(updatedInventory);
 
-    const { botEmbed, row } = await renderShop(
-      state,
-      updatedUser,
-      availableSpace,
-      interaction.user.displayAvatarURL(),
-    );
-
     try {
+      const { botEmbed, row } = await renderShop(
+        state,
+        updatedUser,
+        availableSpace,
+        interaction.user.displayAvatarURL(),
+      );
+
       if (!interaction.message) {
         await interaction.reply({
           embeds: [botEmbed],
