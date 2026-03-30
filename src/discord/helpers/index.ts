@@ -1,4 +1,5 @@
 export * from './getBrowser';
+export * from './handleButtonInteraction';
 export * from './handleCommandInteraction';
 export * from './log';
 export * from './registerDiscordCommands';

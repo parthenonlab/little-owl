@@ -16,7 +16,7 @@ export const getInventory = async (
   try {
     let inventory = await InventoryModel.findOne({
       discord_id: discordId,
-    }).exec();
+    });
 
     if (!inventory) {
       inventory = new InventoryModel({
@@ -48,30 +48,45 @@ export const updateBalls = async (
   ballUpdates: Partial<BallInventory>,
 ): Promise<InventoryDocument | undefined> => {
   try {
-    const increments: Record<string, number> = {};
-    const allowedBallKeys: Array<keyof BallInventory> = [
-      'pokeball',
-      'greatball',
-      'ultraball',
-      'masterball',
-    ];
+    const updatedBallValues: Record<string, number> = {};
 
-    allowedBallKeys.forEach(key => {
-      const delta = ballUpdates[key];
-      if (typeof delta === 'number' && delta !== 0) {
-        increments[`balls.${key}`] = delta;
+    Object.entries(ballUpdates).forEach(([key, value]) => {
+      if (typeof value === 'number' && value >= 0) {
+        updatedBallValues[`balls.${key}`] = value;
       }
     });
 
-    if (!Object.keys(increments).length) {
-      return await InventoryModel.findOne({ discord_id: discordId }).exec();
-    }
-
     const inventory = await InventoryModel.findOneAndUpdate(
       { discord_id: discordId },
-      { $inc: increments },
-      { new: true, upsert: true, setDefaultsOnInsert: true },
-    ).exec();
+      { $set: updatedBallValues },
+    );
+
+    return inventory;
+  } catch (error) {
+    log({
+      type: LogCode.Error,
+      description: JSON.stringify(error),
+    });
+    return;
+  }
+};
+
+/**
+ * Update a user's inventory capacity.
+ *
+ * @param discordId - Discord user id that owns the inventory.
+ * @param newCapacity - New inventory capacity value (non-negative).
+ * @returns Updated inventory document, created with defaults if needed, or undefined on error.
+ */
+export const updateCapacity = async (
+  discordId: string,
+): Promise<InventoryDocument | undefined> => {
+  try {
+    const inventory = await InventoryModel.findOneAndUpdate(
+      { discord_id: discordId },
+      { $inc: { capacity: 1 } },
+      { new: true },
+    );
 
     return inventory;
   } catch (error) {

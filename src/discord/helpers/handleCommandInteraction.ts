@@ -111,7 +111,10 @@ export const handleCommandInteraction = async (
 
   // command: inventory
   else if (interaction.commandName === dc.Inventory.getName()) {
-    return dc.Inventory.execute(interaction);
+    const user = await findOrCreateDiscordUser(interaction.user);
+    if (!user) return;
+
+    return dc.Inventory.execute(interaction, user);
   }
 
   // command: redeem
