@@ -35,7 +35,7 @@ const renderInventory = async (
       new ButtonBuilder()
         .setCustomId(`${user.discord_id}:inventory`)
         .setLabel(`Upgrade (+1 Slot) - Cost: ${nextUpgrade}`)
-        .setStyle(ButtonStyle.Success),
+        .setStyle(ButtonStyle.Primary),
     );
   }
 

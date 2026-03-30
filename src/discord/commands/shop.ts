@@ -88,7 +88,7 @@ const renderShop = async (
     )
     .setThumbnail(shopIcon)
     .setFooter({
-      text: `CASH BALANCE: ${user.cash} | INVENTORY SPACE: ${availableSpace}`,
+      text: `CASH BALANCE: ${user.cash}  |  INVENTORY SPACE: ${availableSpace}`,
       iconURL: POKEMON_IMAGE_URLS.base + '/currency/silver.png',
     });
 
@@ -107,6 +107,15 @@ export const Shop = {
     if (!CONFIG.FEATURES.SHOP.ENABLED) {
       reply({
         content: COPY.DISABLED,
+        ephemeral: true,
+        interaction: interaction,
+      });
+      return;
+    }
+
+    if (state.exploreList.includes(interaction.user.id)) {
+      reply({
+        content: 'There is currently a Pokémon in front of you!',
         ephemeral: true,
         interaction: interaction,
       });

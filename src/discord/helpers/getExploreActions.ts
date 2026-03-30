@@ -1,4 +1,4 @@
-import { EMOJIS } from '@/constants';
+import { POKEBALLS } from '@/constants/pokemon';
 import { getInventory } from '@/services/inventory';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 
@@ -7,45 +7,18 @@ export const getExploreActions = async (userId: string) => {
   const inventory = await getInventory(userId);
 
   if (inventory) {
-    if (inventory.balls.pokeball > 0) {
-      row.addComponents(
-        new ButtonBuilder()
-          .setCustomId(`${userId}:explore:pokeball`)
-          .setEmoji(EMOJIS.POKEMON.POKEBALL)
-          .setLabel(`Use (${inventory.balls.pokeball})`)
-          .setStyle(ButtonStyle.Secondary),
-      );
-    }
-
-    if (inventory.balls.greatball > 0) {
-      row.addComponents(
-        new ButtonBuilder()
-          .setCustomId(`${userId}:explore:greatball`)
-          .setEmoji(EMOJIS.POKEMON.GREATBALL)
-          .setLabel(`Use (${inventory.balls.greatball})`)
-          .setStyle(ButtonStyle.Secondary),
-      );
-    }
-
-    if (inventory.balls.ultraball > 0) {
-      row.addComponents(
-        new ButtonBuilder()
-          .setCustomId(`${userId}:explore:ultraball`)
-          .setEmoji(EMOJIS.POKEMON.ULTRABALL)
-          .setLabel(`Use (${inventory.balls.ultraball})`)
-          .setStyle(ButtonStyle.Secondary),
-      );
-    }
-
-    if (inventory.balls.masterball > 0) {
-      row.addComponents(
-        new ButtonBuilder()
-          .setCustomId(`${userId}:explore:masterball`)
-          .setEmoji(EMOJIS.POKEMON.MASTERBALL)
-          .setLabel(`Use (${inventory.balls.masterball})`)
-          .setStyle(ButtonStyle.Secondary),
-      );
-    }
+    POKEBALLS.forEach(ball => {
+      const amount = inventory.balls[ball.type];
+      if (amount > 0) {
+        row.addComponents(
+          new ButtonBuilder()
+            .setCustomId(`${userId}:explore:${ball.type}`)
+            .setEmoji(ball.emoji)
+            .setLabel(`Use (${amount})`)
+            .setStyle(ButtonStyle.Secondary),
+        );
+      }
+    });
   }
 
   row.addComponents(

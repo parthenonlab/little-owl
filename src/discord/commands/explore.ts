@@ -82,7 +82,7 @@ export const Explore = {
 
     try {
       const botEmbed = new EmbedBuilder()
-        .setColor(CONFIG.COLORS.GREEN as ColorResolvable)
+        .setColor(CONFIG.COLORS.BLUE as ColorResolvable)
         .setAuthor({
           name: 'Exploring...',
           iconURL: interaction.user.displayAvatarURL(),
