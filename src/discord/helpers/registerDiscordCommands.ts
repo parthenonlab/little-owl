@@ -11,6 +11,7 @@ import {
   Gamble,
   Give,
   Help,
+  Inventory,
   Leaderboard,
   Points,
   Profile,
@@ -55,6 +56,7 @@ export const registerDiscordCommands = (): void => {
   commands.push(Explore.data.toJSON());
   commands.push(Gamble.data.toJSON());
   commands.push(Give.data.toJSON());
+  commands.push(Inventory.data.toJSON());
   commands.push(Leaderboard.data.toJSON());
   commands.push(Points.data.toJSON());
   commands.push(Profile.data.toJSON());

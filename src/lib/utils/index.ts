@@ -1,6 +1,7 @@
 export * from './capitalize';
 export * from './getCurrency';
 export * from './getTotalBalls';
+export * from './getUpgradePrice';
 export * from './hasInventoryCapacity';
 export * from './isNumber';
 export * from './parseHexToRGB';

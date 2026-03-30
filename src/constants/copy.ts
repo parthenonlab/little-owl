@@ -96,6 +96,10 @@ export const COPY = {
     bsky: 'https://bsky.app/profile/athenaus.io',
     web: 'https://parthenon.app',
   } as { [key: string]: string },
+  INVENTORY: {
+    NAME: 'inventory',
+    DESCRIPTION: 'Check your inventory',
+  },
   LEADERBOARD: {
     NAME: 'leaderboard',
     DESCRIPTION: `Display a leaderboard based on amount of ${CONFIG.CURRENCY.PLURAL}`,

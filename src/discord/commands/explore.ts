@@ -107,23 +107,22 @@ export const Explore = {
           .setStyle(ButtonStyle.Secondary),
       );
 
+    const titleText = `You found a wild ${isShiny ? 'Shiny ' : ''}${selectedPokemon.name}!`;
+
+    const pokemonImage = `${POKEMON_IMAGE_URLS.base}/pokemon/${selectedPokemon.id}/${imageName}.gif`;
+    const pokemonIcon = `${POKEMON_IMAGE_URLS.pokemondb}/${variant}/${iconName}.png`;
+
+    const rarityLabel = capitalize(rarity);
+    const genderLabel = gender ? capitalize(gender) : 'N/A';
+    const variantLabel = capitalize(variant);
+
+    const footerText = `Rarity: ${rarityLabel}  |  Gender: ${genderLabel}  |  Variant: ${variantLabel}`;
+
     try {
-      const authorText = `Exploring...`;
-      const titleText = `You found a wild ${isShiny ? 'Shiny ' : ''}${selectedPokemon.name}!`;
-
-      const pokemonImage = `${POKEMON_IMAGE_URLS.base}/${selectedPokemon.id}/${imageName}.gif`;
-      const pokemonIcon = `${POKEMON_IMAGE_URLS.icon}/${variant}/${iconName}.png`;
-
-      const rarityLabel = capitalize(rarity);
-      const genderLabel = gender ? capitalize(gender) : 'N/A';
-      const variantLabel = capitalize(variant);
-
-      const footerText = `Rarity: ${rarityLabel}  |  Gender: ${genderLabel}  |  Variant: ${variantLabel}`;
-
       const botEmbed = new EmbedBuilder()
         .setColor(CONFIG.COLORS.GREEN as ColorResolvable)
         .setAuthor({
-          name: authorText,
+          name: 'Exploring...',
           iconURL: interaction.user.displayAvatarURL(),
         })
         .setTitle(titleText)
