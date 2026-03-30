@@ -5,6 +5,7 @@ export * from './explore';
 export * from './gamble';
 export * from './give';
 export * from './help';
+export * from './inventory';
 export * from './leaderboard';
 export * from './link';
 export * from './points';

@@ -109,6 +109,14 @@ export const handleCommandInteraction = async (
     return dc.Gamble.execute(interaction, user);
   }
 
+  // command: inventory
+  else if (interaction.commandName === dc.Inventory.getName()) {
+    const user = await findOrCreateDiscordUser(interaction.user);
+    if (!user) return;
+
+    return dc.Inventory.execute(interaction, user);
+  }
+
   // command: redeem
   else if (interaction.commandName === dc.Redeem.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);

@@ -64,6 +64,9 @@ export const CONFIG = {
     HELP: {
       ENABLED: true,
     },
+    INVENTORY: {
+      ENABLED: true,
+    },
     LEADERBOARD: {
       ENABLED: true,
     },
