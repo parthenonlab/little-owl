@@ -16,6 +16,7 @@ import {
   Points,
   Profile,
   Redeem,
+  Shop,
   Sleep,
   Star,
 } from '../commands';
@@ -61,6 +62,7 @@ export const registerDiscordCommands = (): void => {
   commands.push(Points.data.toJSON());
   commands.push(Profile.data.toJSON());
   commands.push(Redeem.data.toJSON());
+  commands.push(Shop.data.toJSON());
   commands.push(Star.data.toJSON());
 
   // commands in development for testing should be added here

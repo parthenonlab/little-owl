@@ -16,9 +16,9 @@ import {
 
 import { LogCode } from '@/enums/logs';
 import { BotState } from '@/interfaces/bot';
-import { capitalize, getExploreActions, weightedRandom } from '@/lib/utils';
+import { capitalize, weightedRandom } from '@/lib/utils';
 
-import { log, reply } from '../helpers';
+import { getExploreActions, log, reply } from '../helpers';
 
 export const Explore = {
   data: new SlashCommandBuilder()
@@ -82,7 +82,7 @@ export const Explore = {
 
     try {
       const botEmbed = new EmbedBuilder()
-        .setColor(CONFIG.COLORS.GREEN as ColorResolvable)
+        .setColor(CONFIG.COLORS.BLUE as ColorResolvable)
         .setAuthor({
           name: 'Exploring...',
           iconURL: interaction.user.displayAvatarURL(),

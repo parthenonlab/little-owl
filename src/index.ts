@@ -10,6 +10,7 @@ require('dotenv').config();
 import * as de from '@/discord/events';
 import * as te from '@/twitch/events';
 
+import { DEFAULT_SHOP_STATE } from '@/constants/pokemon';
 import { registerDiscordCommands } from '@/discord/helpers';
 import { BotState } from '@/interfaces/bot';
 
@@ -25,6 +26,7 @@ const state: BotState = {
   },
   exploreList: [],
   reminderIndex: 0,
+  shop: DEFAULT_SHOP_STATE,
   timers: [],
   twitchChatQueue: 0,
 };

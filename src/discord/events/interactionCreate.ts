@@ -1,7 +1,11 @@
 import { Interaction } from 'discord.js';
-
 import { BotState } from '@/interfaces/bot';
-import { handleButtonInteraction, handleCommandInteraction } from '../helpers';
+
+import {
+  handleButtonInteraction,
+  handleCommandInteraction,
+  handleModalInteraction,
+} from '../helpers';
 
 export const onInteractionCreate = async (
   state: BotState,
@@ -9,11 +13,9 @@ export const onInteractionCreate = async (
 ) => {
   if (interaction.isChatInputCommand()) {
     await handleCommandInteraction(state, interaction);
-    return;
-  }
-
-  if (interaction.isButton()) {
+  } else if (interaction.isButton()) {
     await handleButtonInteraction(state, interaction);
-    return;
+  } else if (interaction.isModalSubmit()) {
+    await handleModalInteraction(state, interaction);
   }
 };

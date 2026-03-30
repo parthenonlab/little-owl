@@ -82,6 +82,9 @@ export const CONFIG = {
     REDEEM: {
       ENABLED: true,
     },
+    SHOP: {
+      ENABLED: true,
+    },
     SLEEP: {
       ENABLED: true,
     },
