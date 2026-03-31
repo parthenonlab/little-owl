@@ -11,6 +11,13 @@ import { UserModel } from '@/models/user';
 
 type PlatformFilter = { discord_id: string } | { twitch_id: string };
 
+/**
+ * Increment fields on a user document by platform filter.
+ *
+ * @param filter - MongoDB filter targeting a user by discord_id or twitch_id.
+ * @param values - Fields to increment and their amounts.
+ * @param label - Label used in error messages to identify the caller context.
+ */
 const incUser = async (
   filter: PlatformFilter,
   values: UserIncrementFields,
@@ -34,6 +41,13 @@ const incUser = async (
   }
 };
 
+/**
+ * Set fields on a user document by platform filter.
+ *
+ * @param filter - MongoDB filter targeting a user by discord_id or twitch_id.
+ * @param payload - Fields to set on the user document.
+ * @returns Updated user document, or null on error.
+ */
 const setUser = async (
   filter: PlatformFilter,
   payload: Partial<UserDocument>,
@@ -50,6 +64,12 @@ const setUser = async (
   }
 };
 
+/**
+ * Create a new user document.
+ *
+ * @param payload - User fields to save.
+ * @returns The created user document, or null on error.
+ */
 export const createUser = async (
   payload: Partial<UserDocument>,
 ): Promise<UserDocument | null> => {
@@ -62,6 +82,12 @@ export const createUser = async (
   }
 };
 
+/**
+ * Delete a user document by internal user ID.
+ *
+ * @param id - Internal user_id (UUID).
+ * @returns The deleted user document, or null if not found or on error.
+ */
 export const deleteUser = async (id: string): Promise<UserDocument | null> => {
   try {
     return await UserModel.findOneAndDelete({ user_id: id });
@@ -71,6 +97,12 @@ export const deleteUser = async (id: string): Promise<UserDocument | null> => {
   }
 };
 
+/**
+ * Delete a user document by Discord user ID.
+ *
+ * @param id - Discord user ID.
+ * @returns The deleted user document, or null if not found or on error.
+ */
 export const deleteUserByDiscordId = async (
   id: string,
 ): Promise<UserDocument | null> => {
@@ -82,6 +114,12 @@ export const deleteUserByDiscordId = async (
   }
 };
 
+/**
+ * Delete a user document by Twitch username.
+ *
+ * @param username - Twitch username (case-insensitive match not applied here).
+ * @returns The deleted user document, or null if not found or on error.
+ */
 export const deleteUserByTwitchUsername = async (
   username: string,
 ): Promise<UserDocument | null> => {
@@ -93,6 +131,12 @@ export const deleteUserByTwitchUsername = async (
   }
 };
 
+/**
+ * Find or create a user document for a Discord user.
+ *
+ * @param discordUser - Discord.js User object from the interaction.
+ * @returns The existing or newly created user document, or null on error.
+ */
 export const findOrCreateDiscordUser = async (
   discordUser: User,
 ): Promise<UserDocument | null> => {
@@ -117,6 +161,12 @@ export const findOrCreateDiscordUser = async (
   }
 };
 
+/**
+ * Find or create a user document for a Twitch chatter.
+ *
+ * @param userstate - TMI.js userstate object containing user-id and username.
+ * @returns The existing or newly created user document, or null on error.
+ */
 export const findOrCreateTwitchUser = async (
   userstate: ObjectProps,
 ): Promise<UserDocument | null> => {
@@ -142,6 +192,12 @@ export const findOrCreateTwitchUser = async (
   }
 };
 
+/**
+ * Find a user document by Twitch username (lowercased).
+ *
+ * @param username - Twitch username to look up.
+ * @returns The matching user document, or null if not found or on error.
+ */
 export const getTwitchUserByName = async (
   username: string,
 ): Promise<UserDocument | null> => {
@@ -155,6 +211,12 @@ export const getTwitchUserByName = async (
   }
 };
 
+/**
+ * Find a user document by internal user ID.
+ *
+ * @param id - Internal user_id (UUID).
+ * @returns The matching user document, or null if not found or on error.
+ */
 export const getUserById = async (id: string): Promise<UserDocument | null> => {
   try {
     return await UserModel.findOne({ user_id: id });
@@ -164,7 +226,13 @@ export const getUserById = async (id: string): Promise<UserDocument | null> => {
   }
 };
 
-/** Returns ranked Discord users sorted by the given field. Excludes Twitch-only accounts. */
+/**
+ * Get a ranked leaderboard of Discord users sorted by the given field. Excludes Twitch-only accounts.
+ *
+ * @param category - The user field to rank by.
+ * @param max - Maximum number of results to return.
+ * @returns Array of user documents sorted descending by the category field.
+ */
 export const getDiscordLeaderboard = async (
   category: keyof UserIncrementFields,
   max: number,
@@ -182,7 +250,12 @@ export const getDiscordLeaderboard = async (
   }
 };
 
-/** Returns the rank of a Discord user by cash value. Excludes Twitch-only accounts. */
+/**
+ * Get the rank of a Discord user by cash value. Excludes Twitch-only accounts.
+ *
+ * @param value - The user's current cash value.
+ * @returns 1-based rank position, or null on error.
+ */
 export const getDiscordUserRank = async (
   value: number,
 ): Promise<number | null> => {
@@ -198,17 +271,43 @@ export const getDiscordUserRank = async (
   }
 };
 
+/**
+ * Increment fields on a Discord user document.
+ *
+ * @param id - Discord user ID.
+ * @param values - Fields to increment and their amounts.
+ */
 export const incDiscordUser = async (id: string, values: UserIncrementFields) =>
   incUser({ discord_id: id }, values, 'Discord User');
 
+/**
+ * Increment fields on a Twitch user document.
+ *
+ * @param id - Twitch user ID.
+ * @param values - Fields to increment and their amounts.
+ */
 export const incTwitchUser = async (id: string, values: UserIncrementFields) =>
   incUser({ twitch_id: id }, values, 'Twitch User');
 
+/**
+ * Set fields on a Discord user document.
+ *
+ * @param id - Discord user ID.
+ * @param payload - Fields to set on the user document.
+ * @returns Updated user document, or null on error.
+ */
 export const setDiscordUser = async (
   id: string,
   payload: Partial<UserDocument>,
 ): Promise<UserDocument | null> => setUser({ discord_id: id }, payload);
 
+/**
+ * Set fields on a Twitch user document.
+ *
+ * @param id - Twitch user ID.
+ * @param payload - Fields to set on the user document.
+ * @returns Updated user document, or null on error.
+ */
 export const setTwitchUser = async (
   id: string,
   payload: Partial<UserDocument>,
