@@ -15,11 +15,11 @@ export const Gamble = {
       option
         .setName(COPY.GAMBLE.OPTION_NAME)
         .setDescription(COPY.GAMBLE.OPTION_DESCRIPTION)
-        .setRequired(true)
+        .setRequired(true),
     ),
   execute: async (
     interaction: ChatInputCommandInteraction,
-    user: UserDocument
+    user: UserDocument,
   ) => {
     if (!CONFIG.FEATURES.GAMBLE.ENABLED) {
       reply({
@@ -34,7 +34,6 @@ export const Gamble = {
       invalidInput: 'Enter a specific amount, "all", or "half".',
       invalidNegative: `You should gamble at least 1 ${CONFIG.CURRENCY.SINGLE}.`,
       lostAll: `You lost all of your ${CONFIG.CURRENCY.PLURAL}. ${EMOJIS.GAMBLE.LOST}`,
-      maxReached: `You can only gamble up to ${CONFIG.FEATURES.GAMBLE.LIMIT} ${CONFIG.CURRENCY.PLURAL}. ${EMOJIS.GAMBLE.INVALID}`,
       noPoints: `You have no ${CONFIG.CURRENCY.SINGLE} to gamble. ${EMOJIS.GAMBLE.INVALID}`,
       notEnough: `You don't have enough ${CONFIG.CURRENCY.PLURAL} to gamble. ${EMOJIS.GAMBLE.INVALID}`,
     };
@@ -60,18 +59,6 @@ export const Gamble = {
       return;
     }
 
-    const isOverLimit = async (amount: number) => {
-      if (amount > CONFIG.FEATURES.GAMBLE.LIMIT) {
-        reply({
-          content: replies.maxReached,
-          ephemeral: true,
-          interaction: interaction,
-        });
-        return true;
-      }
-      return false;
-    };
-
     const probability = {
       win: CONFIG.FEATURES.GAMBLE.WIN_PERCENT / 100,
       loss: 1 - CONFIG.FEATURES.GAMBLE.WIN_PERCENT / 100,
@@ -81,8 +68,6 @@ export const Gamble = {
     const result = weightedRandom(probability);
 
     if (arg === 'all') {
-      if (await isOverLimit(points)) return;
-
       if (result === 'win') {
         points += user.cash;
 
@@ -104,7 +89,6 @@ export const Gamble = {
       }
     } else if (arg === 'half') {
       const halfPoints = Math.round(user.cash / 2);
-      if (await isOverLimit(halfPoints)) return;
 
       if (result === 'win') {
         points += halfPoints;
@@ -134,8 +118,6 @@ export const Gamble = {
         interaction: interaction,
       });
     } else if (amount <= user.cash) {
-      if (await isOverLimit(amount)) return;
-
       if (result === 'win') {
         points += amount;
 
