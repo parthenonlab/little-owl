@@ -4,6 +4,7 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 
+import { FIGTREE_FONT_FACE } from '@/assets/fonts';
 import { CONFIG, COPY, MONTH_MAP } from '@/constants';
 import { LogCode } from '@/enums/logs';
 import { SilverIcon, StarIcon } from '@/icons';
@@ -44,6 +45,12 @@ export const Profile = {
 
     const userRank = (await getDiscordUserRank(user.cash)) ?? 'N/A';
 
+    const avatarURL = member.displayAvatarURL({ size: 256, extension: 'png' });
+    const avatarBase64 = await fetch(avatarURL)
+      .then(res => res.arrayBuffer())
+      .then(buf => Buffer.from(buf).toString('base64'));
+    const avatarSrc = `data:image/png;base64,${avatarBase64}`;
+
     const whiteRGB = { r: 248, g: 248, b: 255 };
     const roleColorRGB = parseHexToRGB(member.displayHexColor);
 
@@ -61,7 +68,7 @@ export const Profile = {
       <html>
       <head>
         <style>
-          @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300..600&display=swap');
+          ${FIGTREE_FONT_FACE}
           #profile {
             background: linear-gradient(180deg, #f8f8ff 0%, ${rgbString} 80%, ${
               member.displayHexColor
@@ -150,9 +157,7 @@ export const Profile = {
           } ${member.joinedAt?.getFullYear()}</p>
           <div class="content">
             <figure class="avatar">
-              <img alt="avatar" src="${member.displayAvatarURL({
-                size: 256,
-              })}" />
+              <img alt="avatar" src="${avatarSrc}" />
             </figure>
             <div class="info">
               <h1 class="name">${member.displayName}</h1>
@@ -186,11 +191,7 @@ export const Profile = {
         deviceScaleFactor: 2,
       });
 
-      await page.setContent(htmlContent);
-
-      await page.evaluate(async () => {
-        await document.fonts.ready;
-      });
+      await page.setContent(htmlContent, { waitUntil: 'load' });
 
       await page.waitForSelector('#profile');
       const element = await page.$('#profile');
@@ -198,13 +199,13 @@ export const Profile = {
       if (element) {
         const boundingBox = await element.boundingBox();
         if (boundingBox) {
-          const buffer = Buffer.from(
-            await page.screenshot({
-              clip: boundingBox,
-              type: 'png',
-              fullPage: false,
-            }),
-          );
+          const screenshot = await page.screenshot({
+            clip: boundingBox,
+            type: 'png',
+            fullPage: false,
+          });
+
+          const buffer = Buffer.from(screenshot);
 
           await page.close();
 

@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
+
+import { closeBrowser } from '@/discord/helpers';
 import { BotState } from '@/interfaces/bot';
+
 import { discord, twitch } from '../clients';
 
 /**
@@ -14,6 +17,10 @@ export const sleepTime = async (state: BotState) => {
   // stop all node-cron scheduled tasks
   state.timers.forEach(job => job.stop());
   console.log('🦉 Little Owl: Scheduled Tasks Stopped');
+
+  // close Puppeteer browser
+  await closeBrowser();
+  console.log('🦉 Little Owl: Puppeteer Browser Closed');
 
   // disconnect Discord.js client
   discord.destroy();
