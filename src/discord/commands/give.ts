@@ -6,7 +6,7 @@ import {
 
 import { CONFIG, COPY, EMOJIS } from '@/constants';
 import { UserDocument } from '@/interfaces/user';
-import { getCurrency } from '@/lib/utils';
+import { formatPriceToCode, getCurrency } from '@/lib/utils';
 import { incDiscordUser, setDiscordUser } from '@/services/user';
 
 import { reply } from '../helpers';
@@ -19,18 +19,18 @@ export const Give = {
       option
         .setName(COPY.GIVE.OPTION1_NAME)
         .setDescription(COPY.GIVE.OPTION1_DESCRIPTION)
-        .setRequired(true)
+        .setRequired(true),
     )
     .addNumberOption(option =>
       option
         .setName(COPY.GIVE.OPTION2_NAME)
         .setDescription(COPY.GIVE.OPTION2_DESCRIPTION)
-        .setRequired(true)
+        .setRequired(true),
     ),
   execute: async (
     interaction: ChatInputCommandInteraction,
     user: UserDocument,
-    recipient: User
+    recipient: User,
   ) => {
     if (!CONFIG.FEATURES.GIVE.ENABLED) {
       reply({
@@ -48,8 +48,8 @@ export const Give = {
       invalidRecipient: `You can't give yourself ${CONFIG.CURRENCY.PLURAL}. ${EMOJIS.GIVE.INVALID}`,
       noPoints: `Sorry, you have no ${CONFIG.CURRENCY.SINGLE} to give. ${EMOJIS.GIVE.INVALID}`,
       notEnough: `Sorry, you don't have enough ${CONFIG.CURRENCY.PLURAL} to give. ${EMOJIS.GIVE.INVALID}`,
-      success: `You gave ${recipient.displayName} ${amount} ${getCurrency(
-        amount
+      success: `You gave ${recipient.displayName} ${formatPriceToCode(amount)} ${getCurrency(
+        amount,
       )}.`,
     };
 
@@ -95,7 +95,7 @@ export const Give = {
     });
 
     reply({
-      content: `${replies.success} Your new balance: ${user.cash} ${EMOJIS.CURRENCY}`,
+      content: `${replies.success} Your new balance: ${formatPriceToCode(user.cash)} ${EMOJIS.CURRENCY}`,
       ephemeral: false,
       interaction: interaction,
     });

@@ -2,6 +2,7 @@ import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 
 import { CONFIG, COPY, EMOJIS } from '@/constants';
 import { UserDocument } from '@/interfaces/user';
+import { formatPriceToCode } from '@/lib/utils';
 
 import { reply } from '../helpers';
 
@@ -23,7 +24,7 @@ export const Points = {
     }
 
     reply({
-      content: `Your current balance is: ${user.cash} ${EMOJIS.CURRENCY}`,
+      content: `Your current balance is: ${formatPriceToCode(user.cash)} ${EMOJIS.CURRENCY}`,
       ephemeral: false,
       interaction: interaction,
     });
