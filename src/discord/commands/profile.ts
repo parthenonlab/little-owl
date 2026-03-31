@@ -9,7 +9,7 @@ import { LogCode } from '@/enums/logs';
 import { SilverIcon, StarIcon } from '@/icons';
 
 import { UserDocument } from '@/interfaces/user';
-import { parseHexToRGB } from '@/lib/utils';
+import { formatPriceToString, parseHexToRGB } from '@/lib/utils';
 import { getDiscordUserRank, setDiscordUser } from '@/services/user';
 
 import { log, reply, useBrowser } from '../helpers';
@@ -20,7 +20,7 @@ export const Profile = {
     .setDescription(COPY.PROFILE.DESCRIPTION),
   execute: async (
     interaction: ChatInputCommandInteraction,
-    user: UserDocument
+    user: UserDocument,
   ) => {
     if (!CONFIG.FEATURES.PROFILE.ENABLED) {
       reply({
@@ -64,8 +64,8 @@ export const Profile = {
           @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300..600&display=swap');
           #profile {
             background: linear-gradient(180deg, #f8f8ff 0%, ${rgbString} 80%, ${
-      member.displayHexColor
-    } 100%);
+              member.displayHexColor
+            } 100%);
             font-family: 'Figtree', sans-serif;
             padding: 12px 17px;
             position: relative;
@@ -161,7 +161,7 @@ export const Profile = {
                 <div class="balance">
                   <p class="cash">
                     ${SilverIcon(20, 20)}
-                    <span>${user.cash}</span>
+                    <span>${formatPriceToString(user.cash)}</span>
                   </p>
                 </div>
                 <div class="stars">
@@ -203,7 +203,7 @@ export const Profile = {
               clip: boundingBox,
               type: 'png',
               fullPage: false,
-            })
+            }),
           );
 
           await page.close();
