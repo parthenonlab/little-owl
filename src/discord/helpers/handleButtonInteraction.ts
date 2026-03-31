@@ -19,20 +19,20 @@ export const handleButtonInteraction = async (
   // command: explore
   if (command === dc.Explore.getName()) {
     if (option === 'run') return dc.Explore.onRunClick(state, interaction);
+
+    const pokeball = POKEBALLS.find(ball => ball.type === option)!;
+    return dc.Explore.onUseClick(state, interaction, pokeball);
   }
 
   // command: shop
-  if (command === dc.Shop.getName()) {
+  else if (command === dc.Shop.getName()) {
     const pokeball = POKEBALLS.find(ball => ball.type === option);
-
-    return dc.Shop.onBuyClick(state, interaction, pokeball ?? POKEBALLS[0]);
+    return dc.Shop.onBuyClick(state, interaction, pokeball!);
   }
 
   // command: inventory
-  if (command === dc.Inventory.getName()) {
+  else if (command === dc.Inventory.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);
-    if (!user) return;
-
-    return dc.Inventory.onUpgradeClick(interaction, user);
+    if (user) dc.Inventory.onUpgradeClick(interaction, user);
   }
 };
