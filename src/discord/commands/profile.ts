@@ -10,7 +10,7 @@ import { SilverIcon, StarIcon } from '@/icons';
 
 import { UserDocument } from '@/interfaces/user';
 import { parseHexToRGB } from '@/lib/utils';
-import { getUserRank, setDiscordUser } from '@/services/user';
+import { getDiscordUserRank, setDiscordUser } from '@/services/user';
 
 import { log, reply, useBrowser } from '../helpers';
 
@@ -42,7 +42,7 @@ export const Profile = {
       return;
     }
 
-    const userRank = (await getUserRank(user.cash)) ?? 'N/A';
+    const userRank = (await getDiscordUserRank(user.cash)) ?? 'N/A';
 
     const whiteRGB = { r: 248, g: 248, b: 255 };
     const roleColorRGB = parseHexToRGB(member.displayHexColor);

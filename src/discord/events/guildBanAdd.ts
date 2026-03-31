@@ -5,7 +5,7 @@ import { getENV } from '@/lib/config';
 
 import { deleteActivity } from '@/services/activities';
 import { deleteStats } from '@/services/stat';
-import { deleteUser } from '@/services/user';
+import { deleteUserByDiscordId } from '@/services/user';
 
 import { log } from '../helpers/log';
 
@@ -39,7 +39,7 @@ export const onGuildBanAdd = async (guildBan: GuildBan) => {
     footer: `Discord User ID: ${user.id} | Display Name: ${user.displayName}`,
   });
 
-  await deleteUser(user.id);
+  await deleteUserByDiscordId(user.id);
 
   log({
     type: LogCode.Deleted,

@@ -59,7 +59,7 @@ export const updateBalls = async (
     const inventory = await InventoryModel.findOneAndUpdate(
       { discord_id: discordId },
       { $set: updatedBallValues },
-      { new: true },
+      { returnDocument: 'after' },
     );
 
     return inventory;
@@ -86,7 +86,7 @@ export const updateCapacity = async (
     const inventory = await InventoryModel.findOneAndUpdate(
       { discord_id: discordId },
       { $inc: { capacity: 1 } },
-      { new: true },
+      { returnDocument: 'after' },
     );
 
     return inventory;
