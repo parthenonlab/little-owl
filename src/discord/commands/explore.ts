@@ -30,6 +30,7 @@ import {
 } from '@/interfaces/pokemon';
 
 import { capitalize, weightedRandom } from '@/lib/utils';
+import { saveCatch } from '@/services/catch';
 import { getInventory, updateBalls } from '@/services/inventory';
 
 import { getActiveSpawn, getExploreActions, log, reply } from '../helpers';
@@ -251,6 +252,15 @@ export const Explore = {
 
       await interaction.deferUpdate();
       await interaction.editReply({ embeds: [embed], components: [] });
+
+      await saveCatch({
+        discord_id: interaction.user.id,
+        pokemon_id: payload.id,
+        gender: payload.gender,
+        variant: 'normal',
+        shiny: payload.shiny,
+        ball_used: pokeball.type,
+      });
 
       return;
     }
