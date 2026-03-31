@@ -4,6 +4,9 @@ import { CONFIG, DAY_MAP, EMOJIS } from '@/constants';
 import { discord } from '@/lib/clients';
 import { getENV } from '@/lib/config';
 
+/**
+ * Send a daily greeting message to the general channel, including any scheduled events for today.
+ */
 export const sendServerGreeting = async () => {
   const { SERVER_ID } = getENV();
 

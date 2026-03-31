@@ -6,6 +6,12 @@ import { findOrCreateDiscordUser } from '@/services/user';
 
 import * as dc from '../commands';
 
+/**
+ * Route a button interaction to the appropriate command handler.
+ *
+ * @param state - The current bot state.
+ * @param interaction - The button interaction to handle.
+ */
 export const handleButtonInteraction = async (
   state: BotState,
   interaction: ButtonInteraction,

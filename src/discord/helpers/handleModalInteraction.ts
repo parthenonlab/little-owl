@@ -6,6 +6,12 @@ import { findOrCreateDiscordUser } from '@/services/user';
 
 import * as dc from '../commands';
 
+/**
+ * Route a modal submit interaction to the appropriate command handler.
+ *
+ * @param state - The current bot state.
+ * @param interaction - The modal submit interaction to handle.
+ */
 export const handleModalInteraction = async (
   state: BotState,
   interaction: ModalSubmitInteraction,

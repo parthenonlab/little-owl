@@ -34,14 +34,6 @@ import { getInventory, updateBalls } from '@/services/inventory';
 
 import { getActiveSpawn, getExploreActions, log, reply } from '../helpers';
 
-/**
- * Creates a base embed for explore interactions.
- *
- * @param title - The embed title
- * @param authorIcon - URL of the user's avatar
- * @param pokemonIcon - URL of the Pokemon icon
- * @returns A base {@link EmbedBuilder} for further customization
- */
 const renderEmbedHeader = (
   title: string,
   authorIcon: string,
@@ -57,19 +49,10 @@ const renderEmbedHeader = (
     .setThumbnail(pokemonIcon);
 };
 
-/**
- * `/explore` command — spawns a random wild Pokemon encounter for the user.
- */
 export const Explore = {
   data: new SlashCommandBuilder()
     .setName(COPY.EXPLORE.NAME)
     .setDescription(COPY.EXPLORE.DESCRIPTION),
-  /**
-   * Spawns a wild Pokemon for the user and posts an embed with catch/run buttons.
-   *
-   * @param state - Global bot state
-   * @param interaction - The incoming slash command interaction
-   */
   execute: async (
     state: BotState,
     interaction: ChatInputCommandInteraction,
@@ -173,20 +156,9 @@ export const Explore = {
       });
     }
   },
-  /**
-   * @returns The slash command name
-   */
   getName: (): string => {
     return COPY.EXPLORE.NAME;
   },
-  /**
-   * Handles a Use button click. Rolls against the Pokemon's catch rate and
-   * either confirms the catch or decrements the attempt counter.
-   *
-   * @param state - Global bot state
-   * @param interaction - The button interaction
-   * @param pokeball - The pokeball the user selected
-   */
   onUseClick: async (
     state: BotState,
     interaction: ButtonInteraction,
@@ -305,12 +277,6 @@ export const Explore = {
     await interaction.deferUpdate();
     await interaction.editReply({ embeds: [embed], components: [row] });
   },
-  /**
-   * Handles a Run button click. Ends the encounter and updates the embed.
-   *
-   * @param state - Global bot state
-   * @param interaction - The button interaction
-   */
   onRunClick: async (state: BotState, interaction: ButtonInteraction) => {
     const payload = state.exploreList.get(interaction.user.id);
 

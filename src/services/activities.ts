@@ -3,6 +3,12 @@ import { LogCode } from '@/enums/logs';
 import { ActivityDocument, StarActivity } from '@/interfaces/activities';
 import { ActivityModel } from '@/models/activities';
 
+/**
+ * Delete the activity document for a Discord user.
+ *
+ * @param id - Discord user ID.
+ * @returns The deleted activity document, or null if not found or on error.
+ */
 export const deleteActivity = async (
   id: string
 ): Promise<ActivityDocument | null> => {
@@ -18,6 +24,12 @@ export const deleteActivity = async (
   }
 };
 
+/**
+ * Find or create the star activity record for a Discord user.
+ *
+ * @param id - Discord user ID.
+ * @returns The user's star activity data, or null on error.
+ */
 export const findOrCreateStarActivity = async (
   id: string
 ): Promise<StarActivity | null> => {
@@ -58,6 +70,12 @@ export const findOrCreateStarActivity = async (
   }
 };
 
+/**
+ * Increment the star total and update the last given date for a Discord user.
+ *
+ * @param id - Discord user ID.
+ * @returns The updated activity document, or null on error.
+ */
 export const updateStarActivity = async (
   id: string
 ): Promise<ActivityDocument | null> => {

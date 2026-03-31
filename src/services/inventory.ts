@@ -73,11 +73,10 @@ export const updateBalls = async (
 };
 
 /**
- * Update a user's inventory capacity.
+ * Increment a user's inventory capacity by 1.
  *
- * @param discordId - Discord user id that owns the inventory.
- * @param newCapacity - New inventory capacity value (non-negative).
- * @returns Updated inventory document, created with defaults if needed, or undefined on error.
+ * @param discordId - Discord user ID that owns the inventory.
+ * @returns Updated inventory document or undefined on error.
  */
 export const updateCapacity = async (
   discordId: string,

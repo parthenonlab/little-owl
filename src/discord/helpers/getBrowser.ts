@@ -1,5 +1,11 @@
 import puppeteer, { Browser } from 'puppeteer';
 
+/**
+ * Launch a Puppeteer browser, run a task, then close the browser.
+ *
+ * @param task - Async function that receives the browser instance and returns a result.
+ * @returns The result of the task.
+ */
 export async function useBrowser<T>(task: (browser: Browser) => Promise<T>) {
   const browser = await puppeteer.launch({
     executablePath: process.env.STAGING

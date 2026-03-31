@@ -1,5 +1,10 @@
 import mongoose from 'mongoose';
 
+/**
+ * Connect to MongoDB using environment variables.
+ * Selects the test database when STAGING is set, otherwise production.
+ * Exits the process on missing config or connection failure.
+ */
 export const connectDatabase = async () => {
   const mongodbURL = process.env.MONGODB_URL;
   const databaseName = process.env.STAGING

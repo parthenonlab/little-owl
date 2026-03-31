@@ -10,6 +10,12 @@ import { findOrCreateDiscordUser } from '@/services/user';
 import * as dc from '../commands';
 import { reply } from './reply';
 
+/**
+ * Route a slash command interaction to the appropriate command handler.
+ *
+ * @param state - The current bot state.
+ * @param interaction - The slash command interaction to handle.
+ */
 export const handleCommandInteraction = async (
   state: BotState,
   interaction: ChatInputCommandInteraction,

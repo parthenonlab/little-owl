@@ -20,6 +20,11 @@ import {
   Star,
 } from '../commands';
 
+/**
+ * Register all Discord slash commands via the REST API.
+ * Registers production commands to the main guild, stage commands to the admin guild,
+ * and global commands application-wide.
+ */
 export const registerDiscordCommands = (): void => {
   if (!process.env.DISCORD_TOKEN) {
     console.error('🦉 Error: Discord Register Command Missing Token.');

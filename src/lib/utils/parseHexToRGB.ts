@@ -1,3 +1,10 @@
+/**
+ * Parses a hex color string into its RGB components.
+ * Supports both shorthand (#ABC) and full (#AABBCC) formats, with or without the #.
+ *
+ * @param hex - The hex color string to parse.
+ * @returns An object with r, g, b values, or null if the input is invalid.
+ */
 export const parseHexToRGB = (
   hex: string
 ): { r: number; g: number; b: number } | null => {

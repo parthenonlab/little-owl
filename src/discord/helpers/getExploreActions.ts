@@ -4,6 +4,12 @@ import { POKEBALLS } from '@/constants/pokemon';
 import { PokeballObject } from '@/interfaces/pokemon';
 import { getInventory } from '@/services/inventory';
 
+/**
+ * Build an action row of pokeball buttons for an active Pokemon encounter.
+ *
+ * @param userId - Discord user ID used to scope button custom IDs.
+ * @returns An action row containing use buttons for available balls and a run button.
+ */
 export const getExploreActions = async (userId: string) => {
   const row = new ActionRowBuilder<ButtonBuilder>();
   const inventory = await getInventory(userId);
