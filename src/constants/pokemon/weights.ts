@@ -8,11 +8,11 @@ export const POKEMON_RARITY_WEIGHTS: Record<string, number> = {
 };
 
 export const POKEMON_SHINY_WEIGHTS: Record<string, number> = {
-  normal: 0.999755859375,
-  shiny: 0.000244140625, // 1 in 4096 chance
+  normal: 0.9990234375,
+  shiny: 0.0009765625, // 1 in 1024 chance
 };
 
 export const POKEMON_SHINY_CHARM_WEIGHTS: Record<string, number> = {
-  normal: 0.999267399267399,
-  shiny: 0.000732600732601, // 1 in 1365 chance
+  normal: 0.998046875,
+  shiny: 0.001953125, // 1 in 512 chance
 };

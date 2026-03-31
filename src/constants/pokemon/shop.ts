@@ -25,14 +25,14 @@ export const POKEBALLS: PokeballObject[] = [
     emoji: EMOJIS.POKEMON.GREATBALL,
     label: 'Great Balls',
     price: 400,
-    multiplier: 1.5,
+    multiplier: 1.8,
   },
   {
     type: 'ultraball',
     emoji: EMOJIS.POKEMON.ULTRABALL,
     label: 'Ultra Balls',
     price: 800,
-    multiplier: 2,
+    multiplier: 2.5,
   },
   {
     type: 'masterball',

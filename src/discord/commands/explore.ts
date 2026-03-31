@@ -124,7 +124,7 @@ export const Explore = {
     const pokemonIcon = `${POKEMON_IMAGE_URLS.pokemondb}/${variant}/${iconName}.png`;
 
     const rarityLabel = capitalize(rarity);
-    const genderLabel = gender ? capitalize(gender) : 'n/a';
+    const genderLabel = gender ? capitalize(gender) : 'N/A';
     const variantLabel = capitalize(variant);
 
     const payload: PokemonExplorePayload = {
@@ -221,8 +221,9 @@ export const Explore = {
       Math.random() < (payload.catchRate / 255) * pokeball.multiplier;
 
     const rarityLabel = capitalize(payload.rarity);
-    const genderLabel = payload.gender ? capitalize(payload.gender) : 'n/a';
     const variantLabel = capitalize(payload.variant);
+
+    const genderLabel = payload.gender ? capitalize(payload.gender) : 'N/A';
 
     const pokemonTypes = payload.types
       .map(type => POKEMON_TYPE_EMOJIS[type.toLowerCase() as PokemonType])
