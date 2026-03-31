@@ -58,7 +58,6 @@ export const CONFIG = {
     },
     GAMBLE: {
       ENABLED: true,
-      LIMIT: 10000,
       WIN_PERCENT: 40,
     },
     GIVE: {
