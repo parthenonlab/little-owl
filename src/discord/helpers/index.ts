@@ -1,3 +1,4 @@
+export * from './getActiveSpawn';
 export * from './getBrowser';
 export * from './getExploreActions';
 export * from './getInventorySpace';

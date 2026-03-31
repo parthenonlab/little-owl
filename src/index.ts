@@ -12,7 +12,9 @@ import * as te from '@/twitch/events';
 
 import { DEFAULT_SHOP_STATE } from '@/constants/pokemon';
 import { registerDiscordCommands } from '@/discord/helpers';
+
 import { BotState } from '@/interfaces/bot';
+import { PokemonExplorePayload } from '@/interfaces/pokemon';
 
 import { discord, twitch } from '@/lib/clients';
 import { connectDatabase, sleepTime } from '@/lib/config';
@@ -24,7 +26,7 @@ const state: BotState = {
   cooldowns: {
     stream: new Date(),
   },
-  exploreList: [],
+  exploreList: new Map<string, PokemonExplorePayload>(),
   reminderIndex: 0,
   shop: DEFAULT_SHOP_STATE,
   timers: [],

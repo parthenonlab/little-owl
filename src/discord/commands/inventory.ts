@@ -13,9 +13,12 @@ import {
 import { CONFIG, COPY } from '@/constants';
 import { POKEBALLS, POKEMON_IMAGE_URLS } from '@/constants/pokemon';
 import { LogCode } from '@/enums/logs';
+
 import { InventoryDocument } from '@/interfaces/inventory';
+import { PokeballObject } from '@/interfaces/pokemon';
 import { UserDocument } from '@/interfaces/user';
 
+import { formatPrice } from '@/lib/utils';
 import { getInventory, updateCapacity } from '@/services/inventory';
 import { setDiscordUser } from '@/services/user';
 
@@ -26,23 +29,10 @@ const renderInventory = async (
   inventory: InventoryDocument,
   avatarUrl: string,
 ) => {
-  const nextUpgrade = getUpgradePrice(inventory.capacity);
-
-  let row = null;
-
-  if (nextUpgrade > 0) {
-    row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-      new ButtonBuilder()
-        .setCustomId(`${user.discord_id}:inventory`)
-        .setLabel(`Upgrade (+1 Slot) - Cost: ${nextUpgrade}`)
-        .setStyle(ButtonStyle.Primary),
-    );
-  }
-
   const inventoryIcon = `${POKEMON_IMAGE_URLS.base}/inventory/backpack.png`;
 
   const balls = inventory.balls;
-  const ballLines = POKEBALLS.map(ball => {
+  const ballLines = POKEBALLS.map((ball: PokeballObject) => {
     return {
       ...ball,
       count: balls[ball.type],
@@ -55,7 +45,7 @@ const renderInventory = async (
   const capacityLine = `Total Capacity: \`${inventory.capacity}\` • Available Slots: \`${inventory.capacity - getTotalBalls(inventory.balls)}\``;
 
   const botEmbed = new EmbedBuilder()
-    .setColor(CONFIG.COLORS.BLUE as ColorResolvable)
+    .setColor(CONFIG.COLORS.POKEMON.RED as ColorResolvable)
     .setAuthor({
       name: 'Inventory',
       iconURL: avatarUrl,
@@ -65,11 +55,11 @@ const renderInventory = async (
     )
     .setThumbnail(inventoryIcon)
     .setFooter({
-      text: `CASH BALANCE: ${user.cash}`,
+      text: `CASH BALANCE: ${formatPrice(user.cash)}`,
       iconURL: POKEMON_IMAGE_URLS.base + '/currency/silver.png',
     });
 
-  return { botEmbed, row };
+  return botEmbed;
 };
 
 export const Inventory = {
@@ -100,7 +90,20 @@ export const Inventory = {
       return;
     }
 
-    const { botEmbed, row } = await renderInventory(
+    const nextUpgrade = getUpgradePrice(inventory.capacity);
+
+    let row = null;
+
+    if (nextUpgrade > 0) {
+      row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder()
+          .setCustomId(`${user.discord_id}:inventory`)
+          .setLabel(`Upgrade (+1 Slot) - Cost: ${formatPrice(nextUpgrade)}`)
+          .setStyle(ButtonStyle.Success),
+      );
+    }
+
+    const embed = await renderInventory(
       user,
       inventory,
       interaction.user.displayAvatarURL(),
@@ -108,7 +111,7 @@ export const Inventory = {
 
     try {
       await interaction.reply({
-        embeds: [botEmbed],
+        embeds: [embed],
         components: row ? [row] : [],
       });
     } catch (error) {
@@ -160,7 +163,7 @@ export const Inventory = {
     }
 
     try {
-      const { botEmbed } = await renderInventory(
+      const embed = await renderInventory(
         updatedUser,
         updatedInventory,
         interaction.user.displayAvatarURL(),
@@ -169,7 +172,7 @@ export const Inventory = {
       await interaction.deferUpdate();
 
       await interaction.editReply({
-        embeds: [botEmbed],
+        embeds: [embed],
         components: [],
       });
     } catch (error) {

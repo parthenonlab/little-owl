@@ -35,6 +35,9 @@ export const CONFIG = {
     PURPLE: '#9B59B6',
     RED: '#E91E63',
     YELLOW: '#F1C40F',
+    POKEMON: {
+      RED: '#ED533A',
+    },
   },
   CURRENCY: {
     PLURAL: 'silver coins',

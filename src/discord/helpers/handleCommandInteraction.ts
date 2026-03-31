@@ -27,17 +27,13 @@ export const handleCommandInteraction = async (
   // command: link
   if (interaction.commandName === dc.AccountLink.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);
-    if (!user) return;
-
-    return dc.AccountLink.execute(interaction, user);
+    if (user) dc.AccountLink.execute(interaction, user);
   }
 
   // command: unlink
   else if (interaction.commandName === dc.AccountUnlink.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);
-    if (!user) return;
-
-    return dc.AccountUnlink.execute(interaction, user);
+    if (user) dc.AccountUnlink.execute(interaction, user);
   }
 
   // command: help
@@ -82,9 +78,7 @@ export const handleCommandInteraction = async (
   // command: points
   if (interaction.commandName === dc.Points.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);
-    if (!user) return;
-
-    return dc.Points.execute(interaction, user);
+    if (user) dc.Points.execute(interaction, user);
   }
 
   // command: explore
@@ -104,41 +98,31 @@ export const handleCommandInteraction = async (
     }
 
     const user = await findOrCreateDiscordUser(interaction.user);
-    if (!user) return;
-
-    return dc.Gamble.execute(interaction, user);
+    if (user) dc.Gamble.execute(interaction, user);
   }
 
   // command: inventory
   else if (interaction.commandName === dc.Inventory.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);
-    if (!user) return;
-
-    return dc.Inventory.execute(interaction, user);
+    if (user) dc.Inventory.execute(interaction, user);
   }
 
   // command: shop
   else if (interaction.commandName === dc.Shop.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);
-    if (!user) return;
-
-    return dc.Shop.execute(state, interaction, user);
+    if (user) dc.Shop.execute(state, interaction, user);
   }
 
   // command: redeem
   else if (interaction.commandName === dc.Redeem.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);
-    if (!user) return;
-
-    return dc.Redeem.execute(interaction, user);
+    if (user) dc.Redeem.execute(interaction, user);
   }
 
   // command: profile
   else if (interaction.commandName === dc.Profile.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);
-    if (!user) return;
-
-    return dc.Profile.execute(interaction, user);
+    if (user) dc.Profile.execute(interaction, user);
   }
 
   // command: leaderboard

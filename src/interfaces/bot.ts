@@ -2,6 +2,8 @@ import { CommandInteraction } from 'discord.js';
 import { ScheduledTask } from 'node-cron';
 
 import { LogCode } from '@/enums/logs';
+
+import { PokemonExplorePayload } from './pokemon';
 import { ShopState } from './shop';
 
 export interface BotState {
@@ -9,7 +11,7 @@ export interface BotState {
   cooldowns: {
     stream: Date;
   };
-  exploreList: string[];
+  exploreList: Map<string, PokemonExplorePayload>;
   reminderIndex: number;
   shop: ShopState;
   timers: ScheduledTask[];
