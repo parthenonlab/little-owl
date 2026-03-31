@@ -26,7 +26,6 @@ import {
   PokeballObject,
   PokemonExplorePayload,
   PokemonRarity,
-  PokemonType,
 } from '@/interfaces/pokemon';
 
 import { capitalize, weightedRandom } from '@/lib/utils';
@@ -227,7 +226,7 @@ export const Explore = {
     const genderLabel = payload.gender ? capitalize(payload.gender) : 'N/A';
 
     const pokemonTypes = payload.types
-      .map(type => POKEMON_TYPE_EMOJIS[type.toLowerCase() as PokemonType])
+      .map(type => POKEMON_TYPE_EMOJIS[type])
       .join(' ');
 
     if (caught) {

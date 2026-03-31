@@ -42,7 +42,7 @@ export interface PokemonObject {
   id: number;
   name: string;
   slug: string;
-  types: string[];
+  types: PokemonType[];
   rarity: PokemonRarity;
   catchRate: number;
   genderRatio: {
@@ -51,7 +51,7 @@ export interface PokemonObject {
   } | null;
   hasFemaleImage: boolean;
   activeSpawn: ActiveSpawn;
-  variants: string[];
+  variants?: string[];
 }
 
 export interface PokemonExplorePayload {
@@ -60,7 +60,7 @@ export interface PokemonExplorePayload {
   rarity: PokemonRarity;
   catchRate: number;
   attempts: number;
-  types: string[];
+  types: PokemonType[];
   gender: string | null;
   variant: string;
   shiny: boolean;

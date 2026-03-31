@@ -5,7 +5,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 1,
     name: 'Bulbasaur',
     slug: 'bulbasaur',
-    types: ['Grass', 'Poison'],
+    types: ['grass', 'poison'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -20,7 +20,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 2,
     name: 'Ivysaur',
     slug: 'ivysaur',
-    types: ['Grass', 'Poison'],
+    types: ['grass', 'poison'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -35,7 +35,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 3,
     name: 'Venusaur',
     slug: 'venusaur',
-    types: ['Grass', 'Poison'],
+    types: ['grass', 'poison'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -50,7 +50,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 4,
     name: 'Charmander',
     slug: 'charmander',
-    types: ['Fire'],
+    types: ['fire'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -65,7 +65,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 5,
     name: 'Charmeleon',
     slug: 'charmeleon',
-    types: ['Fire'],
+    types: ['fire'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -80,7 +80,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 6,
     name: 'Charizard',
     slug: 'charizard',
-    types: ['Fire', 'Flying'],
+    types: ['fire', 'flying'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -95,7 +95,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 7,
     name: 'Squirtle',
     slug: 'squirtle',
-    types: ['Water'],
+    types: ['water'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -110,7 +110,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 8,
     name: 'Wartortle',
     slug: 'wartortle',
-    types: ['Water'],
+    types: ['water'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -125,7 +125,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 9,
     name: 'Blastoise',
     slug: 'blastoise',
-    types: ['Water'],
+    types: ['water'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -140,7 +140,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 10,
     name: 'Caterpie',
     slug: 'caterpie',
-    types: ['Bug'],
+    types: ['bug'],
     rarity: 'common',
     catchRate: 255,
     genderRatio: {
@@ -155,7 +155,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 11,
     name: 'Metapod',
     slug: 'metapod',
-    types: ['Bug'],
+    types: ['bug'],
     rarity: 'uncommon',
     catchRate: 120,
     genderRatio: {
@@ -170,7 +170,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 12,
     name: 'Butterfree',
     slug: 'butterfree',
-    types: ['Bug', 'Flying'],
+    types: ['bug', 'flying'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -185,7 +185,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 13,
     name: 'Weedle',
     slug: 'weedle',
-    types: ['Bug', 'Poison'],
+    types: ['bug', 'poison'],
     rarity: 'common',
     catchRate: 255,
     genderRatio: {
@@ -200,7 +200,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 14,
     name: 'Kakuna',
     slug: 'kakuna',
-    types: ['Bug', 'Poison'],
+    types: ['bug', 'poison'],
     rarity: 'uncommon',
     catchRate: 120,
     genderRatio: {
@@ -215,7 +215,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 15,
     name: 'Beedrill',
     slug: 'beedrill',
-    types: ['Bug', 'Poison'],
+    types: ['bug', 'poison'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -230,7 +230,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 16,
     name: 'Pidgey',
     slug: 'pidgey',
-    types: ['Normal', 'Flying'],
+    types: ['normal', 'flying'],
     rarity: 'common',
     catchRate: 255,
     genderRatio: {
@@ -245,7 +245,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 17,
     name: 'Pidgeotto',
     slug: 'pidgeotto',
-    types: ['Normal', 'Flying'],
+    types: ['normal', 'flying'],
     rarity: 'uncommon',
     catchRate: 120,
     genderRatio: {
@@ -260,7 +260,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 18,
     name: 'Pidgeot',
     slug: 'pidgeot',
-    types: ['Normal', 'Flying'],
+    types: ['normal', 'flying'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -275,7 +275,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 19,
     name: 'Rattata',
     slug: 'rattata',
-    types: ['Normal'],
+    types: ['normal'],
     rarity: 'common',
     catchRate: 255,
     genderRatio: {
@@ -290,7 +290,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 20,
     name: 'Raticate',
     slug: 'raticate',
-    types: ['Normal'],
+    types: ['normal'],
     rarity: 'uncommon',
     catchRate: 127,
     genderRatio: {
@@ -305,7 +305,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 21,
     name: 'Spearow',
     slug: 'spearow',
-    types: ['Normal', 'Flying'],
+    types: ['normal', 'flying'],
     rarity: 'common',
     catchRate: 255,
     genderRatio: {
@@ -320,7 +320,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 22,
     name: 'Fearow',
     slug: 'fearow',
-    types: ['Normal', 'Flying'],
+    types: ['normal', 'flying'],
     rarity: 'rare',
     catchRate: 90,
     genderRatio: {
@@ -335,7 +335,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 23,
     name: 'Ekans',
     slug: 'ekans',
-    types: ['Poison'],
+    types: ['poison'],
     rarity: 'common',
     catchRate: 255,
     genderRatio: {
@@ -350,7 +350,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 24,
     name: 'Arbok',
     slug: 'arbok',
-    types: ['Poison'],
+    types: ['poison'],
     rarity: 'rare',
     catchRate: 90,
     genderRatio: {
@@ -365,7 +365,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 25,
     name: 'Pikachu',
     slug: 'pikachu',
-    types: ['Electric'],
+    types: ['electric'],
     rarity: 'common',
     catchRate: 190,
     genderRatio: {
@@ -380,7 +380,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 26,
     name: 'Raichu',
     slug: 'raichu',
-    types: ['Electric'],
+    types: ['electric'],
     rarity: 'rare',
     catchRate: 75,
     genderRatio: {
@@ -395,7 +395,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 27,
     name: 'Sandshrew',
     slug: 'sandshrew',
-    types: ['Ground'],
+    types: ['ground'],
     rarity: 'common',
     catchRate: 255,
     genderRatio: {
@@ -410,7 +410,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 28,
     name: 'Sandslash',
     slug: 'sandslash',
-    types: ['Ground'],
+    types: ['ground'],
     rarity: 'rare',
     catchRate: 90,
     genderRatio: {
@@ -425,7 +425,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 29,
     name: 'Nidoran ♀',
     slug: 'nidoran-f',
-    types: ['Poison'],
+    types: ['poison'],
     rarity: 'common',
     catchRate: 235,
     genderRatio: {
@@ -440,7 +440,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 30,
     name: 'Nidorina',
     slug: 'nidorina',
-    types: ['Poison'],
+    types: ['poison'],
     rarity: 'uncommon',
     catchRate: 120,
     genderRatio: {
@@ -455,7 +455,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 31,
     name: 'Nidoqueen',
     slug: 'nidoqueen',
-    types: ['Poison', 'Ground'],
+    types: ['poison', 'ground'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -470,7 +470,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 32,
     name: 'Nidoran ♂',
     slug: 'nidoran-m',
-    types: ['Poison'],
+    types: ['poison'],
     rarity: 'common',
     catchRate: 235,
     genderRatio: {
@@ -485,7 +485,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 33,
     name: 'Nidorino',
     slug: 'nidorino',
-    types: ['Poison'],
+    types: ['poison'],
     rarity: 'uncommon',
     catchRate: 120,
     genderRatio: {
@@ -500,7 +500,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 34,
     name: 'Nidoking',
     slug: 'nidoking',
-    types: ['Poison', 'Ground'],
+    types: ['poison', 'ground'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -515,7 +515,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 35,
     name: 'Clefairy',
     slug: 'clefairy',
-    types: ['Fairy'],
+    types: ['fairy'],
     rarity: 'uncommon',
     catchRate: 150,
     genderRatio: {
@@ -530,7 +530,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 36,
     name: 'Clefable',
     slug: 'clefable',
-    types: ['Fairy'],
+    types: ['fairy'],
     rarity: 'very rare',
     catchRate: 25,
     genderRatio: {
@@ -545,7 +545,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 37,
     name: 'Vulpix',
     slug: 'vulpix',
-    types: ['Fire'],
+    types: ['fire'],
     rarity: 'common',
     catchRate: 190,
     genderRatio: {
@@ -560,7 +560,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 38,
     name: 'Ninetales',
     slug: 'ninetales',
-    types: ['Fire'],
+    types: ['fire'],
     rarity: 'rare',
     catchRate: 75,
     genderRatio: {
@@ -575,7 +575,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 39,
     name: 'Jigglypuff',
     slug: 'jigglypuff',
-    types: ['Normal', 'Fairy'],
+    types: ['normal', 'fairy'],
     rarity: 'uncommon',
     catchRate: 170,
     genderRatio: {
@@ -590,7 +590,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 40,
     name: 'Wigglytuff',
     slug: 'wigglytuff',
-    types: ['Normal', 'Fairy'],
+    types: ['normal', 'fairy'],
     rarity: 'rare',
     catchRate: 50,
     genderRatio: {
@@ -605,7 +605,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 41,
     name: 'Zubat',
     slug: 'zubat',
-    types: ['Poison', 'Flying'],
+    types: ['poison', 'flying'],
     rarity: 'common',
     catchRate: 255,
     genderRatio: {
@@ -620,7 +620,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 42,
     name: 'Golbat',
     slug: 'golbat',
-    types: ['Poison', 'Flying'],
+    types: ['poison', 'flying'],
     rarity: 'rare',
     catchRate: 90,
     genderRatio: {
@@ -635,7 +635,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 43,
     name: 'Oddish',
     slug: 'oddish',
-    types: ['Grass', 'Poison'],
+    types: ['grass', 'poison'],
     rarity: 'common',
     catchRate: 255,
     genderRatio: {
@@ -650,7 +650,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 44,
     name: 'Gloom',
     slug: 'gloom',
-    types: ['Grass', 'Poison'],
+    types: ['grass', 'poison'],
     rarity: 'uncommon',
     catchRate: 120,
     genderRatio: {
@@ -665,7 +665,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 45,
     name: 'Vileplume',
     slug: 'vileplume',
-    types: ['Grass', 'Poison'],
+    types: ['grass', 'poison'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -680,7 +680,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 46,
     name: 'Paras',
     slug: 'paras',
-    types: ['Bug', 'Grass'],
+    types: ['bug', 'grass'],
     rarity: 'common',
     catchRate: 190,
     genderRatio: {
@@ -695,7 +695,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 47,
     name: 'Parasect',
     slug: 'parasect',
-    types: ['Bug', 'Grass'],
+    types: ['bug', 'grass'],
     rarity: 'rare',
     catchRate: 75,
     genderRatio: {
@@ -710,7 +710,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 48,
     name: 'Venonat',
     slug: 'venonat',
-    types: ['Bug', 'Poison'],
+    types: ['bug', 'poison'],
     rarity: 'common',
     catchRate: 190,
     genderRatio: {
@@ -725,7 +725,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 49,
     name: 'Venomoth',
     slug: 'venomoth',
-    types: ['Bug', 'Poison'],
+    types: ['bug', 'poison'],
     rarity: 'rare',
     catchRate: 75,
     genderRatio: {
@@ -740,7 +740,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 50,
     name: 'Diglett',
     slug: 'diglett',
-    types: ['Ground'],
+    types: ['ground'],
     rarity: 'common',
     catchRate: 255,
     genderRatio: {
@@ -755,7 +755,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 51,
     name: 'Dugtrio',
     slug: 'dugtrio',
-    types: ['Ground'],
+    types: ['ground'],
     rarity: 'rare',
     catchRate: 50,
     genderRatio: {
@@ -770,7 +770,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 52,
     name: 'Meowth',
     slug: 'meowth',
-    types: ['Normal'],
+    types: ['normal'],
     rarity: 'common',
     catchRate: 255,
     genderRatio: {
@@ -785,7 +785,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 53,
     name: 'Persian',
     slug: 'persian',
-    types: ['Normal'],
+    types: ['normal'],
     rarity: 'rare',
     catchRate: 90,
     genderRatio: {
@@ -800,7 +800,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 54,
     name: 'Psyduck',
     slug: 'psyduck',
-    types: ['Water'],
+    types: ['water'],
     rarity: 'common',
     catchRate: 190,
     genderRatio: {
@@ -815,7 +815,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 55,
     name: 'Golduck',
     slug: 'golduck',
-    types: ['Water'],
+    types: ['water'],
     rarity: 'rare',
     catchRate: 75,
     genderRatio: {
@@ -830,7 +830,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 56,
     name: 'Mankey',
     slug: 'mankey',
-    types: ['Fighting'],
+    types: ['fighting'],
     rarity: 'common',
     catchRate: 190,
     genderRatio: {
@@ -845,7 +845,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 57,
     name: 'Primeape',
     slug: 'primeape',
-    types: ['Fighting'],
+    types: ['fighting'],
     rarity: 'rare',
     catchRate: 75,
     genderRatio: {
@@ -860,7 +860,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 58,
     name: 'Growlithe',
     slug: 'growlithe',
-    types: ['Fire'],
+    types: ['fire'],
     rarity: 'common',
     catchRate: 190,
     genderRatio: {
@@ -875,7 +875,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 59,
     name: 'Arcanine',
     slug: 'arcanine',
-    types: ['Fire'],
+    types: ['fire'],
     rarity: 'rare',
     catchRate: 75,
     genderRatio: {
@@ -890,7 +890,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 60,
     name: 'Poliwag',
     slug: 'poliwag',
-    types: ['Water'],
+    types: ['water'],
     rarity: 'common',
     catchRate: 255,
     genderRatio: {
@@ -905,7 +905,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 61,
     name: 'Poliwhirl',
     slug: 'poliwhirl',
-    types: ['Water'],
+    types: ['water'],
     rarity: 'uncommon',
     catchRate: 120,
     genderRatio: {
@@ -920,7 +920,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 62,
     name: 'Poliwrath',
     slug: 'poliwrath',
-    types: ['Water', 'Fighting'],
+    types: ['water', 'fighting'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -935,7 +935,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 63,
     name: 'Abra',
     slug: 'abra',
-    types: ['Psychic'],
+    types: ['psychic'],
     rarity: 'common',
     catchRate: 200,
     genderRatio: {
@@ -950,7 +950,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 64,
     name: 'Kadabra',
     slug: 'kadabra',
-    types: ['Psychic'],
+    types: ['psychic'],
     rarity: 'rare',
     catchRate: 100,
     genderRatio: {
@@ -965,7 +965,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 65,
     name: 'Alakazam',
     slug: 'alakazam',
-    types: ['Psychic'],
+    types: ['psychic'],
     rarity: 'rare',
     catchRate: 50,
     genderRatio: {
@@ -980,7 +980,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 66,
     name: 'Machop',
     slug: 'machop',
-    types: ['Fighting'],
+    types: ['fighting'],
     rarity: 'uncommon',
     catchRate: 180,
     genderRatio: {
@@ -995,7 +995,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 67,
     name: 'Machoke',
     slug: 'machoke',
-    types: ['Fighting'],
+    types: ['fighting'],
     rarity: 'rare',
     catchRate: 90,
     genderRatio: {
@@ -1010,7 +1010,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 68,
     name: 'Machamp',
     slug: 'machamp',
-    types: ['Fighting'],
+    types: ['fighting'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1025,7 +1025,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 69,
     name: 'Bellsprout',
     slug: 'bellsprout',
-    types: ['Grass', 'Poison'],
+    types: ['grass', 'poison'],
     rarity: 'common',
     catchRate: 255,
     genderRatio: {
@@ -1040,7 +1040,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 70,
     name: 'Weepinbell',
     slug: 'weepinbell',
-    types: ['Grass', 'Poison'],
+    types: ['grass', 'poison'],
     rarity: 'uncommon',
     catchRate: 120,
     genderRatio: {
@@ -1055,7 +1055,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 71,
     name: 'Victreebel',
     slug: 'victreebel',
-    types: ['Grass', 'Poison'],
+    types: ['grass', 'poison'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1070,7 +1070,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 72,
     name: 'Tentacool',
     slug: 'tentacool',
-    types: ['Water', 'Poison'],
+    types: ['water', 'poison'],
     rarity: 'common',
     catchRate: 190,
     genderRatio: {
@@ -1085,7 +1085,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 73,
     name: 'Tentacruel',
     slug: 'tentacruel',
-    types: ['Water', 'Poison'],
+    types: ['water', 'poison'],
     rarity: 'rare',
     catchRate: 60,
     genderRatio: {
@@ -1100,7 +1100,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 74,
     name: 'Geodude',
     slug: 'geodude',
-    types: ['Rock', 'Ground'],
+    types: ['rock', 'ground'],
     rarity: 'common',
     catchRate: 255,
     genderRatio: {
@@ -1115,7 +1115,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 75,
     name: 'Graveler',
     slug: 'graveler',
-    types: ['Rock', 'Ground'],
+    types: ['rock', 'ground'],
     rarity: 'uncommon',
     catchRate: 120,
     genderRatio: {
@@ -1130,7 +1130,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 76,
     name: 'Golem',
     slug: 'golem',
-    types: ['Rock', 'Ground'],
+    types: ['rock', 'ground'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1145,7 +1145,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 77,
     name: 'Ponyta',
     slug: 'ponyta',
-    types: ['Fire'],
+    types: ['fire'],
     rarity: 'common',
     catchRate: 190,
     genderRatio: {
@@ -1160,7 +1160,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 78,
     name: 'Rapidash',
     slug: 'rapidash',
-    types: ['Fire'],
+    types: ['fire'],
     rarity: 'rare',
     catchRate: 60,
     genderRatio: {
@@ -1175,7 +1175,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 79,
     name: 'Slowpoke',
     slug: 'slowpoke',
-    types: ['Water', 'Psychic'],
+    types: ['water', 'psychic'],
     rarity: 'common',
     catchRate: 190,
     genderRatio: {
@@ -1190,7 +1190,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 80,
     name: 'Slowbro',
     slug: 'slowbro',
-    types: ['Water', 'Psychic'],
+    types: ['water', 'psychic'],
     rarity: 'rare',
     catchRate: 75,
     genderRatio: {
@@ -1205,7 +1205,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 81,
     name: 'Magnemite',
     slug: 'magnemite',
-    types: ['Electric', 'Steel'],
+    types: ['electric', 'steel'],
     rarity: 'common',
     catchRate: 190,
     genderRatio: null,
@@ -1217,7 +1217,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 82,
     name: 'Magneton',
     slug: 'magneton',
-    types: ['Electric', 'Steel'],
+    types: ['electric', 'steel'],
     rarity: 'rare',
     catchRate: 60,
     genderRatio: null,
@@ -1229,7 +1229,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 83,
     name: 'Farfetchd',
     slug: 'farfetchd',
-    types: ['Normal', 'Flying'],
+    types: ['normal', 'flying'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1244,7 +1244,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 84,
     name: 'Doduo',
     slug: 'doduo',
-    types: ['Normal', 'Flying'],
+    types: ['normal', 'flying'],
     rarity: 'common',
     catchRate: 190,
     genderRatio: {
@@ -1259,7 +1259,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 85,
     name: 'Dodrio',
     slug: 'dodrio',
-    types: ['Normal', 'Flying'],
+    types: ['normal', 'flying'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1274,7 +1274,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 86,
     name: 'Seel',
     slug: 'seel',
-    types: ['Water'],
+    types: ['water'],
     rarity: 'common',
     catchRate: 190,
     genderRatio: {
@@ -1289,7 +1289,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 87,
     name: 'Dewgong',
     slug: 'dewgong',
-    types: ['Water', 'Ice'],
+    types: ['water', 'ice'],
     rarity: 'rare',
     catchRate: 75,
     genderRatio: {
@@ -1304,7 +1304,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 88,
     name: 'Grimer',
     slug: 'grimer',
-    types: ['Poison'],
+    types: ['poison'],
     rarity: 'common',
     catchRate: 190,
     genderRatio: {
@@ -1319,7 +1319,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 89,
     name: 'Muk',
     slug: 'muk',
-    types: ['Poison'],
+    types: ['poison'],
     rarity: 'rare',
     catchRate: 75,
     genderRatio: {
@@ -1334,7 +1334,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 90,
     name: 'Shellder',
     slug: 'shellder',
-    types: ['Water'],
+    types: ['water'],
     rarity: 'common',
     catchRate: 190,
     genderRatio: {
@@ -1349,7 +1349,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 91,
     name: 'Cloyster',
     slug: 'cloyster',
-    types: ['Water', 'Ice'],
+    types: ['water', 'ice'],
     rarity: 'rare',
     catchRate: 60,
     genderRatio: {
@@ -1364,7 +1364,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 92,
     name: 'Gastly',
     slug: 'gastly',
-    types: ['Ghost', 'Poison'],
+    types: ['ghost', 'poison'],
     rarity: 'common',
     catchRate: 190,
     genderRatio: {
@@ -1379,7 +1379,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 93,
     name: 'Haunter',
     slug: 'haunter',
-    types: ['Ghost', 'Poison'],
+    types: ['ghost', 'poison'],
     rarity: 'rare',
     catchRate: 90,
     genderRatio: {
@@ -1394,7 +1394,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 94,
     name: 'Gengar',
     slug: 'gengar',
-    types: ['Ghost', 'Poison'],
+    types: ['ghost', 'poison'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1409,7 +1409,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 95,
     name: 'Onix',
     slug: 'onix',
-    types: ['Rock', 'Ground'],
+    types: ['rock', 'ground'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1424,7 +1424,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 96,
     name: 'Drowzee',
     slug: 'drowzee',
-    types: ['Psychic'],
+    types: ['psychic'],
     rarity: 'common',
     catchRate: 190,
     genderRatio: {
@@ -1439,7 +1439,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 97,
     name: 'Hypno',
     slug: 'hypno',
-    types: ['Psychic'],
+    types: ['psychic'],
     rarity: 'rare',
     catchRate: 75,
     genderRatio: {
@@ -1454,7 +1454,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 98,
     name: 'Krabby',
     slug: 'krabby',
-    types: ['Water'],
+    types: ['water'],
     rarity: 'common',
     catchRate: 225,
     genderRatio: {
@@ -1469,7 +1469,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 99,
     name: 'Kingler',
     slug: 'kingler',
-    types: ['Water'],
+    types: ['water'],
     rarity: 'rare',
     catchRate: 60,
     genderRatio: {
@@ -1484,7 +1484,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 100,
     name: 'Voltorb',
     slug: 'voltorb',
-    types: ['Electric'],
+    types: ['electric'],
     rarity: 'common',
     catchRate: 190,
     genderRatio: null,
@@ -1496,7 +1496,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 101,
     name: 'Electrode',
     slug: 'electrode',
-    types: ['Electric'],
+    types: ['electric'],
     rarity: 'rare',
     catchRate: 60,
     genderRatio: null,
@@ -1508,7 +1508,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 102,
     name: 'Exeggcute',
     slug: 'exeggcute',
-    types: ['Grass', 'Psychic'],
+    types: ['grass', 'psychic'],
     rarity: 'rare',
     catchRate: 90,
     genderRatio: {
@@ -1523,7 +1523,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 103,
     name: 'Exeggutor',
     slug: 'exeggutor',
-    types: ['Grass', 'Psychic'],
+    types: ['grass', 'psychic'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1538,7 +1538,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 104,
     name: 'Cubone',
     slug: 'cubone',
-    types: ['Ground'],
+    types: ['ground'],
     rarity: 'common',
     catchRate: 190,
     genderRatio: {
@@ -1553,7 +1553,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 105,
     name: 'Marowak',
     slug: 'marowak',
-    types: ['Ground'],
+    types: ['ground'],
     rarity: 'rare',
     catchRate: 75,
     genderRatio: {
@@ -1568,7 +1568,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 106,
     name: 'Hitmonlee',
     slug: 'hitmonlee',
-    types: ['Fighting'],
+    types: ['fighting'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1583,7 +1583,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 107,
     name: 'Hitmonchan',
     slug: 'hitmonchan',
-    types: ['Fighting'],
+    types: ['fighting'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1598,7 +1598,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 108,
     name: 'Lickitung',
     slug: 'lickitung',
-    types: ['Normal'],
+    types: ['normal'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1613,7 +1613,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 109,
     name: 'Koffing',
     slug: 'koffing',
-    types: ['Poison'],
+    types: ['poison'],
     rarity: 'common',
     catchRate: 190,
     genderRatio: {
@@ -1628,7 +1628,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 110,
     name: 'Weezing',
     slug: 'weezing',
-    types: ['Poison'],
+    types: ['poison'],
     rarity: 'rare',
     catchRate: 60,
     genderRatio: {
@@ -1643,7 +1643,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 111,
     name: 'Rhyhorn',
     slug: 'rhyhorn',
-    types: ['Ground', 'Rock'],
+    types: ['ground', 'rock'],
     rarity: 'uncommon',
     catchRate: 120,
     genderRatio: {
@@ -1658,7 +1658,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 112,
     name: 'Rhydon',
     slug: 'rhydon',
-    types: ['Ground', 'Rock'],
+    types: ['ground', 'rock'],
     rarity: 'rare',
     catchRate: 60,
     genderRatio: {
@@ -1673,7 +1673,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 113,
     name: 'Chansey',
     slug: 'chansey',
-    types: ['Normal'],
+    types: ['normal'],
     rarity: 'very rare',
     catchRate: 30,
     genderRatio: {
@@ -1688,7 +1688,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 114,
     name: 'Tangela',
     slug: 'tangela',
-    types: ['Grass'],
+    types: ['grass'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1703,7 +1703,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 115,
     name: 'Kangaskhan',
     slug: 'kangaskhan',
-    types: ['Normal'],
+    types: ['normal'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1718,7 +1718,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 116,
     name: 'Horsea',
     slug: 'horsea',
-    types: ['Water'],
+    types: ['water'],
     rarity: 'common',
     catchRate: 225,
     genderRatio: {
@@ -1733,7 +1733,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 117,
     name: 'Seadra',
     slug: 'seadra',
-    types: ['Water'],
+    types: ['water'],
     rarity: 'rare',
     catchRate: 75,
     genderRatio: {
@@ -1748,7 +1748,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 118,
     name: 'Goldeen',
     slug: 'goldeen',
-    types: ['Water'],
+    types: ['water'],
     rarity: 'common',
     catchRate: 225,
     genderRatio: {
@@ -1763,7 +1763,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 119,
     name: 'Seaking',
     slug: 'seaking',
-    types: ['Water'],
+    types: ['water'],
     rarity: 'rare',
     catchRate: 60,
     genderRatio: {
@@ -1778,7 +1778,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 120,
     name: 'Staryu',
     slug: 'staryu',
-    types: ['Water'],
+    types: ['water'],
     rarity: 'common',
     catchRate: 225,
     genderRatio: null,
@@ -1790,7 +1790,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 121,
     name: 'Starmie',
     slug: 'starmie',
-    types: ['Water', 'Psychic'],
+    types: ['water', 'psychic'],
     rarity: 'rare',
     catchRate: 60,
     genderRatio: null,
@@ -1802,7 +1802,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 122,
     name: 'Mr. Mime',
     slug: 'mr-mime',
-    types: ['Psychic', 'Fairy'],
+    types: ['psychic', 'fairy'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1817,7 +1817,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 123,
     name: 'Scyther',
     slug: 'scyther',
-    types: ['Bug', 'Flying'],
+    types: ['bug', 'flying'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1832,7 +1832,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 124,
     name: 'Jynx',
     slug: 'jynx',
-    types: ['Ice', 'Psychic'],
+    types: ['ice', 'psychic'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1847,7 +1847,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 125,
     name: 'Electabuzz',
     slug: 'electabuzz',
-    types: ['Electric'],
+    types: ['electric'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1862,7 +1862,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 126,
     name: 'Magmar',
     slug: 'magmar',
-    types: ['Fire'],
+    types: ['fire'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1877,7 +1877,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 127,
     name: 'Pinsir',
     slug: 'pinsir',
-    types: ['Bug'],
+    types: ['bug'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1892,7 +1892,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 128,
     name: 'Tauros',
     slug: 'tauros',
-    types: ['Normal'],
+    types: ['normal'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1907,7 +1907,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 129,
     name: 'Magikarp',
     slug: 'magikarp',
-    types: ['Water'],
+    types: ['water'],
     rarity: 'common',
     catchRate: 255,
     genderRatio: {
@@ -1922,7 +1922,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 130,
     name: 'Gyarados',
     slug: 'gyarados',
-    types: ['Water', 'Flying'],
+    types: ['water', 'flying'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1937,7 +1937,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 131,
     name: 'Lapras',
     slug: 'lapras',
-    types: ['Water', 'Ice'],
+    types: ['water', 'ice'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1952,7 +1952,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 132,
     name: 'Ditto',
     slug: 'ditto',
-    types: ['Normal'],
+    types: ['normal'],
     rarity: 'very rare',
     catchRate: 35,
     genderRatio: null,
@@ -1964,7 +1964,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 133,
     name: 'Eevee',
     slug: 'eevee',
-    types: ['Normal'],
+    types: ['normal'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1979,7 +1979,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 134,
     name: 'Vaporeon',
     slug: 'vaporeon',
-    types: ['Water'],
+    types: ['water'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -1994,7 +1994,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 135,
     name: 'Jolteon',
     slug: 'jolteon',
-    types: ['Electric'],
+    types: ['electric'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -2009,7 +2009,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 136,
     name: 'Flareon',
     slug: 'flareon',
-    types: ['Fire'],
+    types: ['fire'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -2024,7 +2024,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 137,
     name: 'Porygon',
     slug: 'porygon',
-    types: ['Normal'],
+    types: ['normal'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: null,
@@ -2036,7 +2036,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 138,
     name: 'Omanyte',
     slug: 'omanyte',
-    types: ['Rock', 'Water'],
+    types: ['rock', 'water'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -2051,7 +2051,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 139,
     name: 'Omastar',
     slug: 'omastar',
-    types: ['Rock', 'Water'],
+    types: ['rock', 'water'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -2066,7 +2066,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 140,
     name: 'Kabuto',
     slug: 'kabuto',
-    types: ['Rock', 'Water'],
+    types: ['rock', 'water'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -2081,7 +2081,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 141,
     name: 'Kabutops',
     slug: 'kabutops',
-    types: ['Rock', 'Water'],
+    types: ['rock', 'water'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -2096,7 +2096,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 142,
     name: 'Aerodactyl',
     slug: 'aerodactyl',
-    types: ['Rock', 'Flying'],
+    types: ['rock', 'flying'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -2111,7 +2111,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 143,
     name: 'Snorlax',
     slug: 'snorlax',
-    types: ['Normal'],
+    types: ['normal'],
     rarity: 'very rare',
     catchRate: 25,
     genderRatio: {
@@ -2126,7 +2126,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 144,
     name: 'Articuno',
     slug: 'articuno',
-    types: ['Ice', 'Flying'],
+    types: ['ice', 'flying'],
     rarity: 'legendary',
     catchRate: 3,
     genderRatio: null,
@@ -2138,7 +2138,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 145,
     name: 'Zapdos',
     slug: 'zapdos',
-    types: ['Electric', 'Flying'],
+    types: ['electric', 'flying'],
     rarity: 'legendary',
     catchRate: 3,
     genderRatio: null,
@@ -2150,7 +2150,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 146,
     name: 'Moltres',
     slug: 'moltres',
-    types: ['Fire', 'Flying'],
+    types: ['fire', 'flying'],
     rarity: 'legendary',
     catchRate: 3,
     genderRatio: null,
@@ -2162,7 +2162,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 147,
     name: 'Dratini',
     slug: 'dratini',
-    types: ['Dragon'],
+    types: ['dragon'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -2177,7 +2177,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 148,
     name: 'Dragonair',
     slug: 'dragonair',
-    types: ['Dragon'],
+    types: ['dragon'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -2192,7 +2192,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 149,
     name: 'Dragonite',
     slug: 'dragonite',
-    types: ['Dragon', 'Flying'],
+    types: ['dragon', 'flying'],
     rarity: 'rare',
     catchRate: 45,
     genderRatio: {
@@ -2207,7 +2207,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 150,
     name: 'Mewtwo',
     slug: 'mewtwo',
-    types: ['Psychic'],
+    types: ['psychic'],
     rarity: 'legendary',
     catchRate: 3,
     genderRatio: null,
@@ -2219,7 +2219,7 @@ export const kantoPokemon: PokemonObject[] = [
     id: 151,
     name: 'Mew',
     slug: 'mew',
-    types: ['Psychic'],
+    types: ['psychic'],
     rarity: 'mythical',
     catchRate: 45,
     genderRatio: null,
