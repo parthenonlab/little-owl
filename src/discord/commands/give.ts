@@ -7,7 +7,7 @@ import {
 import { CONFIG, COPY, EMOJIS } from '@/constants';
 import { UserDocument } from '@/interfaces/user';
 import { formatPriceToCode, getCurrency } from '@/lib/utils';
-import { incDiscordUser, setDiscordUser } from '@/services/user';
+import { incDiscordUser } from '@/services/user';
 
 import { reply } from '../helpers';
 
@@ -90,12 +90,10 @@ export const Give = {
     }
 
     await incDiscordUser(recipient.id, { cash: amount });
-    await setDiscordUser(interaction.user.id, {
-      cash: (user.cash -= amount),
-    });
+    await incDiscordUser(interaction.user.id, { cash: -amount });
 
     reply({
-      content: `${replies.success} Your new balance: ${formatPriceToCode(user.cash)} ${EMOJIS.CURRENCY}`,
+      content: `${replies.success} Your new balance: ${formatPriceToCode(user.cash - amount)} ${EMOJIS.CURRENCY}`,
       ephemeral: false,
       interaction: interaction,
     });

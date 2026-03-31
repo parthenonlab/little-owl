@@ -8,7 +8,7 @@ import {
 
 import { CONFIG, COPY, EMOJIS } from '@/constants';
 import { LogCode } from '@/enums/logs';
-import { getUsersByCategory } from '@/services/user';
+import { getDiscordLeaderboard } from '@/services/user';
 
 import { log, reply } from '../helpers';
 
@@ -27,7 +27,7 @@ export const Leaderboard = {
     }
 
     const description = `Here are the users with the highest ${CONFIG.CURRENCY.PLURAL}!`;
-    const leaderboardUsers = await getUsersByCategory('cash', 5);
+    const leaderboardUsers = await getDiscordLeaderboard('cash', 5);
 
     if (!leaderboardUsers.length) {
       return await interaction.reply({

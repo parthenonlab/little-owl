@@ -1,4 +1,6 @@
-export const POKEMON_RARITY_WEIGHTS: Record<string, number> = {
+import { PokemonRarity } from '@/interfaces/pokemon';
+
+export const POKEMON_RARITY_WEIGHTS: Record<PokemonRarity, number> = {
   common: 0.45,
   uncommon: 0.25,
   rare: 0.2,
