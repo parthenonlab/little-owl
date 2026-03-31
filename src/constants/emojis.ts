@@ -44,9 +44,6 @@ export const EMOJIS = {
     STEEL: '<:steel:1488379067299270816>',
     WATER: '<:water:1488379068578791545>',
   },
-  REDEEM: {
-    INVALID: ':neutral_face:',
-  },
   STAR: {
     EMBED: ':sparkles:',
     INVALID: ':neutral_face:',
