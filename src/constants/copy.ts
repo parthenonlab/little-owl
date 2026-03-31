@@ -129,12 +129,6 @@ export const COPY = {
     NAME: 'profile',
     DESCRIPTION: 'Display your profile',
   },
-  REDEEM: {
-    NAME: 'redeem',
-    DESCRIPTION: 'Select from the available rewards to redeem',
-    OPTION_NAME: 'reward',
-    OPTION_DESCRIPTION: 'The cost of these rewards are the same as in Twitch',
-  },
   SHOP: {
     NAME: 'shop',
     DESCRIPTION: `Browse the shop and buy items with your ${CONFIG.CURRENCY.PLURAL}!`,

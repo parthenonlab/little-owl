@@ -15,7 +15,6 @@ import {
   Leaderboard,
   Points,
   Profile,
-  Redeem,
   Shop,
   Sleep,
   Star,
@@ -61,7 +60,6 @@ export const registerDiscordCommands = (): void => {
   commands.push(Leaderboard.data.toJSON());
   commands.push(Points.data.toJSON());
   commands.push(Profile.data.toJSON());
-  commands.push(Redeem.data.toJSON());
   commands.push(Shop.data.toJSON());
   commands.push(Star.data.toJSON());
 

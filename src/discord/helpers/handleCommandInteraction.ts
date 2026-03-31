@@ -113,12 +113,6 @@ export const handleCommandInteraction = async (
     if (user) dc.Shop.execute(state, interaction, user);
   }
 
-  // command: redeem
-  else if (interaction.commandName === dc.Redeem.getName()) {
-    const user = await findOrCreateDiscordUser(interaction.user);
-    if (user) dc.Redeem.execute(interaction, user);
-  }
-
   // command: profile
   else if (interaction.commandName === dc.Profile.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);
