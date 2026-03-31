@@ -8,6 +8,12 @@ const MONGODB_USERS = process.env.MONGODB_USERS;
 
 const SERVER_ID = process.env.SERVER_ID;
 
+/**
+ * Return validated environment variables required at runtime.
+ * Exits the process if any required variable is missing.
+ *
+ * @returns Object containing all required environment variable values.
+ */
 export const getENV = () => {
   if (
     !ADMIN_SERVER_ID ||
