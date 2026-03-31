@@ -2,7 +2,7 @@ import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 
 import { CONFIG, COPY, EMOJIS } from '@/constants';
 import { UserDocument } from '@/interfaces/user';
-import { getCurrency, weightedRandom } from '@/lib/utils';
+import { formatPriceToCode, getCurrency, weightedRandom } from '@/lib/utils';
 import { setDiscordUser } from '@/services/user';
 
 import { reply } from '../helpers';
@@ -72,9 +72,9 @@ export const Gamble = {
         points += user.cash;
 
         reply({
-          content: `You won ${user.cash} ${getCurrency(user.cash)}! ${
+          content: `You won ${formatPriceToCode(user.cash)} ${getCurrency(user.cash)}! ${
             EMOJIS.GAMBLE.WIN
-          } Current balance: ${points} ${EMOJIS.CURRENCY}`,
+          } Current balance: ${formatPriceToCode(points)} ${EMOJIS.CURRENCY}`,
           ephemeral: false,
           interaction: interaction,
         });
@@ -94,9 +94,9 @@ export const Gamble = {
         points += halfPoints;
 
         reply({
-          content: `You won ${halfPoints} ${getCurrency(halfPoints)}! ${
+          content: `You won ${formatPriceToCode(halfPoints)} ${getCurrency(halfPoints)}! ${
             EMOJIS.GAMBLE.WIN
-          } Current balance: ${points} ${EMOJIS.CURRENCY}`,
+          } Current balance: ${formatPriceToCode(points)} ${EMOJIS.CURRENCY}`,
           ephemeral: false,
           interaction: interaction,
         });
@@ -104,9 +104,9 @@ export const Gamble = {
         points -= halfPoints;
 
         reply({
-          content: `You lost ${halfPoints} ${getCurrency(halfPoints)}. ${
+          content: `You lost ${formatPriceToCode(halfPoints)} ${getCurrency(halfPoints)}. ${
             EMOJIS.GAMBLE.LOST
-          } Current balance: ${points} ${EMOJIS.CURRENCY}`,
+          } Current balance: ${formatPriceToCode(points)} ${EMOJIS.CURRENCY}`,
           ephemeral: false,
           interaction: interaction,
         });
@@ -122,9 +122,9 @@ export const Gamble = {
         points += amount;
 
         reply({
-          content: `You won ${amount} ${getCurrency(amount)}! ${
+          content: `You won ${formatPriceToCode(amount)} ${getCurrency(amount)}! ${
             EMOJIS.GAMBLE.WIN
-          } Current balance: ${points} ${EMOJIS.CURRENCY}`,
+          } Current balance: ${formatPriceToCode(points)} ${EMOJIS.CURRENCY}`,
           ephemeral: false,
           interaction: interaction,
         });
@@ -132,9 +132,9 @@ export const Gamble = {
         points -= amount;
 
         reply({
-          content: `You lost ${amount} ${getCurrency(amount)}. ${
+          content: `You lost ${formatPriceToCode(amount)} ${getCurrency(amount)}. ${
             EMOJIS.GAMBLE.LOST
-          } Current balance: ${points} ${EMOJIS.CURRENCY}`,
+          } Current balance: ${formatPriceToCode(points)} ${EMOJIS.CURRENCY}`,
           ephemeral: false,
           interaction: interaction,
         });

@@ -20,7 +20,7 @@ import { BotState } from '@/interfaces/bot';
 import { PokeballObject } from '@/interfaces/pokemon';
 import { UserDocument } from '@/interfaces/user';
 
-import { formatPrice } from '@/lib/utils';
+import { formatPriceToCode, formatPriceToString } from '@/lib/utils';
 import { getInventory, updateBalls } from '@/services/inventory';
 import { setDiscordUser } from '@/services/user';
 
@@ -58,7 +58,7 @@ const renderShop = async (
   })
     .map(ball => {
       const header = `${ball.emoji} ${ball.label}`;
-      const description = `Stock: \`${ball.stock}\` - Price: \`${formatPrice(ball.price)}\``;
+      const description = `Stock: \`${ball.stock}\` - Price: ${formatPriceToCode(ball.price)}`;
 
       return `${header}\n\u2003\u2002${description}`;
     })
@@ -87,7 +87,7 @@ const renderShop = async (
     )
     .setThumbnail(shopIcon)
     .setFooter({
-      text: `CASH BALANCE: ${formatPrice(user.cash)}  |  INVENTORY SPACE: ${availableSpace}`,
+      text: `CASH BALANCE: ${formatPriceToString(user.cash)}  |  INVENTORY SPACE: ${availableSpace}`,
       iconURL: POKEMON_IMAGE_URLS.base + '/currency/silver.png',
     });
 

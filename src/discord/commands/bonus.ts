@@ -5,6 +5,7 @@ import {
 } from 'discord.js';
 
 import { CONFIG, COPY, EMOJIS } from '@/constants';
+import { formatPriceToCode } from '@/lib/utils';
 import { incDiscordUser } from '@/services/user';
 
 import { reply } from '../helpers';
@@ -17,17 +18,17 @@ export const Bonus = {
       option
         .setName(COPY.BONUS.OPTION1_NAME)
         .setDescription(COPY.BONUS.OPTION1_DESCRIPTION)
-        .setRequired(true)
+        .setRequired(true),
     )
     .addNumberOption(option =>
       option
         .setName(COPY.BONUS.OPTION2_NAME)
         .setDescription(COPY.BONUS.OPTION2_DESCRIPTION)
-        .setRequired(true)
+        .setRequired(true),
     ),
   execute: async (
     interaction: ChatInputCommandInteraction,
-    recipient: User
+    recipient: User,
   ) => {
     if (!CONFIG.FEATURES.BONUS.ENABLED) {
       reply({
@@ -43,7 +44,7 @@ export const Bonus = {
     const replies = {
       invalidAdmin: 'This is an admin-only command.',
       invalidNegative: `You should reward at least 1 ${CONFIG.CURRENCY.SINGLE}.`,
-      success: `${recipient.displayName} has received ${amount} ${EMOJIS.CURRENCY}`,
+      success: `${recipient.displayName} has received ${formatPriceToCode(amount)} ${EMOJIS.CURRENCY}`,
     };
 
     if (interaction.user.id !== interaction.guild?.ownerId) {

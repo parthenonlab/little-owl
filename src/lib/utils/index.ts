@@ -1,5 +1,6 @@
 export * from './capitalize';
-export * from './formatPrice';
+export * from './formatPriceToCode';
+export * from './formatPriceToString';
 export * from './getCurrency';
 export * from './isNumber';
 export * from './parseHexToRGB';
