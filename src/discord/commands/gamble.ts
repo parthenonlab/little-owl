@@ -6,7 +6,7 @@ import { formatPriceToCode, getCurrency, weightedRandom } from '@/lib/utils';
 import { updateActivity } from '@/services/activity';
 import { setDiscordUser } from '@/services/user';
 
-import { reply } from '../helpers';
+import { checkFeatureEnabled, reply } from '../helpers';
 
 export const Gamble = {
   data: new SlashCommandBuilder()
@@ -22,14 +22,7 @@ export const Gamble = {
     interaction: ChatInputCommandInteraction,
     user: UserDocument,
   ) => {
-    if (!CONFIG.FEATURES.GAMBLE.ENABLED) {
-      reply({
-        content: COPY.DISABLED,
-        ephemeral: true,
-        interaction: interaction,
-      });
-      return;
-    }
+    if (!await checkFeatureEnabled('GAMBLE', interaction)) return;
 
     const replies = {
       invalidInput: 'Enter a specific amount, "all", or "half".',
@@ -61,8 +54,8 @@ export const Gamble = {
     }
 
     const probability = {
-      win: CONFIG.FEATURES.GAMBLE.WIN_PERCENT / 100,
-      loss: 1 - CONFIG.FEATURES.GAMBLE.WIN_PERCENT / 100,
+      win: CONFIG.GAMBLE.WIN_PERCENT / 100,
+      loss: 1 - CONFIG.GAMBLE.WIN_PERCENT / 100,
     };
 
     const result = weightedRandom(probability);
@@ -99,13 +92,13 @@ export const Gamble = {
         content: `You won ${formatPriceToCode(wager)} ${getCurrency(wager)}! ${
           EMOJIS.GAMBLE.WIN
         } Current balance: ${formatPriceToCode(newBalance)} ${EMOJIS.CURRENCY}`,
-        ephemeral: false,
+
         interaction: interaction,
       });
     } else if (newBalance === 0) {
       reply({
         content: replies.lostAll,
-        ephemeral: false,
+
         interaction: interaction,
       });
     } else {
@@ -113,7 +106,7 @@ export const Gamble = {
         content: `You lost ${formatPriceToCode(wager)} ${getCurrency(wager)}. ${
           EMOJIS.GAMBLE.LOST
         } Current balance: ${formatPriceToCode(newBalance)} ${EMOJIS.CURRENCY}`,
-        ephemeral: false,
+
         interaction: interaction,
       });
     }

@@ -1,10 +1,10 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 
-import { CONFIG, COPY } from '@/constants';
+import { COPY } from '@/constants';
 import { BotState } from '@/interfaces/bot';
 import { sleepTime } from '@/lib/config';
 
-import { reply } from '../helpers';
+import { checkFeatureEnabled, reply } from '../helpers';
 
 export const Sleep = {
   data: new SlashCommandBuilder()
@@ -14,18 +14,11 @@ export const Sleep = {
     state: BotState,
     interaction: ChatInputCommandInteraction
   ) => {
-    if (!CONFIG.FEATURES.SLEEP.ENABLED) {
-      reply({
-        content: COPY.DISABLED,
-        ephemeral: true,
-        interaction: interaction,
-      });
-      return;
-    }
+    if (!await checkFeatureEnabled('SLEEP', interaction)) return;
 
     reply({
       content: '🦉 Little Owl: Good night!',
-      ephemeral: false,
+
       interaction: interaction,
     });
 

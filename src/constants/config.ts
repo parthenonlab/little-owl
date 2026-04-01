@@ -43,59 +43,8 @@ export const CONFIG = {
     PLURAL: 'silver coins',
     SINGLE: 'silver coin',
   },
-  FEATURES: {
-    BONUS: {
-      ENABLED: true,
-    },
-    COINFLIP: {
-      ENABLED: true,
-    },
-    EIGHTBALL: {
-      ENABLED: true,
-    },
-    EXPLORE: {
-      ENABLED: true,
-    },
-    GAMBLE: {
-      ENABLED: true,
-      WIN_PERCENT: 40,
-    },
-    GIVE: {
-      ENABLED: true,
-    },
-    HELP: {
-      ENABLED: true,
-    },
-    INVENTORY: {
-      ENABLED: true,
-    },
-    LEADERBOARD: {
-      ENABLED: true,
-    },
-    LINK: {
-      ENABLED: true,
-    },
-    POINTS: {
-      ENABLED: true,
-    },
-    PROFILE: {
-      ENABLED: true,
-    },
-    REDEEM: {
-      ENABLED: true,
-    },
-    SHOP: {
-      ENABLED: true,
-    },
-    SLEEP: {
-      ENABLED: true,
-    },
-    STAR: {
-      ENABLED: true,
-    },
-    UNLINK: {
-      ENABLED: true,
-    },
+  GAMBLE: {
+    WIN_PERCENT: 40,
   },
   ROLES: {
     DEFAULT: {

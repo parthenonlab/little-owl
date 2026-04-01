@@ -34,6 +34,6 @@ export interface ObjectProps {
 
 export interface ReplyProps {
   content: string;
-  ephemeral: boolean;
+  ephemeral?: boolean;
   interaction: CommandInteraction;
 }

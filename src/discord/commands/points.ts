@@ -1,10 +1,10 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 
-import { CONFIG, COPY, EMOJIS } from '@/constants';
+import { COPY, EMOJIS } from '@/constants';
 import { UserDocument } from '@/interfaces/user';
 import { formatPriceToCode } from '@/lib/utils';
 
-import { reply } from '../helpers';
+import { checkFeatureEnabled, reply } from '../helpers';
 
 export const Points = {
   data: new SlashCommandBuilder()
@@ -14,18 +14,11 @@ export const Points = {
     interaction: ChatInputCommandInteraction,
     user: UserDocument,
   ) => {
-    if (!CONFIG.FEATURES.POINTS.ENABLED) {
-      reply({
-        content: COPY.DISABLED,
-        ephemeral: true,
-        interaction: interaction,
-      });
-      return;
-    }
+    if (!await checkFeatureEnabled('POINTS', interaction)) return;
 
     reply({
       content: `Your current balance is: ${formatPriceToCode(user.cash)} ${EMOJIS.CURRENCY}`,
-      ephemeral: false,
+
       interaction: interaction,
     });
   },

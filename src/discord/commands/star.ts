@@ -10,7 +10,7 @@ import { CONFIG, COPY, EMOJIS } from '@/constants';
 import { LogCode } from '@/enums/logs';
 import { getActivity, updateActivity } from '@/services/activity';
 import { incDiscordUser } from '@/services/user';
-import { log, reply } from '../helpers';
+import { checkFeatureEnabled, log, reply } from '../helpers';
 
 export const Star = {
   data: new SlashCommandBuilder()
@@ -26,14 +26,7 @@ export const Star = {
     interaction: ChatInputCommandInteraction,
     recipient: User,
   ) => {
-    if (!CONFIG.FEATURES.STAR.ENABLED) {
-      reply({
-        content: COPY.DISABLED,
-        ephemeral: true,
-        interaction: interaction,
-      });
-      return;
-    }
+    if (!await checkFeatureEnabled('STAR', interaction)) return;
 
     const replies = {
       error: 'Something went wrong. Please try again later.',

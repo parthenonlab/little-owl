@@ -22,7 +22,7 @@ import { formatPriceToString } from '@/lib/utils';
 import { getInventory, updateCapacity } from '@/services/inventory';
 import { setDiscordUser } from '@/services/user';
 
-import { getTotalBalls, getUpgradePrice, log, reply } from '../helpers';
+import { checkFeatureEnabled, getTotalBalls, getUpgradePrice, log, reply } from '../helpers';
 
 const renderInventory = async (
   user: UserDocument,
@@ -70,14 +70,7 @@ export const Inventory = {
     interaction: ChatInputCommandInteraction,
     user: UserDocument,
   ) => {
-    if (!CONFIG.FEATURES.INVENTORY.ENABLED) {
-      reply({
-        content: COPY.DISABLED,
-        ephemeral: true,
-        interaction: interaction,
-      });
-      return;
-    }
+    if (!await checkFeatureEnabled('INVENTORY', interaction)) return;
 
     const inventory = await getInventory(interaction.user.id);
 

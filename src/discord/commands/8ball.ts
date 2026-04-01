@@ -4,8 +4,8 @@ import {
   SlashCommandStringOption,
 } from 'discord.js';
 
-import { CONFIG, COPY } from '@/constants';
-import { reply } from '../helpers';
+import { COPY } from '@/constants';
+import { checkFeatureEnabled, reply } from '../helpers';
 
 export const EightBall = {
   data: new SlashCommandBuilder()
@@ -18,14 +18,7 @@ export const EightBall = {
         .setRequired(true)
     ),
   execute: async (interaction: ChatInputCommandInteraction) => {
-    if (!CONFIG.FEATURES.EIGHTBALL.ENABLED) {
-      reply({
-        content: COPY.DISABLED,
-        ephemeral: true,
-        interaction: interaction,
-      });
-      return;
-    }
+    if (!await checkFeatureEnabled('8BALL', interaction)) return;
 
     const randomNum = Math.floor(
       Math.random() * COPY.EIGHTBALL.RESPONSES.length
@@ -35,7 +28,7 @@ export const EightBall = {
 
     reply({
       content: `:8ball: says.. ${answer}`,
-      ephemeral: false,
+
       interaction: interaction,
     });
   },

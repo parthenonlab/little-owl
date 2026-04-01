@@ -6,24 +6,17 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 
-import { CONFIG, COPY, URLS } from '@/constants';
+import { COPY, URLS } from '@/constants';
 import { LogCode } from '@/enums/logs';
 
-import { log, reply } from '../helpers';
+import { checkFeatureEnabled, log } from '../helpers';
 
 export const Help = {
   data: new SlashCommandBuilder()
     .setName(COPY.HELP.NAME)
     .setDescription(COPY.HELP.DESCRIPTION),
   execute: async (interaction: ChatInputCommandInteraction) => {
-    if (!CONFIG.FEATURES.HELP.ENABLED) {
-      reply({
-        content: COPY.DISABLED,
-        ephemeral: true,
-        interaction: interaction,
-      });
-      return;
-    }
+    if (!await checkFeatureEnabled('HELP', interaction)) return;
 
     const row = new ActionRowBuilder<ButtonBuilder>()
       .addComponents(

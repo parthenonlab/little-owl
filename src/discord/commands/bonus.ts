@@ -8,7 +8,7 @@ import { CONFIG, COPY, EMOJIS } from '@/constants';
 import { formatPriceToCode } from '@/lib/utils';
 import { incDiscordUser } from '@/services/user';
 
-import { reply } from '../helpers';
+import { checkFeatureEnabled, reply } from '../helpers';
 
 export const Bonus = {
   data: new SlashCommandBuilder()
@@ -30,14 +30,7 @@ export const Bonus = {
     interaction: ChatInputCommandInteraction,
     recipient: User,
   ) => {
-    if (!CONFIG.FEATURES.BONUS.ENABLED) {
-      reply({
-        content: COPY.DISABLED,
-        ephemeral: true,
-        interaction: interaction,
-      });
-      return;
-    }
+    if (!await checkFeatureEnabled('BONUS', interaction)) return;
 
     const amount = Number(interaction.options.get('amount')?.value) || 0;
 
@@ -69,7 +62,7 @@ export const Bonus = {
 
     reply({
       content: replies.success,
-      ephemeral: false,
+
       interaction: interaction,
     });
   },

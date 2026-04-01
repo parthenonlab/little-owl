@@ -15,16 +15,16 @@ import { log } from './log';
  */
 export const reply = async ({
   content,
-  ephemeral,
+  ephemeral = false,
   interaction,
 }: ReplyProps) => {
   try {
-    const botEmbed = new EmbedBuilder()
+    const embed = new EmbedBuilder()
       .setColor(CONFIG.COLORS.BLUE as ColorResolvable)
       .setDescription(content);
 
     await interaction.reply({
-      embeds: [botEmbed],
+      embeds: [embed],
       ...(ephemeral && { flags: MessageFlags.Ephemeral }),
     });
   } catch (error) {

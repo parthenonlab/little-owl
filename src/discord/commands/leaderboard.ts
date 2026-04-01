@@ -10,21 +10,14 @@ import { CONFIG, COPY, EMOJIS } from '@/constants';
 import { LogCode } from '@/enums/logs';
 import { getDiscordLeaderboard } from '@/services/user';
 
-import { log, reply } from '../helpers';
+import { checkFeatureEnabled, log } from '../helpers';
 
 export const Leaderboard = {
   data: new SlashCommandBuilder()
     .setName(COPY.LEADERBOARD.NAME)
     .setDescription(COPY.LEADERBOARD.DESCRIPTION),
   execute: async (interaction: ChatInputCommandInteraction) => {
-    if (!CONFIG.FEATURES.LEADERBOARD.ENABLED) {
-      reply({
-        content: COPY.DISABLED,
-        ephemeral: true,
-        interaction: interaction,
-      });
-      return;
-    }
+    if (!await checkFeatureEnabled('LEADERBOARD', interaction)) return;
 
     const description = `Here are the users with the highest ${CONFIG.CURRENCY.PLURAL}!`;
     const leaderboardUsers = await getDiscordLeaderboard('cash', 5);
