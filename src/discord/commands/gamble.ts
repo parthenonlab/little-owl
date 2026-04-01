@@ -3,6 +3,7 @@ import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { CONFIG, COPY, EMOJIS } from '@/constants';
 import { UserDocument } from '@/interfaces/user';
 import { formatPriceToCode, getCurrency, weightedRandom } from '@/lib/utils';
+import { updateActivity } from '@/services/activity';
 import { setDiscordUser } from '@/services/user';
 
 import { reply } from '../helpers';
@@ -64,81 +65,22 @@ export const Gamble = {
       loss: 1 - CONFIG.FEATURES.GAMBLE.WIN_PERCENT / 100,
     };
 
-    let points = user.cash;
     const result = weightedRandom(probability);
+    const won = result === 'win';
+
+    let wager: number;
 
     if (arg === 'all') {
-      if (result === 'win') {
-        points += user.cash;
-
-        reply({
-          content: `You won ${formatPriceToCode(user.cash)} ${getCurrency(user.cash)}! ${
-            EMOJIS.GAMBLE.WIN
-          } Current balance: ${formatPriceToCode(points)} ${EMOJIS.CURRENCY}`,
-          ephemeral: false,
-          interaction: interaction,
-        });
-      } else {
-        points = 0;
-
-        reply({
-          content: replies.lostAll,
-          ephemeral: false,
-          interaction: interaction,
-        });
-      }
+      wager = user.cash;
     } else if (arg === 'half') {
-      const halfPoints = Math.round(user.cash / 2);
-
-      if (result === 'win') {
-        points += halfPoints;
-
-        reply({
-          content: `You won ${formatPriceToCode(halfPoints)} ${getCurrency(halfPoints)}! ${
-            EMOJIS.GAMBLE.WIN
-          } Current balance: ${formatPriceToCode(points)} ${EMOJIS.CURRENCY}`,
-          ephemeral: false,
-          interaction: interaction,
-        });
-      } else {
-        points -= halfPoints;
-
-        reply({
-          content: `You lost ${formatPriceToCode(halfPoints)} ${getCurrency(halfPoints)}. ${
-            EMOJIS.GAMBLE.LOST
-          } Current balance: ${formatPriceToCode(points)} ${EMOJIS.CURRENCY}`,
-          ephemeral: false,
-          interaction: interaction,
-        });
-      }
+      wager = Math.round(user.cash / 2);
     } else if (amount < 1) {
       reply({
         content: replies.invalidNegative,
         ephemeral: true,
         interaction: interaction,
       });
-    } else if (amount <= user.cash) {
-      if (result === 'win') {
-        points += amount;
-
-        reply({
-          content: `You won ${formatPriceToCode(amount)} ${getCurrency(amount)}! ${
-            EMOJIS.GAMBLE.WIN
-          } Current balance: ${formatPriceToCode(points)} ${EMOJIS.CURRENCY}`,
-          ephemeral: false,
-          interaction: interaction,
-        });
-      } else {
-        points -= amount;
-
-        reply({
-          content: `You lost ${formatPriceToCode(amount)} ${getCurrency(amount)}. ${
-            EMOJIS.GAMBLE.LOST
-          } Current balance: ${formatPriceToCode(points)} ${EMOJIS.CURRENCY}`,
-          ephemeral: false,
-          interaction: interaction,
-        });
-      }
+      return;
     } else if (amount > user.cash) {
       reply({
         content: replies.notEnough,
@@ -146,9 +88,45 @@ export const Gamble = {
         interaction: interaction,
       });
       return;
+    } else {
+      wager = amount;
     }
 
-    await setDiscordUser(interaction.user.id, { cash: points });
+    const newBalance = won ? user.cash + wager : user.cash - wager;
+
+    if (won) {
+      reply({
+        content: `You won ${formatPriceToCode(wager)} ${getCurrency(wager)}! ${
+          EMOJIS.GAMBLE.WIN
+        } Current balance: ${formatPriceToCode(newBalance)} ${EMOJIS.CURRENCY}`,
+        ephemeral: false,
+        interaction: interaction,
+      });
+    } else if (newBalance === 0) {
+      reply({
+        content: replies.lostAll,
+        ephemeral: false,
+        interaction: interaction,
+      });
+    } else {
+      reply({
+        content: `You lost ${formatPriceToCode(wager)} ${getCurrency(wager)}. ${
+          EMOJIS.GAMBLE.LOST
+        } Current balance: ${formatPriceToCode(newBalance)} ${EMOJIS.CURRENCY}`,
+        ephemeral: false,
+        interaction: interaction,
+      });
+    }
+
+    await setDiscordUser(interaction.user.id, { cash: newBalance });
+    await updateActivity(interaction.user.id, {
+      $inc: {
+        [`gamble.${won ? 'total_wins' : 'total_losses'}`]: 1,
+        [`gamble.${won ? 'total_won' : 'total_lost'}`]: wager,
+      },
+      $set: { 'gamble.last_used': new Date() },
+      ...(won && { $max: { 'gamble.biggest_win': wager } }),
+    });
   },
   getName: (): string => {
     return COPY.GAMBLE.NAME;

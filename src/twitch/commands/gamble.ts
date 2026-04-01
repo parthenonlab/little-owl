@@ -4,6 +4,7 @@ import { UserDocument } from '@/interfaces/user';
 import { twitch } from '@/lib/clients';
 import { getCurrency, isNumber, weightedRandom } from '@/lib/utils';
 
+import { updateActivity } from '@/services/activity';
 import { setTwitchUser } from '@/services/user';
 
 export const onGamble = async (
@@ -37,70 +38,52 @@ export const onGamble = async (
     loss: 1 - CONFIG.FEATURES.GAMBLE.WIN_PERCENT / 100,
   };
 
-  let points = user.cash;
   const result = weightedRandom(probability);
+  const won = result === 'win';
+
+  let wager: number;
 
   if (value === 'all') {
-    if (result === 'win') {
-      points += user.cash;
-      twitch.say(
-        channel,
-        `${user.twitch_username} won ${user.cash} ${getCurrency(user.cash)}! ${
-          EMOTES.GAMBLE.WIN
-        } Current balance: ${points} ${getCurrency(points)}`,
-      );
-    } else {
-      points = 0;
-      twitch.say(channel, replies.lostAll);
-    }
+    wager = user.cash;
   } else if (value === 'half') {
-    const halfPoints = Math.round(user.cash / 2);
-
-    if (result === 'win') {
-      points += halfPoints;
-      twitch.say(
-        channel,
-        `${user.twitch_username} won ${halfPoints} ${getCurrency(
-          halfPoints,
-        )}! ${EMOTES.GAMBLE.WIN} Current balance: ${points} ${getCurrency(
-          points,
-        )}`,
-      );
-    } else {
-      points -= halfPoints;
-      twitch.say(
-        channel,
-        `${user.twitch_username} lost ${halfPoints} ${getCurrency(
-          halfPoints,
-        )}. ${EMOTES.GAMBLE.LOST} Current balance: ${points} ${getCurrency(
-          points,
-        )}`,
-      );
-    }
-  } else if (amount <= user.cash) {
-    if (result === 'win') {
-      points += amount;
-      twitch.say(
-        channel,
-        `${user.twitch_username} won ${amount} ${getCurrency(amount)}! ${
-          EMOTES.GAMBLE.WIN
-        } Current balance: ${points} ${getCurrency(points)}`,
-      );
-    } else {
-      points -= amount;
-      twitch.say(
-        channel,
-        `${user.twitch_username} lost ${amount} ${getCurrency(amount)}. ${
-          EMOTES.GAMBLE.LOST
-        } Current balance: ${points} ${getCurrency(points)}`,
-      );
-    }
+    wager = Math.round(user.cash / 2);
   } else if (amount > user.cash) {
     twitch.say(channel, replies.notEnough);
     return;
+  } else {
+    wager = amount;
   }
 
-  if (user.twitch_id) {
-    await setTwitchUser(user.twitch_id, { cash: points });
+  const newBalance = won ? user.cash + wager : user.cash - wager;
+
+  if (won) {
+    twitch.say(
+      channel,
+      `${user.twitch_username} won ${wager} ${getCurrency(wager)}! ${
+        EMOTES.GAMBLE.WIN
+      } Current balance: ${newBalance} ${getCurrency(newBalance)}`,
+    );
+  } else if (newBalance === 0) {
+    twitch.say(channel, replies.lostAll);
+  } else {
+    twitch.say(
+      channel,
+      `${user.twitch_username} lost ${wager} ${getCurrency(wager)}. ${
+        EMOTES.GAMBLE.LOST
+      } Current balance: ${newBalance} ${getCurrency(newBalance)}`,
+    );
+  }
+
+  await setTwitchUser(user.twitch_id!, { cash: newBalance });
+
+  if (user.discord_id) {
+    await updateActivity(user.discord_id, {
+      $inc: {
+        [`gamble.${won ? 'total_wins' : 'total_losses'}`]: 1,
+        [`gamble.${won ? 'total_won' : 'total_lost'}`]: wager,
+      },
+      $set: { 'gamble.last_used': new Date() },
+      ...(won && { $max: { 'gamble.biggest_win': wager } }),
+    });
   }
 };
