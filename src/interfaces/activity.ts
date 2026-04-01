@@ -11,6 +11,7 @@ export interface GambleActivity extends BaseActivity {
   total_losses: number;
   total_won: number;
   total_lost: number;
+  biggest_win: number;
 }
 
 export interface StarActivity extends BaseActivity {

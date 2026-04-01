@@ -17,6 +17,7 @@ const activitySchema = new Schema<ActivityDocument>(
       total_losses: { type: Number, default: 0 },
       total_won: { type: Number, default: 0 },
       total_lost: { type: Number, default: 0 },
+      biggest_win: { type: Number, default: 0 },
     },
     star: {
       last_used: { type: Date, default: null },
