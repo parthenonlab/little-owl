@@ -22,3 +22,6 @@ CLAUDE.md
 # Mac Files
 .DS_Store
 src/.DS_Store
+
+# Tokens
+.npmrc

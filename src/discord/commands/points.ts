@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { UserDocument } from '@parthenonlab/models';
 
 import { COPY, EMOJIS } from '@/constants';
-import { UserDocument } from '@/interfaces/user';
 import { formatPriceToCode } from '@/lib/utils';
 
 import { checkFeatureEnabled, reply } from '../helpers';
@@ -14,7 +14,7 @@ export const Points = {
     interaction: ChatInputCommandInteraction,
     user: UserDocument,
   ) => {
-    if (!await checkFeatureEnabled('POINTS', interaction)) return;
+    if (!(await checkFeatureEnabled('POINTS', interaction))) return;
 
     reply({
       content: `Your current balance is: ${formatPriceToCode(user.cash)} ${EMOJIS.CURRENCY}`,

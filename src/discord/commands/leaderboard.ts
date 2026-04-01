@@ -17,7 +17,7 @@ export const Leaderboard = {
     .setName(COPY.LEADERBOARD.NAME)
     .setDescription(COPY.LEADERBOARD.DESCRIPTION),
   execute: async (interaction: ChatInputCommandInteraction) => {
-    if (!await checkFeatureEnabled('LEADERBOARD', interaction)) return;
+    if (!(await checkFeatureEnabled('LEADERBOARD', interaction))) return;
 
     const description = `Here are the users with the highest ${CONFIG.CURRENCY.PLURAL}!`;
     const leaderboardUsers = await getDiscordLeaderboard('cash', 5);
@@ -31,7 +31,7 @@ export const Leaderboard = {
 
     const botEmbed = new EmbedBuilder()
       .setTitle('Leaderboard')
-      .setColor(CONFIG.COLORS.YELLOW as ColorResolvable);
+      .setColor(CONFIG.COLORS.BLUE as ColorResolvable);
 
     let content = '';
     leaderboardUsers.forEach((user, i) => {

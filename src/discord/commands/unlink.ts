@@ -5,9 +5,10 @@ import {
   SlashCommandStringOption,
 } from 'discord.js';
 
+import { UserDocument } from '@parthenonlab/models';
+
 import { COPY } from '@/constants';
 import { LogCode } from '@/enums/logs';
-import { UserDocument } from '@/interfaces/user';
 import { createUser, setDiscordUser } from '@/services/user';
 
 import { checkFeatureEnabled, log, reply } from '../helpers';
@@ -20,13 +21,13 @@ export const AccountUnlink = {
       option
         .setName(COPY.UNLINK.OPTION_NAME)
         .setDescription(COPY.UNLINK.OPTION_DESCRIPTION)
-        .setRequired(true)
+        .setRequired(true),
     ),
   execute: async (
     interaction: ChatInputCommandInteraction,
-    user: UserDocument
+    user: UserDocument,
   ) => {
-    if (!await checkFeatureEnabled('UNLINK', interaction)) return;
+    if (!(await checkFeatureEnabled('UNLINK', interaction))) return;
 
     if (!user.twitch_id) {
       reply({

@@ -12,19 +12,26 @@ import {
   TextInputStyle,
 } from 'discord.js';
 
+import { UserDocument } from '@parthenonlab/models';
+
 import { CONFIG, COPY } from '@/constants';
 import { POKEBALLS, POKEMON_IMAGE_URLS } from '@/constants/pokemon';
 import { LogCode } from '@/enums/logs';
 
 import { BotState } from '@/interfaces/bot';
 import { PokeballObject } from '@/interfaces/pokemon';
-import { UserDocument } from '@/interfaces/user';
 
 import { formatPriceToCode, formatPriceToString } from '@/lib/utils';
 import { getInventory, updateBalls } from '@/services/inventory';
 import { setDiscordUser } from '@/services/user';
 
-import { checkFeatureEnabled, getInventorySpace, getShopActions, log, reply } from '../helpers';
+import {
+  checkFeatureEnabled,
+  getInventorySpace,
+  getShopActions,
+  log,
+  reply,
+} from '../helpers';
 
 const getNextDailyRestock = (lastRestock: Date): number => {
   const next = new Date(lastRestock);
@@ -103,7 +110,7 @@ export const Shop = {
     interaction: ChatInputCommandInteraction,
     user: UserDocument,
   ) => {
-    if (!await checkFeatureEnabled('SHOP', interaction)) return;
+    if (!(await checkFeatureEnabled('SHOP', interaction))) return;
 
     if (state.exploreList.has(interaction.user.id)) {
       reply({

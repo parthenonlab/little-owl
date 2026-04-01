@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { UserDocument } from '@parthenonlab/models';
 
 import { CONFIG, COPY, EMOJIS } from '@/constants';
-import { UserDocument } from '@/interfaces/user';
 import { formatPriceToCode, getCurrency, weightedRandom } from '@/lib/utils';
 import { updateActivity } from '@/services/activity';
 import { setDiscordUser } from '@/services/user';
@@ -22,7 +22,7 @@ export const Gamble = {
     interaction: ChatInputCommandInteraction,
     user: UserDocument,
   ) => {
-    if (!await checkFeatureEnabled('GAMBLE', interaction)) return;
+    if (!(await checkFeatureEnabled('GAMBLE', interaction))) return;
 
     const replies = {
       invalidInput: 'Enter a specific amount, "all", or "half".',

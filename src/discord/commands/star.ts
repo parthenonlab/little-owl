@@ -69,7 +69,7 @@ export const Star = {
         $inc: { 'star.total_given': 1 },
         $set: { 'star.last_used': now },
       }),
-      incDiscordUser(recipient.id, { stars: 1 }),
+      incDiscordUser(recipient.id, 'stars', 1),
     ]);
 
     if (!updatedActivity) {
