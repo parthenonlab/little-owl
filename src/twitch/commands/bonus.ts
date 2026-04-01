@@ -14,7 +14,7 @@ export const onBonus = async (
   if (!isFeatureEnabled('BONUS')) return;
 
   if (recipient.twitch_id) {
-    await incTwitchUser(recipient.twitch_id, { cash: value });
+    await incTwitchUser(recipient.twitch_id, 'cash', value);
 
     twitch.say(
       channel,

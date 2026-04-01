@@ -83,8 +83,8 @@ export const Give = {
       return;
     }
 
-    await incDiscordUser(recipient.id, { cash: amount });
-    await incDiscordUser(interaction.user.id, { cash: -amount });
+    await incDiscordUser(recipient.id, 'cash', amount);
+    await incDiscordUser(interaction.user.id, 'cash', -amount);
 
     reply({
       content: `${replies.success} Your new balance: ${formatPriceToCode(user.cash - amount)} ${EMOJIS.CURRENCY}`,

@@ -61,7 +61,7 @@ export const onChat = async (
       description: `${userstate.username} has claimed ${points} channel points to ${points} ${CONFIG.CURRENCY.PLURAL}!`,
     });
 
-    await incTwitchUser(userstate['user-id'], { cash: points });
+    await incTwitchUser(userstate['user-id'], 'cash', points);
     return;
   }
 
@@ -152,5 +152,5 @@ export const onChat = async (
 
   if (!isValid) return;
 
-  await incTwitchUser(userstate['user-id'], { cash: 1 });
+  await incTwitchUser(userstate['user-id'], 'cash', 1);
 };

@@ -58,7 +58,7 @@ export const Bonus = {
       return;
     }
 
-    await incDiscordUser(recipient.id, { cash: amount });
+    await incDiscordUser(recipient.id, 'cash', amount);
 
     reply({
       content: replies.success,
