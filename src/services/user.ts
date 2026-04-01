@@ -1,11 +1,12 @@
-import { User } from 'discord.js';
+import { User as DiscordUser } from 'discord.js';
 import { v4 as uuidv4 } from 'uuid';
+import { UserDocument } from '@parthenonlab/models';
 
 import { log } from '@/discord/helpers';
 import { LogCode } from '@/enums/logs';
 
 import { ObjectProps } from '@/interfaces/bot';
-import { UserDocument, UserIncrementFields } from '@/interfaces/user';
+import { UserIncrementFields } from '@/interfaces/user';
 
 import { UserModel } from '@/models/user';
 
@@ -138,7 +139,7 @@ export const deleteUserByTwitchUsername = async (
  * @returns The existing or newly created user document, or null on error.
  */
 export const findOrCreateDiscordUser = async (
-  discordUser: User,
+  discordUser: DiscordUser,
 ): Promise<UserDocument | null> => {
   try {
     let user = await UserModel.findOne({ discord_id: discordUser.id });

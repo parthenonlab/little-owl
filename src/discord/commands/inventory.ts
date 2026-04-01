@@ -10,19 +10,26 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 
+import { UserDocument } from '@parthenonlab/models';
+
 import { CONFIG, COPY } from '@/constants';
 import { POKEBALLS, POKEMON_IMAGE_URLS } from '@/constants/pokemon';
 import { LogCode } from '@/enums/logs';
 
 import { InventoryDocument } from '@/interfaces/inventory';
 import { PokeballObject } from '@/interfaces/pokemon';
-import { UserDocument } from '@/interfaces/user';
 
 import { formatPriceToString } from '@/lib/utils';
 import { getInventory, updateCapacity } from '@/services/inventory';
 import { setDiscordUser } from '@/services/user';
 
-import { checkFeatureEnabled, getTotalBalls, getUpgradePrice, log, reply } from '../helpers';
+import {
+  checkFeatureEnabled,
+  getTotalBalls,
+  getUpgradePrice,
+  log,
+  reply,
+} from '../helpers';
 
 const renderInventory = async (
   user: UserDocument,
@@ -70,7 +77,7 @@ export const Inventory = {
     interaction: ChatInputCommandInteraction,
     user: UserDocument,
   ) => {
-    if (!await checkFeatureEnabled('INVENTORY', interaction)) return;
+    if (!(await checkFeatureEnabled('INVENTORY', interaction))) return;
 
     const inventory = await getInventory(interaction.user.id);
 

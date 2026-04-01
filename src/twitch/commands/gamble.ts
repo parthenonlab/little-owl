@@ -1,5 +1,6 @@
+import { UserDocument } from '@parthenonlab/models';
+
 import { CONFIG, EMOTES } from '@/constants';
-import { UserDocument } from '@/interfaces/user';
 
 import { twitch } from '@/lib/clients';
 import { isFeatureEnabled } from '@/lib/config';

@@ -4,8 +4,9 @@ import {
   User,
 } from 'discord.js';
 
+import { UserDocument } from '@parthenonlab/models';
+
 import { CONFIG, COPY, EMOJIS } from '@/constants';
-import { UserDocument } from '@/interfaces/user';
 import { formatPriceToCode, getCurrency } from '@/lib/utils';
 import { incDiscordUser } from '@/services/user';
 
@@ -32,7 +33,7 @@ export const Give = {
     user: UserDocument,
     recipient: User,
   ) => {
-    if (!await checkFeatureEnabled('GIVE', interaction)) return;
+    if (!(await checkFeatureEnabled('GIVE', interaction))) return;
 
     const amount = Number(interaction.options.get('amount')?.value) || 0;
 

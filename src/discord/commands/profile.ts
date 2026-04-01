@@ -4,12 +4,13 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 
+import { UserDocument } from '@parthenonlab/models';
+
 import { FIGTREE_FONT_FACE } from '@/assets/fonts';
 import { COPY, MONTH_MAP } from '@/constants';
 import { LogCode } from '@/enums/logs';
 import { SilverIcon, StarIcon } from '@/icons';
 
-import { UserDocument } from '@/interfaces/user';
 import { formatPriceToString, parseHexToRGB } from '@/lib/utils';
 import { getDiscordUserRank, setDiscordUser } from '@/services/user';
 
@@ -23,7 +24,7 @@ export const Profile = {
     interaction: ChatInputCommandInteraction,
     user: UserDocument,
   ) => {
-    if (!await checkFeatureEnabled('PROFILE', interaction)) return;
+    if (!(await checkFeatureEnabled('PROFILE', interaction))) return;
 
     await interaction.deferReply();
 

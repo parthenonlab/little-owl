@@ -5,10 +5,10 @@ import {
   SlashCommandStringOption,
 } from 'discord.js';
 
+import { UserDocument } from '@parthenonlab/models';
+
 import { COPY } from '@/constants';
 import { LogCode } from '@/enums/logs';
-import { UserDocument } from '@/interfaces/user';
-
 import { deleteUser, getUserById, setDiscordUser } from '@/services/user';
 
 import { checkFeatureEnabled, log, reply } from '../helpers';
@@ -21,13 +21,13 @@ export const AccountLink = {
       option
         .setName(COPY.LINK.OPTION_NAME)
         .setDescription(COPY.LINK.OPTION_DESCRIPTION)
-        .setRequired(true)
+        .setRequired(true),
     ),
   execute: async (
     interaction: ChatInputCommandInteraction,
-    user: UserDocument
+    user: UserDocument,
   ) => {
-    if (!await checkFeatureEnabled('LINK', interaction)) return;
+    if (!(await checkFeatureEnabled('LINK', interaction))) return;
 
     const code = interaction.options.get('code')?.value;
 
