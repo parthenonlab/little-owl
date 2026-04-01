@@ -2,6 +2,7 @@ import { CONFIG, EMOTES } from '@/constants';
 import { UserDocument } from '@/interfaces/user';
 
 import { twitch } from '@/lib/clients';
+import { isFeatureEnabled } from '@/lib/config';
 import { getCurrency, isNumber, weightedRandom } from '@/lib/utils';
 
 import { updateActivity } from '@/services/activity';
@@ -12,7 +13,7 @@ export const onGamble = async (
   user: UserDocument,
   args: string[],
 ) => {
-  if (!CONFIG.FEATURES.GAMBLE.ENABLED) return;
+  if (!isFeatureEnabled('GAMBLE')) return;
 
   const replies = {
     lostAll: `${user.twitch_username} lost all of their ${CONFIG.CURRENCY.PLURAL}. ${EMOTES.GAMBLE.LOST}`,
@@ -34,8 +35,8 @@ export const onGamble = async (
   if (amount < 1) return;
 
   const probability = {
-    win: CONFIG.FEATURES.GAMBLE.WIN_PERCENT / 100,
-    loss: 1 - CONFIG.FEATURES.GAMBLE.WIN_PERCENT / 100,
+    win: CONFIG.GAMBLE.WIN_PERCENT / 100,
+    loss: 1 - CONFIG.GAMBLE.WIN_PERCENT / 100,
   };
 
   const result = weightedRandom(probability);

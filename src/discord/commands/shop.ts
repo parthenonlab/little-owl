@@ -24,7 +24,7 @@ import { formatPriceToCode, formatPriceToString } from '@/lib/utils';
 import { getInventory, updateBalls } from '@/services/inventory';
 import { setDiscordUser } from '@/services/user';
 
-import { getInventorySpace, getShopActions, log, reply } from '../helpers';
+import { checkFeatureEnabled, getInventorySpace, getShopActions, log, reply } from '../helpers';
 
 const getNextDailyRestock = (lastRestock: Date): number => {
   const next = new Date(lastRestock);
@@ -103,14 +103,7 @@ export const Shop = {
     interaction: ChatInputCommandInteraction,
     user: UserDocument,
   ) => {
-    if (!CONFIG.FEATURES.SHOP.ENABLED) {
-      reply({
-        content: COPY.DISABLED,
-        ephemeral: true,
-        interaction: interaction,
-      });
-      return;
-    }
+    if (!await checkFeatureEnabled('SHOP', interaction)) return;
 
     if (state.exploreList.has(interaction.user.id)) {
       reply({

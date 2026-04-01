@@ -5,13 +5,13 @@ import {
   SlashCommandStringOption,
 } from 'discord.js';
 
-import { CONFIG, COPY } from '@/constants';
+import { COPY } from '@/constants';
 import { LogCode } from '@/enums/logs';
 import { UserDocument } from '@/interfaces/user';
 
 import { deleteUser, getUserById, setDiscordUser } from '@/services/user';
 
-import { log, reply } from '../helpers';
+import { checkFeatureEnabled, log, reply } from '../helpers';
 
 export const AccountLink = {
   data: new SlashCommandBuilder()
@@ -27,14 +27,7 @@ export const AccountLink = {
     interaction: ChatInputCommandInteraction,
     user: UserDocument
   ) => {
-    if (!CONFIG.FEATURES.LINK.ENABLED) {
-      reply({
-        content: COPY.DISABLED,
-        ephemeral: true,
-        interaction: interaction,
-      });
-      return;
-    }
+    if (!await checkFeatureEnabled('LINK', interaction)) return;
 
     const code = interaction.options.get('code')?.value;
 

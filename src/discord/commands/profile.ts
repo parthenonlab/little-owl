@@ -5,7 +5,7 @@ import {
 } from 'discord.js';
 
 import { FIGTREE_FONT_FACE } from '@/assets/fonts';
-import { CONFIG, COPY, MONTH_MAP } from '@/constants';
+import { COPY, MONTH_MAP } from '@/constants';
 import { LogCode } from '@/enums/logs';
 import { SilverIcon, StarIcon } from '@/icons';
 
@@ -13,7 +13,7 @@ import { UserDocument } from '@/interfaces/user';
 import { formatPriceToString, parseHexToRGB } from '@/lib/utils';
 import { getDiscordUserRank, setDiscordUser } from '@/services/user';
 
-import { log, reply, useBrowser } from '../helpers';
+import { checkFeatureEnabled, log, useBrowser } from '../helpers';
 
 export const Profile = {
   data: new SlashCommandBuilder()
@@ -23,14 +23,7 @@ export const Profile = {
     interaction: ChatInputCommandInteraction,
     user: UserDocument,
   ) => {
-    if (!CONFIG.FEATURES.PROFILE.ENABLED) {
-      reply({
-        content: COPY.DISABLED,
-        ephemeral: true,
-        interaction: interaction,
-      });
-      return;
-    }
+    if (!await checkFeatureEnabled('PROFILE', interaction)) return;
 
     await interaction.deferReply();
 

@@ -9,7 +9,7 @@ import { UserDocument } from '@/interfaces/user';
 import { formatPriceToCode, getCurrency } from '@/lib/utils';
 import { incDiscordUser } from '@/services/user';
 
-import { reply } from '../helpers';
+import { checkFeatureEnabled, reply } from '../helpers';
 
 export const Give = {
   data: new SlashCommandBuilder()
@@ -32,14 +32,7 @@ export const Give = {
     user: UserDocument,
     recipient: User,
   ) => {
-    if (!CONFIG.FEATURES.GIVE.ENABLED) {
-      reply({
-        content: COPY.DISABLED,
-        ephemeral: true,
-        interaction: interaction,
-      });
-      return;
-    }
+    if (!await checkFeatureEnabled('GIVE', interaction)) return;
 
     const amount = Number(interaction.options.get('amount')?.value) || 0;
 
@@ -94,7 +87,7 @@ export const Give = {
 
     reply({
       content: `${replies.success} Your new balance: ${formatPriceToCode(user.cash - amount)} ${EMOJIS.CURRENCY}`,
-      ephemeral: false,
+
       interaction: interaction,
     });
   },

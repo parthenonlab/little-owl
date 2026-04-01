@@ -5,12 +5,12 @@ import {
   SlashCommandStringOption,
 } from 'discord.js';
 
-import { CONFIG, COPY } from '@/constants';
+import { COPY } from '@/constants';
 import { LogCode } from '@/enums/logs';
 import { UserDocument } from '@/interfaces/user';
 import { createUser, setDiscordUser } from '@/services/user';
 
-import { log, reply } from '../helpers';
+import { checkFeatureEnabled, log, reply } from '../helpers';
 
 export const AccountUnlink = {
   data: new SlashCommandBuilder()
@@ -26,14 +26,7 @@ export const AccountUnlink = {
     interaction: ChatInputCommandInteraction,
     user: UserDocument
   ) => {
-    if (!CONFIG.FEATURES.UNLINK.ENABLED) {
-      reply({
-        content: COPY.DISABLED,
-        ephemeral: true,
-        interaction: interaction,
-      });
-      return;
-    }
+    if (!await checkFeatureEnabled('UNLINK', interaction)) return;
 
     if (!user.twitch_id) {
       reply({
