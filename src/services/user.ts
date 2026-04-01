@@ -1,13 +1,12 @@
 import { User as DiscordUser } from 'discord.js';
 import { v4 as uuidv4 } from 'uuid';
 
-import { UserDocument } from '@parthenonlab/models';
+import { UserDocument, UserModel } from '@parthenonlab/models';
 import { User } from '@parthenonlab/types';
 
 import { log } from '@/discord/helpers';
 import { LogCode } from '@/enums/logs';
 import { ObjectProps } from '@/interfaces/bot';
-import { UserModel } from '@/models/user';
 
 type NumericUserField = {
   [K in keyof User]: User[K] extends number ? K : never;
