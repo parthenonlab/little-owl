@@ -5,7 +5,7 @@ import {
 } from 'discord.js';
 
 import { CONFIG, COPY, EMOJIS } from '@/constants';
-import { formatPriceToCode } from '@/lib/utils';
+import { formatNumberToCode } from '@/lib/utils';
 import { incDiscordUser } from '@/services/user';
 
 import { checkFeatureEnabled, reply } from '../helpers';
@@ -30,14 +30,14 @@ export const Bonus = {
     interaction: ChatInputCommandInteraction,
     recipient: User,
   ) => {
-    if (!await checkFeatureEnabled('BONUS', interaction)) return;
+    if (!(await checkFeatureEnabled('BONUS', interaction))) return;
 
     const amount = Number(interaction.options.get('amount')?.value) || 0;
 
     const replies = {
       invalidAdmin: 'This is an admin-only command.',
       invalidNegative: `You should reward at least 1 ${CONFIG.CURRENCY.SINGLE}.`,
-      success: `${recipient.displayName} has received ${formatPriceToCode(amount)} ${EMOJIS.CURRENCY}`,
+      success: `${recipient.displayName} has received ${formatNumberToCode(amount)} ${EMOJIS.CURRENCY}`,
     };
 
     if (interaction.user.id !== interaction.guild?.ownerId) {

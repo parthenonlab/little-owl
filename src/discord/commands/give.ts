@@ -7,7 +7,7 @@ import {
 import { UserDocument } from '@parthenonlab/models';
 
 import { CONFIG, COPY, EMOJIS } from '@/constants';
-import { formatPriceToCode, getCurrency } from '@/lib/utils';
+import { formatNumberToCode, getCurrency } from '@/lib/utils';
 import { incDiscordUser } from '@/services/user';
 
 import { checkFeatureEnabled, reply } from '../helpers';
@@ -42,7 +42,7 @@ export const Give = {
       invalidRecipient: `You can't give yourself ${CONFIG.CURRENCY.PLURAL}. ${EMOJIS.GIVE.INVALID}`,
       noPoints: `Sorry, you have no ${CONFIG.CURRENCY.SINGLE} to give. ${EMOJIS.GIVE.INVALID}`,
       notEnough: `Sorry, you don't have enough ${CONFIG.CURRENCY.PLURAL} to give. ${EMOJIS.GIVE.INVALID}`,
-      success: `You gave ${recipient.displayName} ${formatPriceToCode(amount)} ${getCurrency(
+      success: `You gave ${recipient.displayName} ${formatNumberToCode(amount)} ${getCurrency(
         amount,
       )}.`,
     };
@@ -87,7 +87,7 @@ export const Give = {
     await incDiscordUser(interaction.user.id, 'cash', -amount);
 
     reply({
-      content: `${replies.success} Your new balance: ${formatPriceToCode(user.cash - amount)} ${EMOJIS.CURRENCY}`,
+      content: `${replies.success} Your new balance: ${formatNumberToCode(user.cash - amount)} ${EMOJIS.CURRENCY}`,
 
       interaction: interaction,
     });

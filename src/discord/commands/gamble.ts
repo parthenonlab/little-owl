@@ -2,7 +2,7 @@ import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { UserDocument } from '@parthenonlab/models';
 
 import { CONFIG, COPY, EMOJIS } from '@/constants';
-import { formatPriceToCode, getCurrency, weightedRandom } from '@/lib/utils';
+import { formatNumberToCode, getCurrency, weightedRandom } from '@/lib/utils';
 import { updateActivity } from '@/services/activity';
 import { setDiscordUser } from '@/services/user';
 
@@ -89,9 +89,9 @@ export const Gamble = {
 
     if (won) {
       reply({
-        content: `You won ${formatPriceToCode(wager)} ${getCurrency(wager)}! ${
+        content: `You won ${formatNumberToCode(wager)} ${getCurrency(wager)}! ${
           EMOJIS.GAMBLE.WIN
-        } Current balance: ${formatPriceToCode(newBalance)} ${EMOJIS.CURRENCY}`,
+        } Current balance: ${formatNumberToCode(newBalance)} ${EMOJIS.CURRENCY}`,
 
         interaction: interaction,
       });
@@ -103,9 +103,9 @@ export const Gamble = {
       });
     } else {
       reply({
-        content: `You lost ${formatPriceToCode(wager)} ${getCurrency(wager)}. ${
+        content: `You lost ${formatNumberToCode(wager)} ${getCurrency(wager)}. ${
           EMOJIS.GAMBLE.LOST
-        } Current balance: ${formatPriceToCode(newBalance)} ${EMOJIS.CURRENCY}`,
+        } Current balance: ${formatNumberToCode(newBalance)} ${EMOJIS.CURRENCY}`,
 
         interaction: interaction,
       });
