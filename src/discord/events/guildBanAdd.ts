@@ -2,7 +2,7 @@ import { GuildBan } from 'discord.js';
 
 import { LogCode } from '@/enums/logs';
 import { deleteActivity } from '@/services/activity';
-import { deleteStats } from '@/services/stat';
+import { deleteStats } from '@/services/stats';
 import { deleteUserByDiscordId } from '@/services/user';
 
 import { log } from '../helpers/log';

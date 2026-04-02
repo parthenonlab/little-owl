@@ -219,6 +219,7 @@ export const Explore = {
 
       await saveCatch({
         discord_id: interaction.user.id,
+        original_trainer: interaction.user.id,
         pokemon_id: payload.id,
         gender: payload.gender,
         variant: 'normal',

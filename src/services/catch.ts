@@ -1,13 +1,13 @@
 import { nanoid } from 'nanoid';
 
+import { CatchDocument, CatchModel } from '@parthenonlab/models';
+
 import { log } from '@/discord/helpers/log';
 import { LogCode } from '@/enums/logs';
 
-import { CatchDocument } from '@/interfaces/catch';
-import { CatchModel } from '@/models/catch';
-
 interface CreateCatchParams {
   discord_id: string;
+  original_trainer: string;
   pokemon_id: number;
   gender: string | null;
   variant: string;
