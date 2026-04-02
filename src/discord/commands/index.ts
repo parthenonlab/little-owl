@@ -9,6 +9,7 @@ export * from './inventory';
 export * from './leaderboard';
 export * from './link';
 export * from './points';
+export * from './pokedex';
 export * from './profile';
 export * from './shop';
 export * from './sleep';

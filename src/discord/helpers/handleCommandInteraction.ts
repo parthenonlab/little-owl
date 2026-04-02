@@ -119,6 +119,11 @@ export const handleCommandInteraction = async (
     if (user) dc.Shop.execute(state, interaction, user);
   }
 
+  // command: pokedex
+  else if (interaction.commandName === dc.Pokedex.getName()) {
+    return dc.Pokedex.execute(interaction);
+  }
+
   // command: profile
   else if (interaction.commandName === dc.Profile.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);

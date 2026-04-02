@@ -125,6 +125,10 @@ export const COPY = {
     NAME: 'points',
     DESCRIPTION: `Display the amount of ${CONFIG.CURRENCY.PLURAL} you have`,
   },
+  POKEDEX: {
+    NAME: 'pokedex',
+    DESCRIPTION: 'View your Pokédex on Parthenon!',
+  },
   PROFILE: {
     NAME: 'profile',
     DESCRIPTION: 'Display your profile',
