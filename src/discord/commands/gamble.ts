@@ -2,8 +2,9 @@ import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { UserDocument } from '@parthenonlab/models';
 
 import { CONFIG, COPY, EMOJIS } from '@/constants';
-import { formatPriceToCode, getCurrency, weightedRandom } from '@/lib/utils';
+import { formatNumberToCode, getCurrency, weightedRandom } from '@/lib/utils';
 import { updateActivity } from '@/services/activity';
+import { saveGambleStats } from '@/services/stats';
 import { setDiscordUser } from '@/services/user';
 
 import { checkFeatureEnabled, reply } from '../helpers';
@@ -89,9 +90,9 @@ export const Gamble = {
 
     if (won) {
       reply({
-        content: `You won ${formatPriceToCode(wager)} ${getCurrency(wager)}! ${
+        content: `You won ${formatNumberToCode(wager)} ${getCurrency(wager)}! ${
           EMOJIS.GAMBLE.WIN
-        } Current balance: ${formatPriceToCode(newBalance)} ${EMOJIS.CURRENCY}`,
+        } Current balance: ${formatNumberToCode(newBalance)} ${EMOJIS.CURRENCY}`,
 
         interaction: interaction,
       });
@@ -103,23 +104,17 @@ export const Gamble = {
       });
     } else {
       reply({
-        content: `You lost ${formatPriceToCode(wager)} ${getCurrency(wager)}. ${
+        content: `You lost ${formatNumberToCode(wager)} ${getCurrency(wager)}. ${
           EMOJIS.GAMBLE.LOST
-        } Current balance: ${formatPriceToCode(newBalance)} ${EMOJIS.CURRENCY}`,
+        } Current balance: ${formatNumberToCode(newBalance)} ${EMOJIS.CURRENCY}`,
 
         interaction: interaction,
       });
     }
 
     await setDiscordUser(interaction.user.id, { cash: newBalance });
-    await updateActivity(interaction.user.id, {
-      $inc: {
-        [`gamble.${won ? 'total_wins' : 'total_losses'}`]: 1,
-        [`gamble.${won ? 'total_won' : 'total_lost'}`]: wager,
-      },
-      $set: { 'gamble.last_used': new Date() },
-      ...(won && { $max: { 'gamble.biggest_win': wager } }),
-    });
+    await saveGambleStats(interaction.user.id, { won, wager });
+    await updateActivity(interaction.user.id, { $set: { 'gamble.last_used': new Date() } });
   },
   getName: (): string => {
     return COPY.GAMBLE.NAME;

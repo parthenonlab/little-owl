@@ -7,8 +7,8 @@
   "author": "athena@parthenon.app",
   "license": "MIT",
   "dependencies": {
-    "@parthenonlab/models": "^0.1.2",
-    "@parthenonlab/types": "^0.1.0",
+    "@parthenonlab/models": "^0.2.2",
+    "@parthenonlab/types": "^0.2.3",
     "discord.js": "^14.26.0",
     "mongoose": "^9.3.3",
     "nanoid": "^5.1.7",

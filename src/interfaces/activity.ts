@@ -6,13 +6,7 @@ interface BaseActivity {
 
 export interface BankActivity extends BaseActivity {}
 
-export interface GambleActivity extends BaseActivity {
-  total_wins: number;
-  total_losses: number;
-  total_won: number;
-  total_lost: number;
-  biggest_win: number;
-}
+export interface GambleActivity extends BaseActivity {}
 
 export interface StarActivity extends BaseActivity {
   total_given: number;

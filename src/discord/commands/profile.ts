@@ -11,7 +11,7 @@ import { COPY, MONTH_MAP } from '@/constants';
 import { LogCode } from '@/enums/logs';
 import { SilverIcon, StarIcon } from '@/icons';
 
-import { formatPriceToString, parseHexToRGB } from '@/lib/utils';
+import { formatNumberToString, parseHexToRGB } from '@/lib/utils';
 import { getDiscordUserRank, setDiscordUser } from '@/services/user';
 
 import { checkFeatureEnabled, log, useBrowser } from '../helpers';
@@ -160,7 +160,7 @@ export const Profile = {
                 <div class="balance">
                   <p class="cash">
                     ${SilverIcon(20, 20)}
-                    <span>${formatPriceToString(user.cash)}</span>
+                    <span>${formatNumberToString(user.cash)}</span>
                   </p>
                 </div>
                 <div class="stars">

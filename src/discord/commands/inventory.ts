@@ -19,7 +19,7 @@ import { LogCode } from '@/enums/logs';
 import { InventoryDocument } from '@/interfaces/inventory';
 import { PokeballObject } from '@/interfaces/pokemon';
 
-import { formatPriceToString } from '@/lib/utils';
+import { formatNumberToString } from '@/lib/utils';
 import { getInventory, updateCapacity } from '@/services/inventory';
 import { setDiscordUser } from '@/services/user';
 
@@ -62,7 +62,7 @@ const renderInventory = async (
     )
     .setThumbnail(inventoryIcon)
     .setFooter({
-      text: `CASH BALANCE: ${formatPriceToString(user.cash)}`,
+      text: `CASH BALANCE: ${formatNumberToString(user.cash)}`,
       iconURL: POKEMON_IMAGE_URLS.base + '/currency/silver.png',
     });
 
@@ -99,7 +99,7 @@ export const Inventory = {
         new ButtonBuilder()
           .setCustomId(`${user.discord_id}:inventory`)
           .setLabel(
-            `Upgrade (+1 Slot) - Cost: ${formatPriceToString(nextUpgrade)}`,
+            `Upgrade (+1 Slot) - Cost: ${formatNumberToString(nextUpgrade)}`,
           )
           .setStyle(ButtonStyle.Success),
       );
