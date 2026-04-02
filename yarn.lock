@@ -728,15 +728,15 @@
     "@emnapi/runtime" "^1.4.3"
     "@tybys/wasm-util" "^0.10.0"
 
-"@parthenonlab/models@^0.1.2":
-  version "0.1.2"
-  resolved "https://npm.pkg.github.com/download/@parthenonlab/models/0.1.2/16405e50654e18c85b6c04169666a07b67ee4134#16405e50654e18c85b6c04169666a07b67ee4134"
-  integrity sha512-+daiTt4Mpagg7ZsoAe3tMYiAdM50kYX5Ygq3PEqCjinlHMtJO0x9Vk62zyJeMp5dYzrY2/DTDIh5pxSmq0DHFA==
+"@parthenonlab/models@^0.2.1":
+  version "0.2.1"
+  resolved "https://npm.pkg.github.com/download/@parthenonlab/models/0.2.1/4ab97239fe4daffc90d57186171f33b3d245a00b#4ab97239fe4daffc90d57186171f33b3d245a00b"
+  integrity sha512-QP6/pN0w76LSRWXwc2JUVKtiTljeoUMWlhGOwztmFMO5D80nTkqsxHSZDd2AyFNWMcjc0Wmwet4Cb4WWyBbp/Q==
 
-"@parthenonlab/types@^0.1.0":
-  version "0.1.0"
-  resolved "https://npm.pkg.github.com/download/@parthenonlab/types/0.1.0/46928996595f79722f4c2771d4d37ae797413cde#46928996595f79722f4c2771d4d37ae797413cde"
-  integrity sha512-A/1wVbYjBRpmI9xhiyKeEpgGWnRYRFRZPHnf88FGJa0Db2e22vt1bsyBMBApWO+RZB8u9GGqJsUU07K9/Divfg==
+"@parthenonlab/types@^0.2.2":
+  version "0.2.2"
+  resolved "https://npm.pkg.github.com/download/@parthenonlab/types/0.2.2/8e18d13244aefd4131ebd2ba4aeaffa8e769df09#8e18d13244aefd4131ebd2ba4aeaffa8e769df09"
+  integrity sha512-E/JtPBUC7M0p4Q31r2AFmL3bsbD/EO+3LQ0G5tgCgRvr1Jnl4koPly0/D5QfATW3kXtV0NYDKJkMcUAgoc4OKQ==
 
 "@pkgjs/parseargs@^0.11.0":
   version "0.11.0"

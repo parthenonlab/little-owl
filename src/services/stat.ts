@@ -1,7 +1,7 @@
+import { StatsDocument, StatsModel } from '@parthenonlab/models';
+
 import { log } from '@/discord/helpers';
 import { LogCode } from '@/enums/logs';
-import { StatDocument } from '@/interfaces/stat';
-import { StatModel } from '@/models/stat';
 
 /**
  * Delete the stats document for a Discord user.
@@ -9,9 +9,9 @@ import { StatModel } from '@/models/stat';
  * @param id - Discord user ID.
  * @returns The deleted stats document, or null if not found or on error.
  */
-export const deleteStats = async (id: string): Promise<StatDocument | null> => {
+export const deleteStats = async (id: string): Promise<StatsDocument | null> => {
   try {
-    return await StatModel.findOneAndDelete({ discord_id: id });
+    return await StatsModel.findOneAndDelete({ discord_id: id });
   } catch (error) {
     log({
       type: LogCode.Error,

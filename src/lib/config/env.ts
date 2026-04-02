@@ -3,8 +3,6 @@ const ADMIN_SERVER_ID = process.env.ADMIN_SERVER_ID;
 const MONGODB_ACTS = process.env.MONGODB_ACTS;
 const MONGODB_CATCHES = process.env.MONGODB_CATCHES;
 const MONGODB_INVENTORY = process.env.MONGODB_INVENTORY;
-const MONGODB_STATS = process.env.MONGODB_STATS;
-const MONGODB_USERS = process.env.MONGODB_USERS;
 
 const SERVER_ID = process.env.SERVER_ID;
 
@@ -20,8 +18,6 @@ export const getENV = () => {
     !MONGODB_ACTS ||
     !MONGODB_CATCHES ||
     !MONGODB_INVENTORY ||
-    !MONGODB_STATS ||
-    !MONGODB_USERS ||
     !SERVER_ID
   ) {
     console.error('🦉 Error: Missing Necessary Environment Variables');
@@ -33,8 +29,6 @@ export const getENV = () => {
     MONGODB_ACTS,
     MONGODB_CATCHES,
     MONGODB_INVENTORY,
-    MONGODB_STATS,
-    MONGODB_USERS,
     SERVER_ID,
   };
 };
