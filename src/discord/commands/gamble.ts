@@ -4,6 +4,7 @@ import { UserDocument } from '@parthenonlab/models';
 import { CONFIG, COPY, EMOJIS } from '@/constants';
 import { formatNumberToCode, getCurrency, weightedRandom } from '@/lib/utils';
 import { updateActivity } from '@/services/activity';
+import { saveGambleStats } from '@/services/stats';
 import { setDiscordUser } from '@/services/user';
 
 import { checkFeatureEnabled, reply } from '../helpers';
@@ -112,14 +113,8 @@ export const Gamble = {
     }
 
     await setDiscordUser(interaction.user.id, { cash: newBalance });
-    await updateActivity(interaction.user.id, {
-      $inc: {
-        [`gamble.${won ? 'total_wins' : 'total_losses'}`]: 1,
-        [`gamble.${won ? 'total_won' : 'total_lost'}`]: wager,
-      },
-      $set: { 'gamble.last_used': new Date() },
-      ...(won && { $max: { 'gamble.biggest_win': wager } }),
-    });
+    await saveGambleStats(interaction.user.id, { won, wager });
+    await updateActivity(interaction.user.id, { $set: { 'gamble.last_used': new Date() } });
   },
   getName: (): string => {
     return COPY.GAMBLE.NAME;

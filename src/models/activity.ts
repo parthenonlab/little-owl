@@ -13,11 +13,6 @@ const activitySchema = new Schema<ActivityDocument>(
     },
     gamble: {
       last_used: { type: Date, default: null },
-      total_wins: { type: Number, default: 0 },
-      total_losses: { type: Number, default: 0 },
-      total_won: { type: Number, default: 0 },
-      total_lost: { type: Number, default: 0 },
-      biggest_win: { type: Number, default: 0 },
     },
     star: {
       last_used: { type: Date, default: null },
