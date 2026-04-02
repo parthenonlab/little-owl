@@ -10,7 +10,9 @@ import { LogCode } from '@/enums/logs';
  * @param id - Discord user ID.
  * @returns The deleted stats document, or null if not found or on error.
  */
-export const deleteStats = async (id: string): Promise<StatsDocument | null> => {
+export const deleteStats = async (
+  id: string,
+): Promise<StatsDocument | null> => {
   try {
     return await StatsModel.findOneAndDelete({ discord_id: id });
   } catch (error) {
@@ -34,11 +36,15 @@ export const saveGambleStats = async (
   { won, wager }: { won: boolean; wager: number },
 ): Promise<StatsDocument | null> => {
   try {
-    const inc: Partial<GambleStats> = { totalPlayed: 1 };
-    const max: Partial<GambleStats> = won ? { highestWin: wager } : { highestLost: wager };
+    const inc: Partial<GambleStats> = { totalPlays: 1 };
+    const max: Partial<GambleStats> = won
+      ? { maxWin: wager }
+      : { maxLoss: wager };
 
     const toGmb = (fields: Partial<GambleStats>) =>
-      Object.fromEntries(Object.entries(fields).map(([k, v]) => [`gmb.${k}`, v]));
+      Object.fromEntries(
+        Object.entries(fields).map(([k, v]) => [`gmb.${k}`, v]),
+      );
 
     return await StatsModel.findOneAndUpdate(
       { discord_id: id },
