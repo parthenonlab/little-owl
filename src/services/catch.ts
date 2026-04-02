@@ -27,6 +27,7 @@ export const saveCatch = async (
   try {
     const pokemonCatch = new CatchModel({
       catch_id: `PKM-${nanoid(8)}`,
+      caught_at: new Date(),
       ...params,
     });
 

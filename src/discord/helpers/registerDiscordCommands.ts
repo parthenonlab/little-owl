@@ -14,6 +14,7 @@ import {
   Inventory,
   Leaderboard,
   Points,
+  Pokedex,
   Profile,
   Shop,
   Sleep,
@@ -64,6 +65,7 @@ export const registerDiscordCommands = (): void => {
   commands.push(Inventory.data.toJSON());
   commands.push(Leaderboard.data.toJSON());
   commands.push(Points.data.toJSON());
+  commands.push(Pokedex.data.toJSON());
   commands.push(Profile.data.toJSON());
   commands.push(Shop.data.toJSON());
   commands.push(Star.data.toJSON());
