@@ -1,4 +1,4 @@
-import { restockShopDaily, restockShopWeekly } from '@/discord/helpers/restockShop';
+import { restockShopDaily, restockShopWeekly } from '@/discord/helpers';
 import { BotState } from '@/interfaces/bot';
 
 const makeState = (overrides: Partial<BotState['shop']> = {}): BotState =>
@@ -12,7 +12,7 @@ const makeState = (overrides: Partial<BotState['shop']> = {}): BotState =>
       lastWeeklyRestock: new Date(0),
       ...overrides,
     },
-  } as unknown as BotState);
+  }) as unknown as BotState;
 
 describe('restockShopDaily', () => {
   it('resets pokeball, greatball, and ultraball to default quantities', () => {
@@ -33,7 +33,9 @@ describe('restockShopDaily', () => {
     const before = Date.now();
     const state = makeState();
     restockShopDaily(state);
-    expect(state.shop.lastDailyRestock.getTime()).toBeGreaterThanOrEqual(before);
+    expect(state.shop.lastDailyRestock.getTime()).toBeGreaterThanOrEqual(
+      before,
+    );
   });
 });
 
@@ -56,6 +58,8 @@ describe('restockShopWeekly', () => {
     const before = Date.now();
     const state = makeState();
     restockShopWeekly(state);
-    expect(state.shop.lastWeeklyRestock.getTime()).toBeGreaterThanOrEqual(before);
+    expect(state.shop.lastWeeklyRestock.getTime()).toBeGreaterThanOrEqual(
+      before,
+    );
   });
 });

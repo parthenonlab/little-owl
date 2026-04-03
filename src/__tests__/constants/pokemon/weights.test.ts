@@ -10,7 +10,16 @@ const sum = (weights: Record<string, number>) =>
 describe('POKEMON_RARITY_WEIGHTS', () => {
   it('contains all rarity tiers', () => {
     const keys = Object.keys(POKEMON_RARITY_WEIGHTS);
-    expect(keys).toEqual(expect.arrayContaining(['common', 'uncommon', 'rare', 'very rare', 'legendary', 'mythical']));
+    expect(keys).toEqual(
+      expect.arrayContaining([
+        'common',
+        'uncommon',
+        'rare',
+        'very rare',
+        'legendary',
+        'mythical',
+      ]),
+    );
     expect(keys).toHaveLength(6);
   });
 
@@ -19,13 +28,17 @@ describe('POKEMON_RARITY_WEIGHTS', () => {
   });
 
   it('all weights are positive', () => {
-    Object.values(POKEMON_RARITY_WEIGHTS).forEach(w => expect(w).toBeGreaterThan(0));
+    Object.values(POKEMON_RARITY_WEIGHTS).forEach(w =>
+      expect(w).toBeGreaterThan(0),
+    );
   });
 });
 
 describe('POKEMON_SHINY_WEIGHTS', () => {
   it('contains normal and shiny keys', () => {
-    expect(Object.keys(POKEMON_SHINY_WEIGHTS)).toEqual(expect.arrayContaining(['normal', 'shiny']));
+    expect(Object.keys(POKEMON_SHINY_WEIGHTS)).toEqual(
+      expect.arrayContaining(['normal', 'shiny']),
+    );
   });
 
   it('weights sum to 1', () => {
@@ -43,7 +56,9 @@ describe('POKEMON_SHINY_CHARM_WEIGHTS', () => {
   });
 
   it('shiny charm rate is higher than base shiny rate', () => {
-    expect(POKEMON_SHINY_CHARM_WEIGHTS.shiny).toBeGreaterThan(POKEMON_SHINY_WEIGHTS.shiny);
+    expect(POKEMON_SHINY_CHARM_WEIGHTS.shiny).toBeGreaterThan(
+      POKEMON_SHINY_WEIGHTS.shiny,
+    );
   });
 
   it('shiny chance is approximately 1 in 512', () => {
