@@ -8,6 +8,7 @@ import {
 
 import { COPY, EMOJIS, URLS } from '@/constants';
 import { LogCode } from '@/enums/logs';
+import { isFeatureEnabled } from '@/lib/config';
 
 import { checkFeatureEnabled, log } from '../helpers';
 
@@ -21,10 +22,20 @@ export const Pokedex = {
     const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
       new ButtonBuilder()
         .setEmoji(EMOJIS.POKEMON.POKEBALL)
-        .setLabel('Pokedex')
+        .setLabel('Pokédex')
         .setStyle(ButtonStyle.Link)
         .setURL(URLS.POKEDEX),
     );
+
+    if (isFeatureEnabled('PCBOX')) {
+      row.addComponents(
+        new ButtonBuilder()
+          .setEmoji(EMOJIS.POKEMON.POKEBALL)
+          .setLabel('PC Box')
+          .setStyle(ButtonStyle.Link)
+          .setURL(URLS.PCBOX),
+      );
+    }
 
     try {
       await interaction.reply({ components: [row] });
