@@ -1,3 +1,5 @@
+import { Document } from 'mongoose';
+
 export interface ShopState {
   pokeball: number;
   greatball: number;
@@ -6,3 +8,5 @@ export interface ShopState {
   lastDailyRestock: Date;
   lastWeeklyRestock: Date;
 }
+
+export interface ShopDocument extends Document, ShopState {}
