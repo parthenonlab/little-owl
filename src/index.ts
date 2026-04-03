@@ -18,6 +18,7 @@ import { PokemonExplorePayload } from '@/interfaces/pokemon';
 
 import { discord, twitch } from '@/lib/clients';
 import { connectDatabase, sleepTime } from '@/lib/config';
+import { findOrCreateShop } from '@/services/shop';
 
 import { scheduleTasks } from '@/scheduler';
 
@@ -74,9 +75,13 @@ const addSleepListeners = async () => {
 
 const init = async () => {
   await connectDatabase();
+
+  const shopState = await findOrCreateShop();
+  if (shopState) state.shop = shopState;
+
   await addEventListeners();
   await addSleepListeners();
-  await scheduleTasks(state);
+  scheduleTasks(state);
 };
 
 if (process.env.REGISTER) registerDiscordCommands();

@@ -25,6 +25,8 @@ import { formatNumberToCode, formatNumberToString } from '@/lib/utils';
 import { getInventory, updateBalls } from '@/services/inventory';
 import { setDiscordUser } from '@/services/user';
 
+import { updateShopStock } from '@/services/shop';
+
 import {
   checkFeatureEnabled,
   getInventorySpace,
@@ -237,6 +239,7 @@ export const Shop = {
     }
 
     state.shop[pokeball.type] -= amount;
+    await updateShopStock({ [pokeball.type]: state.shop[pokeball.type] });
 
     const updatedUser = await setDiscordUser(interaction.user.id, {
       cash: user.cash - totalPrice,
