@@ -17,5 +17,4 @@ const shopSchema = new Schema<ShopDocument>(
   { collection: MONGODB_SHOP, versionKey: false },
 );
 
-export const ShopModel =
-  models.Shop || model<ShopDocument>('Shop', shopSchema);
+export const ShopModel = models.Shop || model<ShopDocument>('Shop', shopSchema);

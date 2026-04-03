@@ -5,7 +5,7 @@ import { ObjectProps } from '@/interfaces/bot';
 export const onCheer = (
   _channel: string,
   userstate: ObjectProps,
-  message: string
+  message: string,
 ) => {
   log({
     type: LogCode.Alert,

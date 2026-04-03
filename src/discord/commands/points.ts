@@ -3,7 +3,6 @@ import { UserDocument } from '@parthenonlab/models';
 
 import { COPY, EMOJIS } from '@/constants';
 import { formatNumberToCode } from '@/lib/utils';
-
 import { checkFeatureEnabled, reply } from '../helpers';
 
 export const Points = {

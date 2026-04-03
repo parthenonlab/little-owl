@@ -1,8 +1,8 @@
+import { DEFAULT_SHOP_STATE } from '@/constants/pokemon';
 import { log } from '@/discord/helpers';
 import { LogCode } from '@/enums/logs';
 import { ShopDocument, ShopState } from '@/interfaces/shop';
 import { ShopModel } from '@/models/shop';
-import { DEFAULT_SHOP_STATE } from '@/constants/pokemon/shop';
 
 export const findOrCreateShop = async (): Promise<ShopDocument | null> => {
   try {

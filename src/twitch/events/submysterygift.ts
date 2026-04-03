@@ -7,7 +7,7 @@ export const onSubMysteryGift = (
   username: string,
   numOfSubs: number,
   _methods: ObjectProps,
-  _userstate: ObjectProps
+  _userstate: ObjectProps,
 ) => {
   log({
     type: LogCode.Alert,

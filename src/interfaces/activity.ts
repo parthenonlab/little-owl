@@ -5,14 +5,12 @@ interface BaseActivity {
 }
 
 export interface BankActivity extends BaseActivity {}
-
 export interface GambleActivity extends BaseActivity {}
+export interface WordleActivity extends BaseActivity {}
 
 export interface StarActivity extends BaseActivity {
   total_given: number;
 }
-
-export interface WordleActivity extends BaseActivity {}
 
 export type ActivityFields = {
   bank: BankActivity;

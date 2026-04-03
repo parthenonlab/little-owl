@@ -1,6 +1,5 @@
 import { log } from '@/discord/helpers/log';
 import { LogCode } from '@/enums/logs';
-
 import { InventoryDocument, BallInventory } from '@/interfaces/inventory';
 import { InventoryModel } from '@/models/inventory';
 

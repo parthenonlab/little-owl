@@ -8,7 +8,7 @@ export const onResub = (
   streakMonths: number,
   message: string,
   _userstate: ObjectProps,
-  _methods: ObjectProps
+  _methods: ObjectProps,
 ) => {
   log({
     type: LogCode.Alert,

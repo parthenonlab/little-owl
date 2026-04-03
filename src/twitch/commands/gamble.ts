@@ -81,6 +81,8 @@ export const onGamble = async (
 
   if (user.discord_id) {
     await saveGambleStats(user.discord_id, { won, wager });
-    await updateActivity(user.discord_id, { $set: { 'gamble.last_used': new Date() } });
+    await updateActivity(user.discord_id, {
+      $set: { 'gamble.last_used': new Date() },
+    });
   }
 };

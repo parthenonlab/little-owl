@@ -7,7 +7,7 @@ export const onTimeout = (
   username: string,
   reason: string,
   duration: number,
-  _userstate: ObjectProps
+  _userstate: ObjectProps,
 ) => {
   log({
     type: LogCode.Leave,
