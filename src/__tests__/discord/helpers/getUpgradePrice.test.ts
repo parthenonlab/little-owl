@@ -1,4 +1,4 @@
-import { getUpgradePrice } from '@/discord/helpers/getUpgradePrice';
+import { getUpgradePrice } from '@/discord/helpers';
 
 describe('getUpgradePrice', () => {
   it('returns 500 for capacity below 10', () => {

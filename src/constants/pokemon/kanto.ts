@@ -13,7 +13,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.125,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -28,7 +28,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.125,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -103,7 +103,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.125,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -118,7 +118,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.125,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -238,7 +238,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.5,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -253,7 +253,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.5,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -268,7 +268,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.5,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: ['mega'],
   },
   {
@@ -373,7 +373,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.5,
     },
     hasFemaleImage: true,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -403,7 +403,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.5,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: ['alolan'],
   },
   {
@@ -418,7 +418,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.5,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: ['alolan'],
   },
   {
@@ -523,7 +523,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.75,
     },
     hasFemaleImage: false,
-    activeSpawn: 'both',
+    activeSpawn: 'night',
     variants: [],
   },
   {
@@ -628,7 +628,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.5,
     },
     hasFemaleImage: true,
-    activeSpawn: 'both',
+    activeSpawn: 'night',
     variants: [],
   },
   {
@@ -838,7 +838,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.5,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -853,7 +853,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.5,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -868,7 +868,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.25,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: ['hisuian'],
   },
   {
@@ -883,7 +883,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.25,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: ['hisuian'],
   },
   {
@@ -988,7 +988,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.25,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -1003,7 +1003,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.25,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -1018,7 +1018,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.25,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -1168,7 +1168,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.5,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'night',
     variants: ['galarian'],
   },
   {
@@ -1183,7 +1183,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.5,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: ['galarian'],
   },
   {
@@ -1252,7 +1252,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.5,
     },
     hasFemaleImage: true,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -1267,7 +1267,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.5,
     },
     hasFemaleImage: true,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -1297,7 +1297,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.5,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -1417,7 +1417,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.5,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -1576,7 +1576,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -1591,7 +1591,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -1651,7 +1651,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.5,
     },
     hasFemaleImage: true,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -1666,7 +1666,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.5,
     },
     hasFemaleImage: true,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -1711,7 +1711,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 1,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: ['mega'],
   },
   {
@@ -1840,7 +1840,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 1,
     },
     hasFemaleImage: false,
-    activeSpawn: 'night',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -1900,7 +1900,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -1930,7 +1930,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.5,
     },
     hasFemaleImage: true,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: ['mega'],
   },
   {
@@ -1972,7 +1972,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.125,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -1987,7 +1987,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.125,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -2002,7 +2002,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.125,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -2017,7 +2017,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.125,
     },
     hasFemaleImage: false,
-    activeSpawn: 'day',
+    activeSpawn: 'both',
     variants: [],
   },
   {
@@ -2119,7 +2119,7 @@ export const kantoPokemon: PokemonObject[] = [
       female: 0.125,
     },
     hasFemaleImage: false,
-    activeSpawn: 'night',
+    activeSpawn: 'both',
     variants: [],
   },
   {

@@ -13,7 +13,13 @@ const SERVER_ID = process.env.SERVER_ID;
  * @returns Object containing all required environment variable values.
  */
 export const getENV = () => {
-  if (!ADMIN_SERVER_ID || !MONGODB_ACTS || !MONGODB_INVENTORY || !MONGODB_SHOP || !SERVER_ID) {
+  if (
+    !ADMIN_SERVER_ID ||
+    !MONGODB_ACTS ||
+    !MONGODB_INVENTORY ||
+    !MONGODB_SHOP ||
+    !SERVER_ID
+  ) {
     console.error('🦉 Error: Missing Necessary Environment Variables');
     process.exit(1);
   }

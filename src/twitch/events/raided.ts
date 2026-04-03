@@ -4,7 +4,7 @@ import { LogCode } from '@/enums/logs';
 export const onRaided = (
   _channel: string,
   username: string,
-  viewers: number
+  viewers: number,
 ) => {
   log({
     type: LogCode.Alert,

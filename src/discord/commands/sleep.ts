@@ -12,9 +12,9 @@ export const Sleep = {
     .setDescription(COPY.SLEEP.DESCRIPTION),
   execute: async (
     state: BotState,
-    interaction: ChatInputCommandInteraction
+    interaction: ChatInputCommandInteraction,
   ) => {
-    if (!await checkFeatureEnabled('SLEEP', interaction)) return;
+    if (!(await checkFeatureEnabled('SLEEP', interaction))) return;
 
     reply({
       content: '🦉 Little Owl: Good night!',

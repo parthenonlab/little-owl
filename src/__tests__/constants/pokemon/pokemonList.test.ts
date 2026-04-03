@@ -1,6 +1,14 @@
 import { POKEMON_LIST } from '@/constants/pokemon';
 
-const VALID_RARITIES = new Set(['common', 'uncommon', 'rare', 'very rare', 'legendary', 'mythical']);
+const VALID_RARITIES = new Set([
+  'common',
+  'uncommon',
+  'rare',
+  'very rare',
+  'legendary',
+  'mythical',
+]);
+
 const VALID_SPAWNS = new Set(['day', 'night', 'both']);
 const GENDERLESS_RARITIES = new Set(['legendary', 'mythical']);
 

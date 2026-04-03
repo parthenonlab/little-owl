@@ -1,6 +1,11 @@
 import { POKEBALLS } from '@/constants/pokemon';
 
-const BALL_TYPES = ['pokeball', 'greatball', 'ultraball', 'masterball'] as const;
+const BALL_TYPES = [
+  'pokeball',
+  'greatball',
+  'ultraball',
+  'masterball',
+] as const;
 
 describe('POKEBALLS', () => {
   it('contains all 4 ball types in order', () => {

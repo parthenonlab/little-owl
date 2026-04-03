@@ -8,7 +8,7 @@ export const onSubGift = (
   _streakMonths: number,
   recipient: string,
   _methods: ObjectProps,
-  _userstate: ObjectProps
+  _userstate: ObjectProps,
 ) => {
   log({
     type: LogCode.Alert,

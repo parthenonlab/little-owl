@@ -32,7 +32,13 @@ import { capitalize, weightedRandom } from '@/lib/utils';
 import { saveCatch } from '@/services/catch';
 import { getInventory, updateBalls } from '@/services/inventory';
 
-import { checkFeatureEnabled, getActiveSpawn, getExploreActions, log, reply } from '../helpers';
+import {
+  checkFeatureEnabled,
+  getActiveSpawn,
+  getExploreActions,
+  log,
+  reply,
+} from '../helpers';
 
 const renderEmbedHeader = (
   title: string,
@@ -57,7 +63,7 @@ export const Explore = {
     state: BotState,
     interaction: ChatInputCommandInteraction,
   ) => {
-    if (!await checkFeatureEnabled('EXPLORE', interaction)) return;
+    if (!(await checkFeatureEnabled('EXPLORE', interaction))) return;
 
     if (state.exploreList.has(interaction.user.id)) {
       reply({

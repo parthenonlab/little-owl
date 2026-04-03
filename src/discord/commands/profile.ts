@@ -13,7 +13,6 @@ import { SilverIcon, StarIcon } from '@/icons';
 
 import { formatNumberToString, parseHexToRGB } from '@/lib/utils';
 import { getDiscordUserRank, setDiscordUser } from '@/services/user';
-
 import { checkFeatureEnabled, log, useBrowser } from '../helpers';
 
 export const Profile = {

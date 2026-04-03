@@ -8,7 +8,6 @@ import {
 
 import { COPY, URLS } from '@/constants';
 import { LogCode } from '@/enums/logs';
-
 import { checkFeatureEnabled, log } from '../helpers';
 
 export const Help = {
@@ -16,7 +15,7 @@ export const Help = {
     .setName(COPY.HELP.NAME)
     .setDescription(COPY.HELP.DESCRIPTION),
   execute: async (interaction: ChatInputCommandInteraction) => {
-    if (!await checkFeatureEnabled('HELP', interaction)) return;
+    if (!(await checkFeatureEnabled('HELP', interaction))) return;
 
     const row = new ActionRowBuilder<ButtonBuilder>()
       .addComponents(
@@ -24,14 +23,14 @@ export const Help = {
           .setEmoji('📚')
           .setLabel('Commands')
           .setStyle(ButtonStyle.Link)
-          .setURL(URLS.COMMANDS)
+          .setURL(URLS.COMMANDS),
       )
       .addComponents(
         new ButtonBuilder()
           .setEmoji('📜')
           .setLabel('FAQ')
           .setStyle(ButtonStyle.Link)
-          .setURL(URLS.FAQ)
+          .setURL(URLS.FAQ),
       );
 
     try {

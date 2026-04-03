@@ -29,7 +29,7 @@ export const onChat = async (
   channel: string,
   userstate: ObjectProps,
   message: string,
-  self: boolean
+  self: boolean,
 ) => {
   if (self) return;
   if (IGNORE_LIST.includes(userstate.username)) return;
@@ -78,8 +78,8 @@ export const onChat = async (
       return twitch.say(
         channel,
         `${userstate['display-name']} you have ${user.cash} ${getCurrency(
-          user.cash
-        )}`
+          user.cash,
+        )}`,
       );
     }
 
@@ -90,7 +90,7 @@ export const onChat = async (
     if (command === COPY.LURK.NAME) {
       return twitch.say(
         channel,
-        `/me ${userstate['display-name']} has disappeared into the shadows ${EMOTES.LURK.DEFAULT}`
+        `/me ${userstate['display-name']} has disappeared into the shadows ${EMOTES.LURK.DEFAULT}`,
       );
     }
 
@@ -113,7 +113,7 @@ export const onChat = async (
     if (command === COPY.HUG.NAME) {
       return twitch.say(
         channel,
-        `${EMOTES.HUG.LEFT} ${userstate['display-name']} hugs ${recipientName} ${EMOTES.HUG.RIGHT}`
+        `${EMOTES.HUG.LEFT} ${userstate['display-name']} hugs ${recipientName} ${EMOTES.HUG.RIGHT}`,
       );
     }
 

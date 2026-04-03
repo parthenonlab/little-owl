@@ -1,6 +1,5 @@
 import { User as DiscordUser } from 'discord.js';
 import { v4 as uuidv4 } from 'uuid';
-
 import { UserDocument, UserModel } from '@parthenonlab/models';
 import { User } from '@parthenonlab/types';
 
@@ -91,7 +90,9 @@ export const createUser = async (
  * @param filter - Fields to match the user document against.
  * @returns The deleted user document, or null if not found or on error.
  */
-const deleteUserBy = async (filter: Partial<User>): Promise<UserDocument | null> => {
+const deleteUserBy = async (
+  filter: Partial<User>,
+): Promise<UserDocument | null> => {
   try {
     return await UserModel.findOneAndDelete(filter);
   } catch (error) {
@@ -104,10 +105,12 @@ const deleteUserBy = async (filter: Partial<User>): Promise<UserDocument | null>
 export const deleteUser = (id: string) => deleteUserBy({ user_id: id });
 
 /** Delete a user document by Discord user ID. */
-export const deleteUserByDiscordId = (id: string) => deleteUserBy({ discord_id: id });
+export const deleteUserByDiscordId = (id: string) =>
+  deleteUserBy({ discord_id: id });
 
 /** Delete a user document by Twitch username. */
-export const deleteUserByTwitchUsername = (username: string) => deleteUserBy({ twitch_username: username });
+export const deleteUserByTwitchUsername = (username: string) =>
+  deleteUserBy({ twitch_username: username });
 
 /**
  * Find or create a user document for a Discord user.
@@ -170,7 +173,9 @@ export const findOrCreateTwitchUser = async (
  * @param filter - Fields to match the user document against.
  * @returns The matching user document, or null if not found or on error.
  */
-const findUserBy = async (filter: Partial<User>): Promise<UserDocument | null> => {
+const findUserBy = async (
+  filter: Partial<User>,
+): Promise<UserDocument | null> => {
   try {
     return await UserModel.findOne(filter);
   } catch (error) {
