@@ -3,4 +3,5 @@ export const URLS = {
   FAQ: 'https://parthenon.app/faq',
   HOME: 'https://parthenon.app',
   POKEDEX: 'https://parthenon.app/pokedex',
+  PCBOX: 'https://parthenon.app/pc-box',
 };
