@@ -38,6 +38,7 @@ const addEventListeners = async () => {
   discord.on('guildBanAdd', de.onGuildBanAdd);
   discord.on('guildMemberAdd', de.onGuildMemberAdd);
   discord.on('guildMemberRemove', de.onGuildMemberRemove);
+  discord.on('guildMemberUpdate', de.onGuildMemberUpdate);
   discord.on('interactionCreate', de.onInteractionCreate.bind(null, state));
   discord.on('messageCreate', de.onMessageCreate);
   discord.on('messageDelete', de.onMessageDelete);
