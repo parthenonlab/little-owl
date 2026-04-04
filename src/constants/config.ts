@@ -55,6 +55,10 @@ export const CONFIG = {
       ENABLED: true,
       ID: '684850466559098962',
     },
+    SUBSCRIBER: {
+      DISCORD: '1053018519987572869',
+      TWITCH: '344566052136550400',
+    },
   },
   TWITCH_REWARDS: {
     REDEEM100: 'af2d04b1-2cc6-4f09-a555-954ff7e3aadb',
