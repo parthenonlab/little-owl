@@ -1,4 +1,6 @@
+import { syncSubscribers } from '@/services/user';
 import { ActivityType, Client, Events, GatewayIntentBits } from 'discord.js';
+import { getENV } from '../config';
 
 if (!process.env.DISCORD_TOKEN) {
   console.error('🦉 Error: Discord.js Missing Environment Variables');
@@ -19,13 +21,25 @@ const discord = new Client({
   ],
 });
 
-discord.on(Events.ClientReady, () => {
+discord.on(Events.ClientReady, async () => {
   console.log('🦉 Little Owl: Discord.js Connected');
 
+  const isStaging = process.env.STAGING;
+
+  if (!isStaging) {
+    const { SERVER_ID } = getENV();
+    const guild = await discord.guilds.fetch(SERVER_ID);
+
+    if (guild.available) {
+      await syncSubscribers(guild);
+      console.log('🦉 Little Owl: Subscribers Synced');
+    } else {
+      console.error('🦉 Little Owl: Guild Unavailable for Subscriber Sync');
+    }
+  }
+
   discord.user?.setActivity({
-    name: process.env.STAGING
-      ? 'IN DEV MODE'
-      : `I'm Athena's little companion <3`,
+    name: isStaging ? 'IN DEV MODE' : `I'm Athena's little companion. <3`,
     type: ActivityType.Custom,
   });
 });

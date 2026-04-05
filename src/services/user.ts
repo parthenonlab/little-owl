@@ -1,4 +1,4 @@
-import { User as DiscordUser } from 'discord.js';
+import { User as DiscordUser, Guild } from 'discord.js';
 import { v4 as uuidv4 } from 'uuid';
 import { UserDocument, UserModel } from '@parthenonlab/models';
 import { User } from '@parthenonlab/types';
@@ -6,6 +6,7 @@ import { User } from '@parthenonlab/types';
 import { log } from '@/discord/helpers';
 import { LogCode } from '@/enums/logs';
 import { ObjectProps } from '@/interfaces/bot';
+import { CONFIG } from '@/constants';
 
 type NumericUserField = {
   [K in keyof User]: User[K] extends number ? K : never;
@@ -285,3 +286,39 @@ export const setTwitchUser = async (
   id: string,
   payload: Partial<UserDocument>,
 ): Promise<UserDocument | null> => setUser({ twitch_id: id }, payload);
+
+/**
+ * Sets the subscriber field for members based on Twitch and Discord subscriber roles.
+ *
+ * @param guild - Guild object for the server.
+ */
+export const syncSubscribers = async (guild: Guild) => {
+  const roleIds = [
+    CONFIG.ROLES.SUBSCRIBER.DISCORD,
+    CONFIG.ROLES.SUBSCRIBER.TWITCH,
+  ];
+
+  const members = await guild.members.fetch();
+
+  const operations = members.map(member => {
+    const isSubscriber = roleIds.some(roleId => member.roles.cache.has(roleId));
+
+    return {
+      updateOne: {
+        filter: { discord_id: member.id },
+        update: {
+          $set: { subscriber: isSubscriber },
+          $setOnInsert: {
+            user_id: uuidv4(),
+            discord_id: member.id,
+            discord_username: member.user.username,
+            discord_name: member.displayName,
+          },
+        },
+        upsert: true,
+      },
+    };
+  });
+
+  await UserModel.bulkWrite(operations);
+};

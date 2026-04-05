@@ -49,7 +49,7 @@ export const saveGambleStats = async (
     return await StatsModel.findOneAndUpdate(
       { discord_id: id },
       { $inc: toGmb(inc), $max: toGmb(max) },
-      { new: true, upsert: true },
+      { returnDocument: 'after', upsert: true },
     );
   } catch (error) {
     log({
