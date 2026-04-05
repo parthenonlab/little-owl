@@ -9,7 +9,7 @@ export const findOrCreateShop = async (): Promise<ShopDocument | null> => {
     return await ShopModel.findOneAndUpdate(
       {},
       { $setOnInsert: DEFAULT_SHOP_STATE },
-      { new: true, upsert: true },
+      { returnDocument: 'after', upsert: true },
     );
   } catch (error) {
     log({ type: LogCode.Error, description: JSON.stringify(error) });
@@ -21,7 +21,11 @@ export const updateShopStock = async (
   stock: Partial<ShopState>,
 ): Promise<ShopDocument | null> => {
   try {
-    return await ShopModel.findOneAndUpdate({}, { $set: stock }, { new: true });
+    return await ShopModel.findOneAndUpdate(
+      {},
+      { $set: stock },
+      { returnDocument: 'after' },
+    );
   } catch (error) {
     log({ type: LogCode.Error, description: JSON.stringify(error) });
     return null;

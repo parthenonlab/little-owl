@@ -25,7 +25,7 @@ export const onGuildMemberUpdate = async (
   if (hadSubRole === hasSubRole) return;
 
   try {
-    await setDiscordUser(newMember.id, { subscriber: hasSubRole } as any);
+    await setDiscordUser(newMember.id, { subscriber: hasSubRole });
   } catch (error) {
     log({
       type: LogCode.Error,
