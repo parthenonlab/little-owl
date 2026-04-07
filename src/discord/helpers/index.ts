@@ -1,6 +1,7 @@
 export * from './checkFeatureEnabled';
 export * from './getActiveSpawn';
 export * from './getBrowser';
+export * from './getPCBoxCapacity';
 export * from './getExploreActions';
 export * from './getInventorySpace';
 export * from './getShopActions';

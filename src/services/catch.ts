@@ -16,6 +16,24 @@ interface CreateCatchParams {
 }
 
 /**
+ * Count the number of Pokemon in a user's PC Box.
+ *
+ * @param discord_id - Discord user ID.
+ * @returns The count of caught Pokemon, or 0 on error.
+ */
+export const getPCBoxCount = async (discord_id: string): Promise<number> => {
+  try {
+    return await CatchModel.countDocuments({ discord_id });
+  } catch (error) {
+    log({
+      type: LogCode.Error,
+      description: JSON.stringify(error),
+    });
+    return 0;
+  }
+};
+
+/**
  * Save a caught Pokemon to the database.
  *
  * @param params - The catch data to save.

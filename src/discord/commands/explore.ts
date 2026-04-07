@@ -29,13 +29,15 @@ import {
 } from '@/interfaces/pokemon';
 
 import { capitalize, weightedRandom } from '@/lib/utils';
-import { saveCatch } from '@/services/catch';
+import { getPCBoxCount, saveCatch } from '@/services/catch';
 import { getInventory, updateBalls } from '@/services/inventory';
+import { findOrCreateDiscordUser } from '@/services/user';
 
 import {
   checkFeatureEnabled,
   getActiveSpawn,
   getExploreActions,
+  getPCBoxCapacity,
   log,
   reply,
 } from '../helpers';
@@ -73,6 +75,11 @@ export const Explore = {
       });
       return;
     }
+
+    const user = await findOrCreateDiscordUser(interaction.user);
+    const boxFull = user
+      ? (await getPCBoxCount(interaction.user.id)) >= getPCBoxCapacity(user)
+      : false;
 
     const activeSpawn = getActiveSpawn();
     const rarity = weightedRandom(POKEMON_RARITY_WEIGHTS) as PokemonRarity;
@@ -142,7 +149,7 @@ export const Explore = {
           text: `Rarity: ${rarityLabel}  |  Gender: ${genderLabel}  |  Variant: ${variantLabel}`,
         });
 
-      const row = await getExploreActions(interaction.user.id);
+      const row = await getExploreActions(interaction.user.id, boxFull);
 
       await interaction.reply({
         embeds: [embed],
@@ -220,6 +227,18 @@ export const Explore = {
         .setImage(payload.pokemonImage)
         .setFooter({ text: `Caught: ${new Date()}` });
 
+      const catchUser = await findOrCreateDiscordUser(interaction.user);
+      if (catchUser) {
+        const count = await getPCBoxCount(interaction.user.id);
+        if (count >= getPCBoxCapacity(catchUser)) {
+          await interaction.reply({
+            content: 'Your PC Box is full! Release some Pokémon to catch more.',
+            flags: MessageFlags.Ephemeral,
+          });
+          return;
+        }
+      }
+
       await interaction.deferUpdate();
       await interaction.editReply({ embeds: [embed], components: [] });
 
@@ -272,7 +291,12 @@ export const Explore = {
         text: `Rarity: ${rarityLabel}  |  Gender: ${genderLabel}  |  Variant: ${variantLabel}`,
       });
 
-    const row = await getExploreActions(interaction.user.id);
+    const failUser = await findOrCreateDiscordUser(interaction.user);
+    const failBoxFull = failUser
+      ? (await getPCBoxCount(interaction.user.id)) >= getPCBoxCapacity(failUser)
+      : false;
+
+    const row = await getExploreActions(interaction.user.id, failBoxFull);
 
     await interaction.deferUpdate();
     await interaction.editReply({ embeds: [embed], components: [row] });
