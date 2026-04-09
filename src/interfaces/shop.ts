@@ -5,8 +5,6 @@ export interface ShopState {
   greatball: number;
   ultraball: number;
   masterball: number;
-  lastDailyRestock: Date;
-  lastWeeklyRestock: Date;
 }
 
 export interface ShopDocument extends Document, ShopState {}

@@ -8,8 +8,6 @@ export const DEFAULT_SHOP_STATE: ShopState = {
   greatball: 100,
   ultraball: 50,
   masterball: 1,
-  lastDailyRestock: new Date(),
-  lastWeeklyRestock: new Date(),
 };
 
 export const POKEBALLS: PokeballObject[] = [

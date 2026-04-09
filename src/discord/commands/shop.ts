@@ -24,8 +24,8 @@ import { BotState } from '@/interfaces/bot';
 import { PokeballObject } from '@/interfaces/pokemon';
 
 import { getInventory, updateBalls } from '@/services/inventory';
-import { setDiscordUser } from '@/services/user';
 import { updateShopStock } from '@/services/shop';
+import { setDiscordUser } from '@/services/user';
 
 import {
   checkFeatureEnabled,
@@ -35,15 +35,15 @@ import {
   reply,
 } from '../helpers';
 
-const getNextDailyRestock = (lastRestock: Date): number => {
-  const next = new Date(lastRestock);
+const getNextDailyRestock = (): number => {
+  const next = new Date();
   next.setDate(next.getDate() + 1);
   next.setHours(0, 0, 0, 0);
   return Math.floor(next.getTime() / 1000);
 };
 
-const getNextWeeklyRestock = (lastRestock: Date): number => {
-  const next = new Date(lastRestock);
+const getNextWeeklyRestock = (): number => {
+  const next = new Date();
   const daysUntilSunday = (7 - next.getDay()) % 7 || 7;
   next.setDate(next.getDate() + daysUntilSunday);
   next.setHours(0, 0, 0, 0);
@@ -73,8 +73,8 @@ const renderShop = async (
     })
     .join('\n\n');
 
-  const nextDailyRestock = getNextDailyRestock(state.shop.lastDailyRestock);
-  const nextWeeklyRestock = getNextWeeklyRestock(state.shop.lastWeeklyRestock);
+  const nextDailyRestock = getNextDailyRestock();
+  const nextWeeklyRestock = getNextWeeklyRestock();
 
   const restockLine = `Daily Restock: <t:${nextDailyRestock}:R> (Master Ball: <t:${nextWeeklyRestock}:R>)`;
 

@@ -11,8 +11,6 @@ const shopSchema = new Schema<ShopDocument>(
     greatball: { type: Number, required: true },
     ultraball: { type: Number, required: true },
     masterball: { type: Number, required: true },
-    lastDailyRestock: { type: Date, required: true },
-    lastWeeklyRestock: { type: Date, required: true },
   },
   { collection: MONGODB_SHOP, versionKey: false },
 );

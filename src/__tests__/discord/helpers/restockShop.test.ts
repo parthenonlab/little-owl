@@ -8,8 +8,6 @@ const makeState = (overrides: Partial<BotState['shop']> = {}): BotState =>
       greatball: 0,
       ultraball: 0,
       masterball: 0,
-      lastDailyRestock: new Date(0),
-      lastWeeklyRestock: new Date(0),
       ...overrides,
     },
   }) as unknown as BotState;
@@ -28,15 +26,6 @@ describe('restockShopDaily', () => {
     restockShopDaily(state);
     expect(state.shop.masterball).toBe(5);
   });
-
-  it('updates lastDailyRestock to approximately now', () => {
-    const before = Date.now();
-    const state = makeState();
-    restockShopDaily(state);
-    expect(state.shop.lastDailyRestock.getTime()).toBeGreaterThanOrEqual(
-      before,
-    );
-  });
 });
 
 describe('restockShopWeekly', () => {
@@ -52,14 +41,5 @@ describe('restockShopWeekly', () => {
     expect(state.shop.pokeball).toBe(100);
     expect(state.shop.greatball).toBe(50);
     expect(state.shop.ultraball).toBe(25);
-  });
-
-  it('updates lastWeeklyRestock to approximately now', () => {
-    const before = Date.now();
-    const state = makeState();
-    restockShopWeekly(state);
-    expect(state.shop.lastWeeklyRestock.getTime()).toBeGreaterThanOrEqual(
-      before,
-    );
   });
 });
