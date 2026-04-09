@@ -131,7 +131,9 @@ export const Explore = {
       authorIcon: interaction.user.displayAvatarURL(),
     };
 
-    state.exploreList.set(interaction.user.id, payload);
+    if (!boxFull) {
+      state.exploreList.set(interaction.user.id, payload);
+    }
 
     try {
       const title = `A wild ${isShiny ? 'Shiny ' : ''}${selectedPokemon.name} appeared!`;
@@ -143,18 +145,22 @@ export const Explore = {
       );
 
       embed
-        .setDescription('Catch it or run away with the buttons below!')
+        .setDescription(
+          boxFull
+            ? 'Your PC Box is full! Release some Pokémon to catch more.'
+            : 'Catch it or run away with the buttons below!',
+        )
         .setImage(pokemonImage)
         .setFooter({
           text: `Rarity: ${rarityLabel}  |  Gender: ${genderLabel}  |  Variant: ${variantLabel}`,
         });
 
-      const row = await getExploreActions(interaction.user.id, boxFull);
-
-      await interaction.reply({
-        embeds: [embed],
-        components: [row],
-      });
+      if (boxFull) {
+        await interaction.reply({ embeds: [embed] });
+      } else {
+        const row = await getExploreActions(interaction.user.id);
+        await interaction.reply({ embeds: [embed], components: [row] });
+      }
     } catch (error) {
       log({
         type: LogCode.Error,
@@ -227,21 +233,6 @@ export const Explore = {
         .setImage(payload.pokemonImage)
         .setFooter({ text: `Caught: ${new Date()}` });
 
-      const catchUser = await findOrCreateDiscordUser(interaction.user);
-      if (catchUser) {
-        const count = await getPCBoxCount(interaction.user.id);
-        if (count >= getPCBoxCapacity(catchUser)) {
-          await interaction.reply({
-            content: 'Your PC Box is full! Release some Pokémon to catch more.',
-            flags: MessageFlags.Ephemeral,
-          });
-          return;
-        }
-      }
-
-      await interaction.deferUpdate();
-      await interaction.editReply({ embeds: [embed], components: [] });
-
       await saveCatch({
         discord_id: interaction.user.id,
         original_trainer: interaction.user.id,
@@ -251,6 +242,9 @@ export const Explore = {
         shiny: payload.shiny,
         ball_used: pokeball.type,
       });
+
+      await interaction.deferUpdate();
+      await interaction.editReply({ embeds: [embed], components: [] });
 
       return;
     }
@@ -291,12 +285,7 @@ export const Explore = {
         text: `Rarity: ${rarityLabel}  |  Gender: ${genderLabel}  |  Variant: ${variantLabel}`,
       });
 
-    const failUser = await findOrCreateDiscordUser(interaction.user);
-    const failBoxFull = failUser
-      ? (await getPCBoxCount(interaction.user.id)) >= getPCBoxCapacity(failUser)
-      : false;
-
-    const row = await getExploreActions(interaction.user.id, failBoxFull);
+    const row = await getExploreActions(interaction.user.id);
 
     await interaction.deferUpdate();
     await interaction.editReply({ embeds: [embed], components: [row] });
