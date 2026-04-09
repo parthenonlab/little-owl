@@ -29,13 +29,15 @@ import {
 } from '@/interfaces/pokemon';
 
 import { capitalize, weightedRandom } from '@/lib/utils';
-import { saveCatch } from '@/services/catch';
+import { getPCBoxCount, saveCatch } from '@/services/catch';
 import { getInventory, updateBalls } from '@/services/inventory';
+import { findOrCreateDiscordUser } from '@/services/user';
 
 import {
   checkFeatureEnabled,
   getActiveSpawn,
   getExploreActions,
+  getPCBoxCapacity,
   log,
   reply,
 } from '../helpers';
@@ -73,6 +75,11 @@ export const Explore = {
       });
       return;
     }
+
+    const user = await findOrCreateDiscordUser(interaction.user);
+    const boxFull = user
+      ? (await getPCBoxCount(interaction.user.id)) >= getPCBoxCapacity(user)
+      : false;
 
     const activeSpawn = getActiveSpawn();
     const rarity = weightedRandom(POKEMON_RARITY_WEIGHTS) as PokemonRarity;
@@ -124,7 +131,9 @@ export const Explore = {
       authorIcon: interaction.user.displayAvatarURL(),
     };
 
-    state.exploreList.set(interaction.user.id, payload);
+    if (!boxFull) {
+      state.exploreList.set(interaction.user.id, payload);
+    }
 
     try {
       const title = `A wild ${isShiny ? 'Shiny ' : ''}${selectedPokemon.name} appeared!`;
@@ -136,18 +145,22 @@ export const Explore = {
       );
 
       embed
-        .setDescription('Catch it or run away with the buttons below!')
+        .setDescription(
+          boxFull
+            ? 'Your PC Box is full! Release some Pokémon to catch more.'
+            : 'Catch it or run away with the buttons below!',
+        )
         .setImage(pokemonImage)
         .setFooter({
           text: `Rarity: ${rarityLabel}  |  Gender: ${genderLabel}  |  Variant: ${variantLabel}`,
         });
 
-      const row = await getExploreActions(interaction.user.id);
-
-      await interaction.reply({
-        embeds: [embed],
-        components: [row],
-      });
+      if (boxFull) {
+        await interaction.reply({ embeds: [embed] });
+      } else {
+        const row = await getExploreActions(interaction.user.id);
+        await interaction.reply({ embeds: [embed], components: [row] });
+      }
     } catch (error) {
       log({
         type: LogCode.Error,
@@ -220,9 +233,6 @@ export const Explore = {
         .setImage(payload.pokemonImage)
         .setFooter({ text: `Caught: ${new Date()}` });
 
-      await interaction.deferUpdate();
-      await interaction.editReply({ embeds: [embed], components: [] });
-
       await saveCatch({
         discord_id: interaction.user.id,
         original_trainer: interaction.user.id,
@@ -232,6 +242,9 @@ export const Explore = {
         shiny: payload.shiny,
         ball_used: pokeball.type,
       });
+
+      await interaction.deferUpdate();
+      await interaction.editReply({ embeds: [embed], components: [] });
 
       return;
     }
