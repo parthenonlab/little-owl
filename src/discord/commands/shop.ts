@@ -24,8 +24,8 @@ import { BotState } from '@/interfaces/bot';
 import { PokeballObject } from '@/interfaces/pokemon';
 
 import { getInventory, updateBalls } from '@/services/inventory';
-import { setDiscordUser } from '@/services/user';
 import { updateShopStock } from '@/services/shop';
+import { setDiscordUser } from '@/services/user';
 
 import {
   checkFeatureEnabled,
@@ -35,18 +35,20 @@ import {
   reply,
 } from '../helpers';
 
-const getNextDailyRestock = (lastRestock: Date): number => {
-  const next = new Date(lastRestock);
+const getNextDailyRestock = (): number => {
+  const next = new Date();
   next.setDate(next.getDate() + 1);
   next.setHours(0, 0, 0, 0);
   return Math.floor(next.getTime() / 1000);
 };
 
-const getNextWeeklyRestock = (lastRestock: Date): number => {
-  const next = new Date(lastRestock);
-  const daysUntilSunday = (7 - next.getDay()) % 7 || 7;
+const getNextWeeklyRestock = (): number => {
+  const next = new Date();
+  const isSunday = next.getDay() === 0;
+  const isBeforeNoon = next.getHours() < 12;
+  const daysUntilSunday = isSunday && isBeforeNoon ? 0 : (7 - next.getDay()) % 7 || 7;
   next.setDate(next.getDate() + daysUntilSunday);
-  next.setHours(0, 0, 0, 0);
+  next.setHours(12, 0, 0, 0);
   return Math.floor(next.getTime() / 1000);
 };
 
@@ -59,22 +61,13 @@ const renderShop = async (
   const shopIcon = `${POKEMON_IMAGE_URLS.base}/inventory/pokemart.png`;
 
   const shopLines = POKEBALLS.map((ball: PokeballObject) => {
-    return {
-      ...ball,
-      label: ball.label.toUpperCase(),
-      stock: state.shop[ball.type],
-    };
-  })
-    .map(ball => {
-      const header = `${ball.emoji} ${ball.label}`;
-      const description = `Stock: \`${ball.stock}\` - Price: ${formatNumberToCode(ball.price)}`;
+    const header = `${ball.emoji} ${ball.label.toUpperCase()}`;
+    const description = `Stock: \`${state.shop[ball.type]}\` - Price: ${formatNumberToCode(ball.price)}`;
+    return `${header}\n\u2003\u2002${description}`;
+  }).join('\n\n');
 
-      return `${header}\n\u2003\u2002${description}`;
-    })
-    .join('\n\n');
-
-  const nextDailyRestock = getNextDailyRestock(state.shop.lastDailyRestock);
-  const nextWeeklyRestock = getNextWeeklyRestock(state.shop.lastWeeklyRestock);
+  const nextDailyRestock = getNextDailyRestock();
+  const nextWeeklyRestock = getNextWeeklyRestock();
 
   const restockLine = `Daily Restock: <t:${nextDailyRestock}:R> (Master Ball: <t:${nextWeeklyRestock}:R>)`;
 
@@ -230,7 +223,7 @@ export const Shop = {
       return;
     }
 
-    if (amount > getInventorySpace(inventory!)) {
+    if (amount > getInventorySpace(inventory)) {
       await interaction.reply({
         content: `You don't have enough inventory space to buy ${amount} ${pokeball.label}.`,
         flags: MessageFlags.Ephemeral,
@@ -238,16 +231,12 @@ export const Shop = {
       return;
     }
 
-    state.shop[pokeball.type] -= amount;
-    await updateShopStock({ [pokeball.type]: state.shop[pokeball.type] });
-
-    const updatedUser = await setDiscordUser(interaction.user.id, {
-      cash: user.cash - totalPrice,
-    });
-
-    const updatedInventory = await updateBalls(interaction.user.id, {
-      [pokeball.type]: inventory.balls[pokeball.type] + amount,
-    });
+    const [updatedUser, updatedInventory] = await Promise.all([
+      setDiscordUser(interaction.user.id, { cash: user.cash - totalPrice }),
+      updateBalls(interaction.user.id, {
+        [pokeball.type]: inventory.balls[pokeball.type] + amount,
+      }),
+    ]);
 
     if (!updatedUser || !updatedInventory) {
       await interaction.reply({
@@ -256,6 +245,9 @@ export const Shop = {
       });
       return;
     }
+
+    state.shop[pokeball.type] -= amount;
+    await updateShopStock({ [pokeball.type]: state.shop[pokeball.type] });
 
     const availableSpace = getInventorySpace(updatedInventory);
 
