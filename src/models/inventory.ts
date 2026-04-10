@@ -10,7 +10,7 @@ const inventorySchema = new Schema<InventoryDocument>(
     discord_id: { type: String, required: true, unique: true },
     capacity: { type: Number, default: 5 },
     balls: {
-      pokeball: { type: Number, default: 1 },
+      pokeball: { type: Number, default: 3 },
       greatball: { type: Number, default: 0 },
       ultraball: { type: Number, default: 0 },
       masterball: { type: Number, default: 0 },
