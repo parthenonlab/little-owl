@@ -1,5 +1,8 @@
 import {
+  ActionRowBuilder,
+  ButtonBuilder,
   ButtonInteraction,
+  ButtonStyle,
   ChatInputCommandInteraction,
   ColorResolvable,
   EmbedBuilder,
@@ -7,7 +10,9 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 
-import { CONFIG, COPY } from '@/constants';
+import { URLS } from '@/constants/urls';
+
+import { CONFIG, COPY, EMOJIS } from '@/constants';
 
 import {
   FLEE_PROMPTS,
@@ -156,7 +161,17 @@ export const Explore = {
         });
 
       if (boxFull) {
-        await interaction.reply({ embeds: [embed] });
+        const pcBoxButton = new ButtonBuilder()
+          .setEmoji(EMOJIS.POKEMON.POKEBALL)
+          .setLabel('PC Box')
+          .setURL(URLS.PCBOX)
+          .setStyle(ButtonStyle.Link);
+
+        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+          pcBoxButton,
+        );
+
+        await interaction.reply({ embeds: [embed], components: [row] });
       } else {
         const row = await getExploreActions(interaction.user.id);
         await interaction.reply({ embeds: [embed], components: [row] });
