@@ -55,7 +55,7 @@ export const COPY = {
       "Don't count on it.",
       'My reply is no.',
       'No.',
-      'Outlook not so good',
+      'Outlook not so good.',
       'Very doubtful.',
     ],
   },
@@ -149,7 +149,12 @@ export const COPY = {
   },
   TWITCH_REMINDERS: [
     `Reminder: You're awesome! ${EMOTES.REMINDER.POSITIVITY}`,
-    'Check out our community website: https://parthenon.app. Log in with Discord to play and earn points!',
+    'Check out our community website: https://parthenon.app. Link with your Discord account to play and earn points!',
+    'Enjoying the stream? Drop a follow to get notified next time Athena goes live!',
+    'Earn points by chatting! Type !gamble to try your luck, or !give to share with friends.',
+    `Want to play Overwatch with Athena? Redeem "Join QP Only" in the channel points to hop in! ${EMOTES.REDEEM.QUICKPLAY}`,
+    'Athena streams are rage-free and lurker-friendly! Thank you for your support.',
+    `Subscribers can redeem "Join QP + Ranked" to queue with Athena in Overwatch competitive! (Rules apply) ${EMOTES.REDEEM.COMPETITIVE}`,
   ],
   UNLINK: {
     NAME: 'unlink',

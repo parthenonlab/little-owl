@@ -64,7 +64,9 @@ export const EMOTES = {
     DEFAULT: 'ScaredyCat',
   },
   REDEEM: {
+    COMPETITIVE: 'GoldPLZ',
     DEFAULT: 'athena1Cheer',
+    QUICKPLAY: 'GivePLZ',
   },
   REMINDER: {
     POSITIVITY: 'DinoDance',
