@@ -6,7 +6,7 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 
-import { CONFIG, COPY, EMOJIS } from '@/constants';
+import { CONFIG, COPY } from '@/constants';
 import { LogCode } from '@/enums/logs';
 import { getDiscordLeaderboard } from '@/services/user';
 
@@ -19,58 +19,47 @@ export const Leaderboard = {
   execute: async (interaction: ChatInputCommandInteraction) => {
     if (!(await checkFeatureEnabled('LEADERBOARD', interaction))) return;
 
-    const description = `Here are the users with the highest ${CONFIG.CURRENCY.PLURAL}!`;
-    const leaderboardUsers = await getDiscordLeaderboard('cash', 5);
-
-    if (!leaderboardUsers.length) {
-      return await interaction.reply({
-        content: `Awkward.. it looks like nobody has any ${CONFIG.CURRENCY.SINGLE} right now.`,
-        flags: MessageFlags.Ephemeral,
-      });
-    }
-
-    const botEmbed = new EmbedBuilder()
-      .setTitle('Leaderboard')
-      .setColor(CONFIG.COLORS.BLUE as ColorResolvable);
-
-    let content = '';
-    leaderboardUsers.forEach((user, i) => {
-      const name = user.discord_name || user.discord_username || '';
-
-      switch (i) {
-        case 0:
-          content += `${i + 1}. ${name} ${EMOJIS.LEADERBOARD.FIRST}  •  ${
-            user.cash
-          }  ${EMOJIS.CURRENCY}\n`;
-          break;
-        case 1:
-          content += `${i + 1}. ${name} ${EMOJIS.LEADERBOARD.SECOND}  •  ${
-            user.cash
-          }  ${EMOJIS.CURRENCY}\n`;
-          break;
-        case 2:
-          content += `${i + 1}. ${name} ${EMOJIS.LEADERBOARD.THIRD}  •  ${
-            user.cash
-          }  ${EMOJIS.CURRENCY}\n`;
-          break;
-        default:
-          content += `${i + 1}. ${name}  •  ${user.cash}  ${EMOJIS.CURRENCY}\n`;
-      }
-    });
-
-    botEmbed.addFields({ name: description, value: content });
-
     try {
-      await interaction.reply({ embeds: [botEmbed] });
+      const leaderboardUsers = await getDiscordLeaderboard('cash', 5);
+
+      if (!leaderboardUsers.length) {
+        await interaction.reply({
+          content: `Awkward.. it looks like nobody has any ${CONFIG.CURRENCY.SINGLE} right now.`,
+          flags: MessageFlags.Ephemeral,
+        });
+        return;
+      }
+
+      const medals = ['🥇', '🥈', '🥉'];
+      const NAME_WIDTH = 20;
+
+      const formattedCash = leaderboardUsers.map(u => u.cash.toLocaleString());
+      const cashWidth = Math.max(...formattedCash.map(c => c.length));
+
+      const rows = leaderboardUsers.map((user, i) => {
+        const name = (user.discord_name || user.discord_username || '')
+          .slice(0, NAME_WIDTH)
+          .padEnd(NAME_WIDTH);
+        const cash = formattedCash[i].padStart(cashWidth);
+        const medal = medals[i] ?? '';
+        return `${i + 1}. ${name}  ${cash}  ${medal}`;
+      });
+
+      const description = `Here are the users with the highest ${CONFIG.CURRENCY.PLURAL}!`;
+      const content = `\`\`\`\n${rows.join('\n')}\n\`\`\``;
+
+      const embed = new EmbedBuilder()
+        .setTitle('Leaderboard')
+        .setColor(CONFIG.COLORS.BLUE as ColorResolvable)
+        .addFields({ name: description, value: content });
+
+      await interaction.reply({ embeds: [embed] });
     } catch (error) {
       log({
         type: LogCode.Error,
         description: JSON.stringify(error),
       });
     }
-    return;
   },
-  getName: (): string => {
-    return COPY.LEADERBOARD.NAME;
-  },
+  getName: () => COPY.LEADERBOARD.NAME,
 };
