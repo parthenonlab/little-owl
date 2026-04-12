@@ -15,11 +15,6 @@ export const EMOJIS = {
   GIVE: {
     INVALID: ':neutral_face:',
   },
-  LEADERBOARD: {
-    FIRST: ':first_place:',
-    SECOND: ':second_place:',
-    THIRD: ':third_place:',
-  },
   POKEMON: {
     POKEBALL: '<:pokeball:1487196742410571907>',
     GREATBALL: '<:greatball:1487196739621617665>',
