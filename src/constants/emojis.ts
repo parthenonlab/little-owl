@@ -10,7 +10,7 @@ export const EMOJIS = {
   GAMBLE: {
     LOST: ':money_with_wings:',
     INVALID: ':neutral_face:',
-    WIN: ':moneybag:',
+    WIN: '<:money_bag:1494638092936806492>',
   },
   GIVE: {
     INVALID: ':neutral_face:',
