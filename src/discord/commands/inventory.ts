@@ -39,15 +39,16 @@ const renderInventory = async (
   const inventoryIcon = `${POKEMON_IMAGE_URLS.base}/inventory/backpack.png`;
 
   const balls = inventory.balls;
-  const ballLines = POKEBALLS.map((ball: PokeballObject) => {
-    return {
-      ...ball,
-      count: balls[ball.type],
-    };
-  })
-    .filter(ball => ball.count > 0)
-    .map(ball => `${ball.emoji} ${ball.label}: \`${ball.count}\``)
-    .join('\n\n');
+  const ballLines =
+    POKEBALLS.map((ball: PokeballObject) => {
+      return {
+        ...ball,
+        count: balls[ball.type],
+      };
+    })
+      .filter(ball => ball.count > 0)
+      .map(ball => `${ball.emoji} ${ball.label}: \`${ball.count}\``)
+      .join('\n\n') || 'You currently have no items.';
 
   const capacityLine = `Total Capacity: \`${inventory.capacity}\` • Available Slots: \`${inventory.capacity - getTotalBalls(inventory.balls)}\``;
 
