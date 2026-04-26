@@ -37,8 +37,10 @@ import {
 
 const getNextDailyRestock = (): number => {
   const next = new Date();
+
   next.setDate(next.getDate() + 1);
   next.setHours(0, 0, 0, 0);
+
   return Math.floor(next.getTime() / 1000);
 };
 
@@ -46,9 +48,13 @@ const getNextWeeklyRestock = (): number => {
   const next = new Date();
   const isSunday = next.getDay() === 0;
   const isBeforeNoon = next.getHours() < 12;
-  const daysUntilSunday = isSunday && isBeforeNoon ? 0 : (7 - next.getDay()) % 7 || 7;
+
+  const daysUntilSunday =
+    isSunday && isBeforeNoon ? 0 : (7 - next.getDay()) % 7 || 7;
+
   next.setDate(next.getDate() + daysUntilSunday);
   next.setHours(12, 0, 0, 0);
+
   return Math.floor(next.getTime() / 1000);
 };
 
@@ -166,7 +172,7 @@ export const Shop = {
               custom_id: 'amount',
               label: 'How many would you like to buy?',
               style: TextInputStyle.Short,
-              placeholder: `Enter amount (max: ${state.shop[pokeball.type]})`,
+              placeholder: `Enter Amount (Stock: ${state.shop[pokeball.type]})`,
               min_length: 1,
               max_length: 7,
               required: true,
