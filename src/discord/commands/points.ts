@@ -1,9 +1,9 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { UserDocument } from '@parthenonlab/models';
 
-import { CONFIG, COPY, EMOJIS } from '@/constants';
-import { UserDocument } from '@/interfaces/user';
-
-import { reply } from '../helpers';
+import { COPY, EMOJIS } from '@/constants';
+import { formatNumberToCode } from '@/lib/utils';
+import { checkFeatureEnabled, reply } from '../helpers';
 
 export const Points = {
   data: new SlashCommandBuilder()
@@ -11,20 +11,13 @@ export const Points = {
     .setDescription(COPY.POINTS.DESCRIPTION),
   execute: async (
     interaction: ChatInputCommandInteraction,
-    user: UserDocument
+    user: UserDocument,
   ) => {
-    if (!CONFIG.FEATURES.POINTS.ENABLED) {
-      reply({
-        content: COPY.DISABLED,
-        ephemeral: true,
-        interaction: interaction,
-      });
-      return;
-    }
+    if (!(await checkFeatureEnabled('POINTS', interaction))) return;
 
     reply({
-      content: `Your current balance is: ${user.cash} ${EMOJIS.CURRENCY}`,
-      ephemeral: false,
+      content: `Your current balance is: ${formatNumberToCode(user.cash)} ${EMOJIS.CURRENCY}`,
+
       interaction: interaction,
     });
   },

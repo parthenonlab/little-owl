@@ -35,56 +35,16 @@ export const CONFIG = {
     PURPLE: '#9B59B6',
     RED: '#E91E63',
     YELLOW: '#F1C40F',
+    POKEMON: {
+      RED: '#ED533A',
+    },
   },
   CURRENCY: {
     PLURAL: 'silver coins',
     SINGLE: 'silver coin',
   },
-  FEATURES: {
-    BONUS: {
-      ENABLED: true,
-    },
-    COINFLIP: {
-      ENABLED: true,
-    },
-    EIGHTBALL: {
-      ENABLED: true,
-    },
-    GAMBLE: {
-      ENABLED: true,
-      LIMIT: 10000,
-      WIN_PERCENT: 40,
-    },
-    GIVE: {
-      ENABLED: true,
-    },
-    HELP: {
-      ENABLED: true,
-    },
-    LEADERBOARD: {
-      ENABLED: true,
-    },
-    LINK: {
-      ENABLED: true,
-    },
-    POINTS: {
-      ENABLED: true,
-    },
-    PROFILE: {
-      ENABLED: true,
-    },
-    REDEEM: {
-      ENABLED: true,
-    },
-    SLEEP: {
-      ENABLED: true,
-    },
-    STAR: {
-      ENABLED: true,
-    },
-    UNLINK: {
-      ENABLED: true,
-    },
+  GAMBLE: {
+    WIN_PERCENT: 40,
   },
   ROLES: {
     DEFAULT: {
@@ -94,6 +54,10 @@ export const CONFIG = {
     LIVE: {
       ENABLED: true,
       ID: '684850466559098962',
+    },
+    SUBSCRIBER: {
+      DISCORD: '1053018519987572869',
+      TWITCH: '344566052136550400',
     },
   },
   TWITCH_REWARDS: {

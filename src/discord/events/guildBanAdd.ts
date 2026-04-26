@@ -1,16 +1,13 @@
 import { GuildBan } from 'discord.js';
 
 import { LogCode } from '@/enums/logs';
-import { getENV } from '@/lib/config';
-
-import { deleteActivity } from '@/services/activities';
-import { deleteStats } from '@/services/stat';
-import { deleteUser } from '@/services/user';
+import { deleteActivity } from '@/services/activity';
+import { deleteStats } from '@/services/stats';
+import { deleteUserByDiscordId } from '@/services/user';
 
 import { log } from '../helpers/log';
 
 export const onGuildBanAdd = async (guildBan: GuildBan) => {
-  const { MONGODB_ACTS, MONGODB_STATS, MONGODB_USERS } = getENV();
   const { user, reason } = guildBan;
   const reasonStr = reason ? `\nReason: ${reason}` : '';
 
@@ -25,7 +22,7 @@ export const onGuildBanAdd = async (guildBan: GuildBan) => {
 
   log({
     type: LogCode.Deleted,
-    description: `Record for ${user.username} has been removed from collection ${MONGODB_ACTS}.`,
+    description: `Record for ${user.username} has been removed from the activities collection.`,
     thumbnail: user.displayAvatarURL() || undefined,
     footer: `Discord User ID: ${user.id} | Display Name: ${user.displayName}`,
   });
@@ -34,16 +31,16 @@ export const onGuildBanAdd = async (guildBan: GuildBan) => {
 
   log({
     type: LogCode.Deleted,
-    description: `Record for ${user.username} has been removed from collection ${MONGODB_STATS}.`,
+    description: `Record for ${user.username} has been removed from the stats collection.`,
     thumbnail: user.displayAvatarURL() || undefined,
     footer: `Discord User ID: ${user.id} | Display Name: ${user.displayName}`,
   });
 
-  await deleteUser(user.id);
+  await deleteUserByDiscordId(user.id);
 
   log({
     type: LogCode.Deleted,
-    description: `Record for ${user.username} has been removed from collection ${MONGODB_USERS}.`,
+    description: `Record for ${user.username} has been removed from the users collection.`,
     thumbnail: user.displayAvatarURL() || undefined,
     footer: `Discord User ID: ${user.id} | Display Name: ${user.displayName}`,
   });

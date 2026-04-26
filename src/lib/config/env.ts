@@ -1,17 +1,23 @@
 const ADMIN_SERVER_ID = process.env.ADMIN_SERVER_ID;
 
 const MONGODB_ACTS = process.env.MONGODB_ACTS;
-const MONGODB_STATS = process.env.MONGODB_STATS;
-const MONGODB_USERS = process.env.MONGODB_USERS;
+const MONGODB_INVENTORY = process.env.MONGODB_INVENTORY;
+const MONGODB_SHOP = process.env.MONGODB_SHOP;
 
 const SERVER_ID = process.env.SERVER_ID;
 
+/**
+ * Return validated environment variables required at runtime.
+ * Exits the process if any required variable is missing.
+ *
+ * @returns Object containing all required environment variable values.
+ */
 export const getENV = () => {
   if (
     !ADMIN_SERVER_ID ||
     !MONGODB_ACTS ||
-    !MONGODB_STATS ||
-    !MONGODB_USERS ||
+    !MONGODB_INVENTORY ||
+    !MONGODB_SHOP ||
     !SERVER_ID
   ) {
     console.error('🦉 Error: Missing Necessary Environment Variables');
@@ -21,8 +27,8 @@ export const getENV = () => {
   return {
     ADMIN_SERVER_ID,
     MONGODB_ACTS,
-    MONGODB_STATS,
-    MONGODB_USERS,
+    MONGODB_INVENTORY,
+    MONGODB_SHOP,
     SERVER_ID,
   };
 };

@@ -3,12 +3,17 @@ import { ScheduledTask } from 'node-cron';
 
 import { LogCode } from '@/enums/logs';
 
+import { PokemonExplorePayload } from './pokemon';
+import { ShopState } from './shop';
+
 export interface BotState {
   activityIndex: number;
   cooldowns: {
     stream: Date;
   };
+  exploreList: Map<string, PokemonExplorePayload>;
   reminderIndex: number;
+  shop: ShopState;
   timers: ScheduledTask[];
   twitchChatQueue: number;
 }
@@ -29,6 +34,6 @@ export interface ObjectProps {
 
 export interface ReplyProps {
   content: string;
-  ephemeral: boolean;
+  ephemeral?: boolean;
   interaction: CommandInteraction;
 }

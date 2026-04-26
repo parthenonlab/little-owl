@@ -1,11 +1,14 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { UserDocument } from '@parthenonlab/models';
 
 import { CONFIG, COPY, EMOJIS } from '@/constants';
-import { UserDocument } from '@/interfaces/user';
-import { getCurrency, weightedRandom } from '@/lib/utils';
+import { formatNumberToCode, getCurrency, weightedRandom } from '@/lib/utils';
+
+import { updateActivity } from '@/services/activity';
+import { saveGambleStats } from '@/services/stats';
 import { setDiscordUser } from '@/services/user';
 
-import { reply } from '../helpers';
+import { checkFeatureEnabled, reply } from '../helpers';
 
 export const Gamble = {
   data: new SlashCommandBuilder()
@@ -15,26 +18,18 @@ export const Gamble = {
       option
         .setName(COPY.GAMBLE.OPTION_NAME)
         .setDescription(COPY.GAMBLE.OPTION_DESCRIPTION)
-        .setRequired(true)
+        .setRequired(true),
     ),
   execute: async (
     interaction: ChatInputCommandInteraction,
-    user: UserDocument
+    user: UserDocument,
   ) => {
-    if (!CONFIG.FEATURES.GAMBLE.ENABLED) {
-      reply({
-        content: COPY.DISABLED,
-        ephemeral: true,
-        interaction: interaction,
-      });
-      return;
-    }
+    if (!(await checkFeatureEnabled('GAMBLE', interaction))) return;
 
     const replies = {
       invalidInput: 'Enter a specific amount, "all", or "half".',
       invalidNegative: `You should gamble at least 1 ${CONFIG.CURRENCY.SINGLE}.`,
       lostAll: `You lost all of your ${CONFIG.CURRENCY.PLURAL}. ${EMOJIS.GAMBLE.LOST}`,
-      maxReached: `You can only gamble up to ${CONFIG.FEATURES.GAMBLE.LIMIT} ${CONFIG.CURRENCY.PLURAL}. ${EMOJIS.GAMBLE.INVALID}`,
       noPoints: `You have no ${CONFIG.CURRENCY.SINGLE} to gamble. ${EMOJIS.GAMBLE.INVALID}`,
       notEnough: `You don't have enough ${CONFIG.CURRENCY.PLURAL} to gamble. ${EMOJIS.GAMBLE.INVALID}`,
     };
@@ -60,103 +55,27 @@ export const Gamble = {
       return;
     }
 
-    const isOverLimit = async (amount: number) => {
-      if (amount > CONFIG.FEATURES.GAMBLE.LIMIT) {
-        reply({
-          content: replies.maxReached,
-          ephemeral: true,
-          interaction: interaction,
-        });
-        return true;
-      }
-      return false;
-    };
-
     const probability = {
-      win: CONFIG.FEATURES.GAMBLE.WIN_PERCENT / 100,
-      loss: 1 - CONFIG.FEATURES.GAMBLE.WIN_PERCENT / 100,
+      win: CONFIG.GAMBLE.WIN_PERCENT / 100,
+      loss: 1 - CONFIG.GAMBLE.WIN_PERCENT / 100,
     };
 
-    let points = user.cash;
     const result = weightedRandom(probability);
+    const won = result === 'win';
+
+    let wager: number;
 
     if (arg === 'all') {
-      if (await isOverLimit(points)) return;
-
-      if (result === 'win') {
-        points += user.cash;
-
-        reply({
-          content: `You won ${user.cash} ${getCurrency(user.cash)}! ${
-            EMOJIS.GAMBLE.WIN
-          } Current balance: ${points} ${EMOJIS.CURRENCY}`,
-          ephemeral: false,
-          interaction: interaction,
-        });
-      } else {
-        points = 0;
-
-        reply({
-          content: replies.lostAll,
-          ephemeral: false,
-          interaction: interaction,
-        });
-      }
+      wager = user.cash;
     } else if (arg === 'half') {
-      const halfPoints = Math.round(user.cash / 2);
-      if (await isOverLimit(halfPoints)) return;
-
-      if (result === 'win') {
-        points += halfPoints;
-
-        reply({
-          content: `You won ${halfPoints} ${getCurrency(halfPoints)}! ${
-            EMOJIS.GAMBLE.WIN
-          } Current balance: ${points} ${EMOJIS.CURRENCY}`,
-          ephemeral: false,
-          interaction: interaction,
-        });
-      } else {
-        points -= halfPoints;
-
-        reply({
-          content: `You lost ${halfPoints} ${getCurrency(halfPoints)}. ${
-            EMOJIS.GAMBLE.LOST
-          } Current balance: ${points} ${EMOJIS.CURRENCY}`,
-          ephemeral: false,
-          interaction: interaction,
-        });
-      }
+      wager = Math.round(user.cash / 2);
     } else if (amount < 1) {
       reply({
         content: replies.invalidNegative,
         ephemeral: true,
         interaction: interaction,
       });
-    } else if (amount <= user.cash) {
-      if (await isOverLimit(amount)) return;
-
-      if (result === 'win') {
-        points += amount;
-
-        reply({
-          content: `You won ${amount} ${getCurrency(amount)}! ${
-            EMOJIS.GAMBLE.WIN
-          } Current balance: ${points} ${EMOJIS.CURRENCY}`,
-          ephemeral: false,
-          interaction: interaction,
-        });
-      } else {
-        points -= amount;
-
-        reply({
-          content: `You lost ${amount} ${getCurrency(amount)}. ${
-            EMOJIS.GAMBLE.LOST
-          } Current balance: ${points} ${EMOJIS.CURRENCY}`,
-          ephemeral: false,
-          interaction: interaction,
-        });
-      }
+      return;
     } else if (amount > user.cash) {
       reply({
         content: replies.notEnough,
@@ -164,9 +83,41 @@ export const Gamble = {
         interaction: interaction,
       });
       return;
+    } else {
+      wager = amount;
     }
 
-    await setDiscordUser(interaction.user.id, { cash: points });
+    const newBalance = won ? user.cash + wager : user.cash - wager;
+
+    if (won) {
+      reply({
+        content: `You won ${formatNumberToCode(wager)} ${getCurrency(wager)}! ${
+          EMOJIS.GAMBLE.WIN
+        } Current balance: ${formatNumberToCode(newBalance)} ${EMOJIS.CURRENCY}`,
+
+        interaction: interaction,
+      });
+    } else if (newBalance === 0) {
+      reply({
+        content: replies.lostAll,
+
+        interaction: interaction,
+      });
+    } else {
+      reply({
+        content: `You lost ${formatNumberToCode(wager)} ${getCurrency(wager)}. ${
+          EMOJIS.GAMBLE.LOST
+        } Current balance: ${formatNumberToCode(newBalance)} ${EMOJIS.CURRENCY}`,
+
+        interaction: interaction,
+      });
+    }
+
+    await setDiscordUser(interaction.user.id, { cash: newBalance });
+    await saveGambleStats(interaction.user.id, { won, wager });
+    await updateActivity(interaction.user.id, {
+      $set: { 'gamble.last_used': new Date() },
+    });
   },
   getName: (): string => {
     return COPY.GAMBLE.NAME;

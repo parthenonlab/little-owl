@@ -4,15 +4,16 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 
-import { CONFIG, COPY, MONTH_MAP } from '@/constants';
+import { UserDocument } from '@parthenonlab/models';
+
+import { FIGTREE_FONT_FACE } from '@/assets/fonts';
+import { COPY, MONTH_MAP } from '@/constants';
 import { LogCode } from '@/enums/logs';
 import { SilverIcon, StarIcon } from '@/icons';
 
-import { UserDocument } from '@/interfaces/user';
-import { parseHexToRGB } from '@/lib/utils';
-import { getUserRank, setDiscordUser } from '@/services/user';
-
-import { log, reply, useBrowser } from '../helpers';
+import { formatNumberToString, parseHexToRGB } from '@/lib/utils';
+import { getDiscordUserRank, setDiscordUser } from '@/services/user';
+import { checkFeatureEnabled, log, useBrowser } from '../helpers';
 
 export const Profile = {
   data: new SlashCommandBuilder()
@@ -20,16 +21,9 @@ export const Profile = {
     .setDescription(COPY.PROFILE.DESCRIPTION),
   execute: async (
     interaction: ChatInputCommandInteraction,
-    user: UserDocument
+    user: UserDocument,
   ) => {
-    if (!CONFIG.FEATURES.PROFILE.ENABLED) {
-      reply({
-        content: COPY.DISABLED,
-        ephemeral: true,
-        interaction: interaction,
-      });
-      return;
-    }
+    if (!(await checkFeatureEnabled('PROFILE', interaction))) return;
 
     await interaction.deferReply();
 
@@ -42,7 +36,13 @@ export const Profile = {
       return;
     }
 
-    const userRank = (await getUserRank(user.cash)) ?? 'N/A';
+    const userRank = (await getDiscordUserRank(user.cash)) ?? 'N/A';
+
+    const avatarURL = member.displayAvatarURL({ size: 256, extension: 'png' });
+    const avatarBase64 = await fetch(avatarURL)
+      .then(res => res.arrayBuffer())
+      .then(buf => Buffer.from(buf).toString('base64'));
+    const avatarSrc = `data:image/png;base64,${avatarBase64}`;
 
     const whiteRGB = { r: 248, g: 248, b: 255 };
     const roleColorRGB = parseHexToRGB(member.displayHexColor);
@@ -61,11 +61,11 @@ export const Profile = {
       <html>
       <head>
         <style>
-          @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300..600&display=swap');
+          ${FIGTREE_FONT_FACE}
           #profile {
             background: linear-gradient(180deg, #f8f8ff 0%, ${rgbString} 80%, ${
-      member.displayHexColor
-    } 100%);
+              member.displayHexColor
+            } 100%);
             font-family: 'Figtree', sans-serif;
             padding: 12px 17px;
             position: relative;
@@ -150,9 +150,7 @@ export const Profile = {
           } ${member.joinedAt?.getFullYear()}</p>
           <div class="content">
             <figure class="avatar">
-              <img alt="avatar" src="${member.displayAvatarURL({
-                size: 256,
-              })}" />
+              <img alt="avatar" src="${avatarSrc}" />
             </figure>
             <div class="info">
               <h1 class="name">${member.displayName}</h1>
@@ -161,7 +159,7 @@ export const Profile = {
                 <div class="balance">
                   <p class="cash">
                     ${SilverIcon(20, 20)}
-                    <span>${user.cash}</span>
+                    <span>${formatNumberToString(user.cash)}</span>
                   </p>
                 </div>
                 <div class="stars">
@@ -186,11 +184,7 @@ export const Profile = {
         deviceScaleFactor: 2,
       });
 
-      await page.setContent(htmlContent);
-
-      await page.evaluate(async () => {
-        await document.fonts.ready;
-      });
+      await page.setContent(htmlContent, { waitUntil: 'load' });
 
       await page.waitForSelector('#profile');
       const element = await page.$('#profile');
@@ -198,13 +192,13 @@ export const Profile = {
       if (element) {
         const boundingBox = await element.boundingBox();
         if (boundingBox) {
-          const buffer = Buffer.from(
-            await page.screenshot({
-              clip: boundingBox,
-              type: 'png',
-              fullPage: false,
-            })
-          );
+          const screenshot = await page.screenshot({
+            clip: boundingBox,
+            type: 'png',
+            fullPage: false,
+          });
+
+          const buffer = Buffer.from(screenshot);
 
           await page.close();
 

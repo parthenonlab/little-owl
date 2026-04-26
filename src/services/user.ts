@@ -1,185 +1,230 @@
-import { User } from 'discord.js';
+import { User as DiscordUser, Guild } from 'discord.js';
 import { v4 as uuidv4 } from 'uuid';
+import { UserDocument, UserModel } from '@parthenonlab/models';
+import { User } from '@parthenonlab/types';
 
 import { log } from '@/discord/helpers';
 import { LogCode } from '@/enums/logs';
-
 import { ObjectProps } from '@/interfaces/bot';
-import { UserDocument, UserIncrementFields } from '@/interfaces/user';
+import { CONFIG } from '@/constants';
 
-import { UserModel } from '@/models/user';
+type NumericUserField = {
+  [K in keyof User]: User[K] extends number ? K : never;
+}[keyof User];
 
+type PlatformFilter = { discord_id: string } | { twitch_id: string };
+
+/**
+ * Increment a field on a user document by platform filter.
+ *
+ * @param filter - MongoDB filter targeting a user by discord_id or twitch_id.
+ * @param field - The numeric field to increment.
+ * @param amount - The amount to increment by (negative to decrement).
+ * @param label - Label used in error messages to identify the caller context.
+ */
+const incUser = async (
+  filter: PlatformFilter,
+  field: NumericUserField,
+  amount: number,
+  label: string,
+) => {
+  try {
+    const result = await UserModel.updateOne(filter, {
+      $inc: { [field]: amount },
+    });
+
+    if (result.modifiedCount === 0) {
+      log({
+        type: LogCode.Error,
+        description: `Increment ${label}: No user found with filter: ${JSON.stringify(filter)}`,
+      });
+    }
+  } catch (error) {
+    log({ type: LogCode.Error, description: JSON.stringify(error) });
+  }
+};
+
+/**
+ * Set fields on a user document by platform filter.
+ *
+ * @param filter - MongoDB filter targeting a user by discord_id or twitch_id.
+ * @param payload - Fields to set on the user document.
+ * @returns Updated user document, or null on error.
+ */
+const setUser = async (
+  filter: PlatformFilter,
+  payload: Partial<UserDocument>,
+): Promise<UserDocument | null> => {
+  try {
+    return await UserModel.findOneAndUpdate(
+      filter,
+      { $set: payload },
+      { returnDocument: 'after' },
+    );
+  } catch (error) {
+    log({ type: LogCode.Error, description: JSON.stringify(error) });
+    return null;
+  }
+};
+
+/**
+ * Create a new user document.
+ *
+ * @param payload - User fields to save.
+ * @returns The created user document, or null on error.
+ */
 export const createUser = async (
-  payload: Partial<UserDocument>
-): Promise<UserDocument | undefined> => {
+  payload: Partial<User>,
+): Promise<UserDocument | null> => {
   try {
     const user = new UserModel(payload);
     return user.save();
   } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: JSON.stringify(error),
-    });
-    return;
-  }
-};
-
-export const deleteUser = async (id: string): Promise<UserDocument | null> => {
-  try {
-    const deleted = await UserModel.findOneAndDelete({ user_id: id });
-    return deleted;
-  } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: JSON.stringify(error),
-    });
+    log({ type: LogCode.Error, description: JSON.stringify(error) });
     return null;
   }
 };
 
-export const deleteUserByDiscordId = async (
-  id: string
+/**
+ * Delete a user document by filter.
+ *
+ * @param filter - Fields to match the user document against.
+ * @returns The deleted user document, or null if not found or on error.
+ */
+const deleteUserBy = async (
+  filter: Partial<User>,
 ): Promise<UserDocument | null> => {
   try {
-    const deleted = await UserModel.findOneAndDelete({ discord_id: id });
-    return deleted;
+    return await UserModel.findOneAndDelete(filter);
   } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: JSON.stringify(error),
-    });
+    log({ type: LogCode.Error, description: JSON.stringify(error) });
     return null;
   }
 };
 
-export const deleteUserByTwitchUsername = async (
-  username: string
-): Promise<UserDocument | null> => {
-  try {
-    const deleted = await UserModel.findOneAndDelete({
-      twitch_username: username,
-    });
-    return deleted;
-  } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: JSON.stringify(error),
-    });
-    return null;
-  }
-};
+/** Delete a user document by internal user ID. */
+export const deleteUser = (id: string) => deleteUserBy({ user_id: id });
 
+/** Delete a user document by Discord user ID. */
+export const deleteUserByDiscordId = (id: string) =>
+  deleteUserBy({ discord_id: id });
+
+/** Delete a user document by Twitch username. */
+export const deleteUserByTwitchUsername = (username: string) =>
+  deleteUserBy({ twitch_username: username });
+
+/**
+ * Find or create a user document for a Discord user.
+ *
+ * @param discordUser - Discord.js User object from the interaction.
+ * @returns The existing or newly created user document, or null on error.
+ */
 export const findOrCreateDiscordUser = async (
-  discordUser: User
-): Promise<UserDocument | undefined> => {
-  try {
-    let user = await UserModel.findOne({ discord_id: discordUser.id }).exec();
-
-    if (!user) {
-      user = new UserModel({
-        user_id: uuidv4(),
-        discord_id: discordUser.id,
-        discord_username: discordUser.username,
-        discord_name: discordUser.displayName,
-      });
-
-      await user.save();
-    }
-
-    return user;
-  } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: JSON.stringify(error),
-    });
-    return;
-  }
-};
-
-export const findOrCreateTwitchUser = async (
-  userstate: ObjectProps
-): Promise<UserDocument | undefined> => {
-  try {
-    let user = await UserModel.findOne({
-      twitch_id: userstate['user-id'],
-    }).exec();
-
-    if (!user) {
-      user = new UserModel({
-        user_id: uuidv4(),
-        twitch_id: userstate['user-id'],
-        twitch_username: userstate.username,
-      });
-
-      await user.save();
-    }
-
-    return user;
-  } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: JSON.stringify(error),
-    });
-    return;
-  }
-};
-
-export const getTwitchUserByName = async (
-  username: string
+  discordUser: DiscordUser,
 ): Promise<UserDocument | null> => {
   try {
-    const user = await UserModel.findOne({
-      twitch_username: username.toLowerCase(),
-    }).exec();
-    return user;
+    return await UserModel.findOneAndUpdate(
+      { discord_id: discordUser.id },
+      {
+        $setOnInsert: {
+          user_id: uuidv4(),
+          discord_id: discordUser.id,
+          discord_username: discordUser.username,
+          discord_name: discordUser.displayName,
+        },
+      },
+      { upsert: true, returnDocument: 'after' },
+    );
   } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: JSON.stringify(error),
-    });
+    log({ type: LogCode.Error, description: JSON.stringify(error) });
     return null;
   }
 };
 
-export const getUserById = async (id: string): Promise<UserDocument | null> => {
+/**
+ * Find or create a user document for a Twitch chatter.
+ *
+ * @param userstate - TMI.js userstate object containing user-id and username.
+ * @returns The existing or newly created user document, or null on error.
+ */
+export const findOrCreateTwitchUser = async (
+  userstate: ObjectProps,
+): Promise<UserDocument | null> => {
   try {
-    const user = await UserModel.findOne({
-      user_id: id,
-    }).exec();
-    return user;
+    return await UserModel.findOneAndUpdate(
+      { twitch_id: userstate['user-id'] },
+      {
+        $setOnInsert: {
+          user_id: uuidv4(),
+          twitch_id: userstate['user-id'],
+          twitch_username: userstate.username,
+        },
+      },
+      { upsert: true, returnDocument: 'after' },
+    );
   } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: JSON.stringify(error),
-    });
+    log({ type: LogCode.Error, description: JSON.stringify(error) });
     return null;
   }
 };
 
-export const getUsersByCategory = async (
-  category: string,
-  max: number
+/**
+ * Find a user document by filter.
+ *
+ * @param filter - Fields to match the user document against.
+ * @returns The matching user document, or null if not found or on error.
+ */
+const findUserBy = async (
+  filter: Partial<User>,
+): Promise<UserDocument | null> => {
+  try {
+    return await UserModel.findOne(filter);
+  } catch (error) {
+    log({ type: LogCode.Error, description: JSON.stringify(error) });
+    return null;
+  }
+};
+
+/** Find a user document by Twitch username. */
+export const getTwitchUserByName = (username: string) =>
+  findUserBy({ twitch_username: username.toLowerCase() });
+
+/** Find a user document by internal user ID. */
+export const getUserById = (id: string) => findUserBy({ user_id: id });
+
+/**
+ * Get a ranked leaderboard of Discord users sorted by the given field. Excludes Twitch-only accounts.
+ *
+ * @param category - The user field to rank by.
+ * @param max - Maximum number of results to return.
+ * @returns Array of user documents sorted descending by the category field.
+ */
+export const getDiscordLeaderboard = async (
+  category: NumericUserField,
+  max: number,
 ): Promise<UserDocument[]> => {
   try {
-    const users = await UserModel.find({
+    return await UserModel.find({
       discord_id: { $exists: true, $ne: null },
       [category]: { $gt: 0 },
     })
-      .sort({ [category]: -1 })
-      .limit(max)
-      .exec();
-
-    return users;
+      .sort([[category, -1]])
+      .limit(max);
   } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: JSON.stringify(error),
-    });
+    log({ type: LogCode.Error, description: JSON.stringify(error) });
     return [];
   }
 };
 
-export const getUserRank = async (value: number): Promise<number | null> => {
+/**
+ * Get the rank of a Discord user by cash value. Excludes Twitch-only accounts.
+ *
+ * @param value - The user's current cash value.
+ * @returns 1-based rank position, or null on error.
+ */
+export const getDiscordUserRank = async (
+  value: number,
+): Promise<number | null> => {
   try {
     const rank = await UserModel.countDocuments({
       discord_id: { $exists: true, $ne: null },
@@ -187,108 +232,93 @@ export const getUserRank = async (value: number): Promise<number | null> => {
     });
     return rank + 1;
   } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: JSON.stringify(error),
-    });
+    log({ type: LogCode.Error, description: JSON.stringify(error) });
     return null;
   }
 };
 
+/**
+ * Increment a field on a Discord user document.
+ *
+ * @param id - Discord user ID.
+ * @param field - The numeric field to increment.
+ * @param amount - The amount to increment by (negative to decrement).
+ */
 export const incDiscordUser = async (
   id: string,
-  values: UserIncrementFields
-) => {
-  if (Object.keys(values).length === 0) {
-    return console.error(
-      '🦉 Error: No Fields Specified for Discord User Increment'
-    );
-  }
+  field: NumericUserField,
+  amount: number,
+) => incUser({ discord_id: id }, field, amount, 'Discord User');
 
-  try {
-    const result = await UserModel.updateOne(
-      { discord_id: id },
-      { $inc: values }
-    );
-
-    if (result.modifiedCount === 0) {
-      log({
-        type: LogCode.Error,
-        description: `Increment Discord User: No user found with Discord ID: ${id}`,
-      });
-    }
-  } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: JSON.stringify(error),
-    });
-  }
-};
-
+/**
+ * Increment a field on a Twitch user document.
+ *
+ * @param id - Twitch user ID.
+ * @param field - The numeric field to increment.
+ * @param amount - The amount to increment by (negative to decrement).
+ */
 export const incTwitchUser = async (
   id: string,
-  values: UserIncrementFields
-) => {
-  if (Object.keys(values).length === 0) {
-    return console.error(
-      '🦉 Error: No Fields Specified for Twitch User Increment'
-    );
-  }
+  field: NumericUserField,
+  amount: number,
+) => incUser({ twitch_id: id }, field, amount, 'Twitch User');
 
-  try {
-    const result = await UserModel.updateOne(
-      { twitch_id: id },
-      { $inc: values }
-    );
-
-    if (result.modifiedCount === 0) {
-      log({
-        type: LogCode.Error,
-        description: `Increment Twitch User: No user found with Discord ID: ${id}`,
-      });
-    }
-  } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: JSON.stringify(error),
-    });
-  }
-};
-
+/**
+ * Set fields on a Discord user document.
+ *
+ * @param id - Discord user ID.
+ * @param payload - Fields to set on the user document.
+ * @returns Updated user document, or null on error.
+ */
 export const setDiscordUser = async (
   id: string,
-  payload: Partial<UserDocument>
-): Promise<UserDocument | null> => {
-  try {
-    const user = await UserModel.findOneAndUpdate(
-      { discord_id: id },
-      { $set: { ...payload } }
-    );
-    return user;
-  } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: JSON.stringify(error),
-    });
-    return null;
-  }
-};
+  payload: Partial<UserDocument>,
+): Promise<UserDocument | null> => setUser({ discord_id: id }, payload);
 
+/**
+ * Set fields on a Twitch user document.
+ *
+ * @param id - Twitch user ID.
+ * @param payload - Fields to set on the user document.
+ * @returns Updated user document, or null on error.
+ */
 export const setTwitchUser = async (
   id: string,
-  payload: Partial<UserDocument>
-): Promise<UserDocument | null> => {
-  try {
-    const user = await UserModel.findOneAndUpdate(
-      { twitch_id: id },
-      { $set: { ...payload } }
-    );
-    return user;
-  } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: JSON.stringify(error),
-    });
-    return null;
-  }
+  payload: Partial<UserDocument>,
+): Promise<UserDocument | null> => setUser({ twitch_id: id }, payload);
+
+/**
+ * Sets the subscriber field for members based on Twitch and Discord subscriber roles.
+ *
+ * @param guild - Guild object for the server.
+ */
+export const syncSubscribers = async (guild: Guild) => {
+  const roleIds = [
+    CONFIG.ROLES.SUBSCRIBER.DISCORD,
+    CONFIG.ROLES.SUBSCRIBER.TWITCH,
+  ];
+
+  const members = await guild.members.fetch();
+
+  const operations = members.map(member => {
+    const isSubscriber = roleIds.some(roleId => member.roles.cache.has(roleId));
+
+    return {
+      updateOne: {
+        filter: { discord_id: member.id },
+        update: {
+          $set: { subscriber: isSubscriber },
+          $setOnInsert: {
+            user_id: uuidv4(),
+            discord_id: member.id,
+            discord_username: member.user.username,
+            discord_name: member.displayName,
+          },
+        },
+        upsert: true,
+      },
+    };
+  });
+
+  await UserModel.bulkWrite(operations);
 };

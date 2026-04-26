@@ -5,7 +5,7 @@ import { LogCode } from '@/enums/logs';
 export const onJoin = async (
   _channel: string,
   username: string,
-  self: boolean
+  self: boolean,
 ) => {
   if (self) return;
   if (IGNORE_LIST.includes(username)) return;

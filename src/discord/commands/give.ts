@@ -4,12 +4,13 @@ import {
   User,
 } from 'discord.js';
 
-import { CONFIG, COPY, EMOJIS } from '@/constants';
-import { UserDocument } from '@/interfaces/user';
-import { getCurrency } from '@/lib/utils';
-import { incDiscordUser, setDiscordUser } from '@/services/user';
+import { UserDocument } from '@parthenonlab/models';
 
-import { reply } from '../helpers';
+import { CONFIG, COPY, EMOJIS } from '@/constants';
+import { formatNumberToCode, getCurrency } from '@/lib/utils';
+import { incDiscordUser } from '@/services/user';
+
+import { checkFeatureEnabled, reply } from '../helpers';
 
 export const Give = {
   data: new SlashCommandBuilder()
@@ -19,27 +20,20 @@ export const Give = {
       option
         .setName(COPY.GIVE.OPTION1_NAME)
         .setDescription(COPY.GIVE.OPTION1_DESCRIPTION)
-        .setRequired(true)
+        .setRequired(true),
     )
     .addNumberOption(option =>
       option
         .setName(COPY.GIVE.OPTION2_NAME)
         .setDescription(COPY.GIVE.OPTION2_DESCRIPTION)
-        .setRequired(true)
+        .setRequired(true),
     ),
   execute: async (
     interaction: ChatInputCommandInteraction,
     user: UserDocument,
-    recipient: User
+    recipient: User,
   ) => {
-    if (!CONFIG.FEATURES.GIVE.ENABLED) {
-      reply({
-        content: COPY.DISABLED,
-        ephemeral: true,
-        interaction: interaction,
-      });
-      return;
-    }
+    if (!(await checkFeatureEnabled('GIVE', interaction))) return;
 
     const amount = Number(interaction.options.get('amount')?.value) || 0;
 
@@ -48,8 +42,8 @@ export const Give = {
       invalidRecipient: `You can't give yourself ${CONFIG.CURRENCY.PLURAL}. ${EMOJIS.GIVE.INVALID}`,
       noPoints: `Sorry, you have no ${CONFIG.CURRENCY.SINGLE} to give. ${EMOJIS.GIVE.INVALID}`,
       notEnough: `Sorry, you don't have enough ${CONFIG.CURRENCY.PLURAL} to give. ${EMOJIS.GIVE.INVALID}`,
-      success: `You gave ${recipient.displayName} ${amount} ${getCurrency(
-        amount
+      success: `You gave ${recipient.displayName} ${formatNumberToCode(amount)} ${getCurrency(
+        amount,
       )}.`,
     };
 
@@ -89,14 +83,12 @@ export const Give = {
       return;
     }
 
-    await incDiscordUser(recipient.id, { cash: amount });
-    await setDiscordUser(interaction.user.id, {
-      cash: (user.cash -= amount),
-    });
+    await incDiscordUser(recipient.id, 'cash', amount);
+    await incDiscordUser(interaction.user.id, 'cash', -amount);
 
     reply({
-      content: `${replies.success} Your new balance: ${user.cash} ${EMOJIS.CURRENCY}`,
-      ephemeral: false,
+      content: `${replies.success} Your new balance: ${formatNumberToCode(user.cash - amount)} ${EMOJIS.CURRENCY}`,
+
       interaction: interaction,
     });
   },

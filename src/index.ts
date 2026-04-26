@@ -10,11 +10,15 @@ require('dotenv').config();
 import * as de from '@/discord/events';
 import * as te from '@/twitch/events';
 
+import { DEFAULT_SHOP_STATE } from '@/constants/pokemon';
 import { registerDiscordCommands } from '@/discord/helpers';
+
 import { BotState } from '@/interfaces/bot';
+import { PokemonExplorePayload } from '@/interfaces/pokemon';
 
 import { discord, twitch } from '@/lib/clients';
 import { connectDatabase, sleepTime } from '@/lib/config';
+import { findOrCreateShop } from '@/services/shop';
 
 import { scheduleTasks } from '@/scheduler';
 
@@ -23,7 +27,9 @@ const state: BotState = {
   cooldowns: {
     stream: new Date(),
   },
+  exploreList: new Map<string, PokemonExplorePayload>(),
   reminderIndex: 0,
+  shop: DEFAULT_SHOP_STATE,
   timers: [],
   twitchChatQueue: 0,
 };
@@ -32,6 +38,7 @@ const addEventListeners = async () => {
   discord.on('guildBanAdd', de.onGuildBanAdd);
   discord.on('guildMemberAdd', de.onGuildMemberAdd);
   discord.on('guildMemberRemove', de.onGuildMemberRemove);
+  discord.on('guildMemberUpdate', de.onGuildMemberUpdate);
   discord.on('interactionCreate', de.onInteractionCreate.bind(null, state));
   discord.on('messageCreate', de.onMessageCreate);
   discord.on('messageDelete', de.onMessageDelete);
@@ -69,9 +76,13 @@ const addSleepListeners = async () => {
 
 const init = async () => {
   await connectDatabase();
+
+  const shopState = await findOrCreateShop();
+  if (shopState) state.shop = shopState;
+
   await addEventListeners();
   await addSleepListeners();
-  await scheduleTasks(state);
+  scheduleTasks(state);
 };
 
 if (process.env.REGISTER) registerDiscordCommands();

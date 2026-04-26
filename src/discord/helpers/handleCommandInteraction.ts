@@ -10,9 +10,15 @@ import { findOrCreateDiscordUser } from '@/services/user';
 import * as dc from '../commands';
 import { reply } from './reply';
 
+/**
+ * Route a slash command interaction to the appropriate command handler.
+ *
+ * @param state - The current bot state.
+ * @param interaction - The slash command interaction to handle.
+ */
 export const handleCommandInteraction = async (
   state: BotState,
-  interaction: ChatInputCommandInteraction
+  interaction: ChatInputCommandInteraction,
 ) => {
   if (interaction.user.bot) return;
 
@@ -27,17 +33,7 @@ export const handleCommandInteraction = async (
   // command: link
   if (interaction.commandName === dc.AccountLink.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);
-    if (!user) return;
-
-    return dc.AccountLink.execute(interaction, user);
-  }
-
-  // command: unlink
-  else if (interaction.commandName === dc.AccountUnlink.getName()) {
-    const user = await findOrCreateDiscordUser(interaction.user);
-    if (!user) return;
-
-    return dc.AccountUnlink.execute(interaction, user);
+    if (user) dc.AccountLink.execute(interaction, user);
   }
 
   // command: help
@@ -82,9 +78,12 @@ export const handleCommandInteraction = async (
   // command: points
   if (interaction.commandName === dc.Points.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);
-    if (!user) return;
+    if (user) dc.Points.execute(interaction, user);
+  }
 
-    return dc.Points.execute(interaction, user);
+  // command: explore
+  else if (interaction.commandName === dc.Explore.getName()) {
+    return dc.Explore.execute(state, interaction);
   }
 
   // command: gamble
@@ -99,25 +98,30 @@ export const handleCommandInteraction = async (
     }
 
     const user = await findOrCreateDiscordUser(interaction.user);
-    if (!user) return;
-
-    return dc.Gamble.execute(interaction, user);
+    if (user) dc.Gamble.execute(interaction, user);
   }
 
-  // command: redeem
-  else if (interaction.commandName === dc.Redeem.getName()) {
+  // command: inventory
+  else if (interaction.commandName === dc.Inventory.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);
-    if (!user) return;
+    if (user) dc.Inventory.execute(interaction, user);
+  }
 
-    return dc.Redeem.execute(interaction, user);
+  // command: shop
+  else if (interaction.commandName === dc.Shop.getName()) {
+    const user = await findOrCreateDiscordUser(interaction.user);
+    if (user) dc.Shop.execute(state, interaction, user);
+  }
+
+  // command: pokedex
+  else if (interaction.commandName === dc.Pokedex.getName()) {
+    return dc.Pokedex.execute(interaction);
   }
 
   // command: profile
   else if (interaction.commandName === dc.Profile.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);
-    if (!user) return;
-
-    return dc.Profile.execute(interaction, user);
+    if (user) dc.Profile.execute(interaction, user);
   }
 
   // command: leaderboard

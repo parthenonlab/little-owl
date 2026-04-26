@@ -1,23 +1,15 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 
-import { CONFIG, COPY, EMOJIS } from '@/constants';
+import { COPY, EMOJIS } from '@/constants';
 import { weightedRandom } from '@/lib/utils';
-
-import { reply } from '../helpers';
+import { checkFeatureEnabled, reply } from '../helpers';
 
 export const CoinFlip = {
   data: new SlashCommandBuilder()
     .setName(COPY.COINFLIP.NAME)
     .setDescription(COPY.COINFLIP.DESCRIPTION),
   execute: async (interaction: ChatInputCommandInteraction) => {
-    if (!CONFIG.FEATURES.COINFLIP.ENABLED) {
-      reply({
-        content: COPY.DISABLED,
-        ephemeral: true,
-        interaction: interaction,
-      });
-      return;
-    }
+    if (!(await checkFeatureEnabled('COINFLIP', interaction))) return;
 
     const probability = { Heads: 0.5, Tails: 0.5 };
     const result = weightedRandom(probability);
@@ -27,7 +19,7 @@ export const CoinFlip = {
 
     reply({
       content: `You got... ${result}! ${currencyEmoji}`,
-      ephemeral: false,
+
       interaction: interaction,
     });
   },

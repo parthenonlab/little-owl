@@ -55,13 +55,17 @@ export const COPY = {
       "Don't count on it.",
       'My reply is no.',
       'No.',
-      'Outlook not so good',
+      'Outlook not so good.',
       'Very doubtful.',
     ],
   },
   ERROR: {
     EXPIRED: 'This interaction has expired.',
     GENERIC: 'Something went wrong. Please try again later.',
+  },
+  EXPLORE: {
+    NAME: 'explore',
+    DESCRIPTION: 'Explore the wild and find some Pokemon!',
   },
   GAMBLE: {
     NAME: 'gamble',
@@ -92,6 +96,10 @@ export const COPY = {
     bsky: 'https://bsky.app/profile/athenaus.io',
     web: 'https://parthenon.app',
   } as { [key: string]: string },
+  INVENTORY: {
+    NAME: 'inventory',
+    DESCRIPTION: 'Check your inventory',
+  },
   LEADERBOARD: {
     NAME: 'leaderboard',
     DESCRIPTION: `Display a leaderboard based on amount of ${CONFIG.CURRENCY.PLURAL}`,
@@ -117,15 +125,17 @@ export const COPY = {
     NAME: 'points',
     DESCRIPTION: `Display the amount of ${CONFIG.CURRENCY.PLURAL} you have`,
   },
+  POKEDEX: {
+    NAME: 'pokedex',
+    DESCRIPTION: 'View your Pokédex on Parthenon!',
+  },
   PROFILE: {
     NAME: 'profile',
     DESCRIPTION: 'Display your profile',
   },
-  REDEEM: {
-    NAME: 'redeem',
-    DESCRIPTION: 'Select from the available rewards to redeem',
-    OPTION_NAME: 'reward',
-    OPTION_DESCRIPTION: 'The cost of these rewards are the same as in Twitch',
+  SHOP: {
+    NAME: 'shop',
+    DESCRIPTION: `Browse the shop and buy items with your ${CONFIG.CURRENCY.PLURAL}!`,
   },
   SLEEP: {
     NAME: 'sleep',
@@ -139,18 +149,11 @@ export const COPY = {
   },
   TWITCH_REMINDERS: [
     `Reminder: You're awesome! ${EMOTES.REMINDER.POSITIVITY}`,
-    'Check out our community website: https://parthenon.app. Log in with Discord to play and earn points!',
+    'Check out our community website: https://parthenon.app. Link with your Discord account to play and earn points!',
+    'Enjoying the stream? Drop a follow to get notified next time Athena goes live!',
+    'Earn points by chatting! Type !gamble to try your luck, or !give to share with friends.',
+    `Want to play Overwatch with Athena? Redeem "Join QP Only" in the channel points to hop in! ${EMOTES.REDEEM.QUICKPLAY}`,
+    'Athena streams are rage-free and lurker-friendly! Thank you for your support.',
+    `Subscribers can redeem "Join QP + Ranked" to queue with Athena in Overwatch competitive! (Rules apply) ${EMOTES.REDEEM.COMPETITIVE}`,
   ],
-  UNLINK: {
-    NAME: 'unlink',
-    DESCRIPTION: `Unlink your accounts (All ${CONFIG.CURRENCY.PLURAL} stay in your Discord account)`,
-    OPTION_NAME: 'username',
-    OPTION_DESCRIPTION: 'Enter the Twitch username you want to unlink',
-    RESPONSES: {
-      INVALID:
-        'The Twitch username you entered is not linked with your account.',
-      NOLINK: 'Your account is not linked to a Twitch account.',
-      SUCCESS: 'Success! Your accounts are not linked anymore.',
-    },
-  },
 };

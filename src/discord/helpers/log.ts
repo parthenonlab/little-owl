@@ -39,6 +39,11 @@ const typeMap = {
   },
 };
 
+/**
+ * Send an embed message to a Discord log channel based on log type.
+ *
+ * @param props - Log properties including type, title, description, and optional media fields.
+ */
 export const log = ({
   type,
   title,

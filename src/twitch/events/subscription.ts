@@ -7,7 +7,7 @@ export const onSubscription = (
   username: string,
   _methods: ObjectProps,
   message: string,
-  _userstate: ObjectProps
+  _userstate: ObjectProps,
 ) => {
   log({
     type: LogCode.Alert,

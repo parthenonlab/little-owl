@@ -6,18 +6,25 @@ import { ReplyProps } from '@/interfaces/bot';
 
 import { log } from './log';
 
+/**
+ * Send an embed reply to a Discord interaction.
+ *
+ * @param props.content - The text content to display in the embed description.
+ * @param props.ephemeral - Whether the reply is only visible to the invoking user.
+ * @param props.interaction - The Discord command interaction to reply to.
+ */
 export const reply = async ({
   content,
-  ephemeral,
+  ephemeral = false,
   interaction,
 }: ReplyProps) => {
   try {
-    const botEmbed = new EmbedBuilder()
+    const embed = new EmbedBuilder()
       .setColor(CONFIG.COLORS.BLUE as ColorResolvable)
       .setDescription(content);
 
     await interaction.reply({
-      embeds: [botEmbed],
+      embeds: [embed],
       ...(ephemeral && { flags: MessageFlags.Ephemeral }),
     });
   } catch (error) {

@@ -65,5 +65,5 @@ export const onMessageCreate = async (message: Message) => {
   if (!isValid) return;
 
   await findOrCreateDiscordUser(message.member.user);
-  await incDiscordUser(message.member.id, { cash: incAmount });
+  await incDiscordUser(message.member.id, 'cash', incAmount);
 };

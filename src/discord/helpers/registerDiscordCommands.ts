@@ -3,21 +3,28 @@ import { REST } from '@discordjs/rest';
 
 import {
   AccountLink,
-  AccountUnlink,
   Bonus,
   CoinFlip,
   EightBall,
+  Explore,
   Gamble,
   Give,
   Help,
+  Inventory,
   Leaderboard,
   Points,
+  Pokedex,
   Profile,
-  Redeem,
+  Shop,
   Sleep,
   Star,
 } from '../commands';
 
+/**
+ * Register all Discord slash commands via the REST API.
+ * Registers production commands to the main guild, stage commands to the admin guild,
+ * and global commands application-wide.
+ */
 export const registerDiscordCommands = (): void => {
   if (!process.env.DISCORD_TOKEN) {
     console.error('🦉 Error: Discord Register Command Missing Token.');
@@ -36,7 +43,7 @@ export const registerDiscordCommands = (): void => {
 
   if (!process.env.ADMIN_SERVER_ID) {
     console.error(
-      '🦉 Error: Discord Register Command Missing Admin Server ID.'
+      '🦉 Error: Discord Register Command Missing Admin Server ID.',
     );
     process.exit(1);
   }
@@ -47,16 +54,18 @@ export const registerDiscordCommands = (): void => {
 
   // commands ready for production should be added here
   commands.push(AccountLink.data.toJSON());
-  commands.push(AccountUnlink.data.toJSON());
   commands.push(Bonus.data.toJSON());
   commands.push(CoinFlip.data.toJSON());
   commands.push(EightBall.data.toJSON());
+  commands.push(Explore.data.toJSON());
   commands.push(Gamble.data.toJSON());
   commands.push(Give.data.toJSON());
+  commands.push(Inventory.data.toJSON());
   commands.push(Leaderboard.data.toJSON());
   commands.push(Points.data.toJSON());
+  commands.push(Pokedex.data.toJSON());
   commands.push(Profile.data.toJSON());
-  commands.push(Redeem.data.toJSON());
+  commands.push(Shop.data.toJSON());
   commands.push(Star.data.toJSON());
 
   // commands in development for testing should be added here
@@ -72,12 +81,12 @@ export const registerDiscordCommands = (): void => {
       .put(
         Routes.applicationGuildCommands(
           process.env.DISCORD_CLIENT_ID,
-          process.env.SERVER_ID
+          process.env.SERVER_ID,
         ),
-        { body: commands }
+        { body: commands },
       )
       .then(_data =>
-        console.log('🦉 Little Owl: Discord PROD Commands Registered')
+        console.log('🦉 Little Owl: Discord PROD Commands Registered'),
       )
       .catch(console.error);
 
@@ -87,7 +96,7 @@ export const registerDiscordCommands = (): void => {
         body: commandsGlobal,
       })
       .then(_data =>
-        console.log('🦉 Little Owl: Discord GLOBAL Commands Registered')
+        console.log('🦉 Little Owl: Discord GLOBAL Commands Registered'),
       )
       .catch(console.error);
 
@@ -96,12 +105,12 @@ export const registerDiscordCommands = (): void => {
       .put(
         Routes.applicationGuildCommands(
           process.env.DISCORD_CLIENT_ID,
-          process.env.ADMIN_SERVER_ID
+          process.env.ADMIN_SERVER_ID,
         ),
-        { body: commandsStage }
+        { body: commandsStage },
       )
       .then(_data =>
-        console.log('🦉 Little Owl: Discord STAGE Commands Registered')
+        console.log('🦉 Little Owl: Discord STAGE Commands Registered'),
       )
       .catch(console.error);
 };
