@@ -3,7 +3,6 @@ import { REST } from '@discordjs/rest';
 
 import {
   AccountLink,
-  AccountUnlink,
   Bonus,
   CoinFlip,
   EightBall,
@@ -55,7 +54,6 @@ export const registerDiscordCommands = (): void => {
 
   // commands ready for production should be added here
   commands.push(AccountLink.data.toJSON());
-  commands.push(AccountUnlink.data.toJSON());
   commands.push(Bonus.data.toJSON());
   commands.push(CoinFlip.data.toJSON());
   commands.push(EightBall.data.toJSON());

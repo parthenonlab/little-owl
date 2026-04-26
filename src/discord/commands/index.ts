@@ -14,4 +14,3 @@ export * from './profile';
 export * from './shop';
 export * from './sleep';
 export * from './star';
-export * from './unlink';
