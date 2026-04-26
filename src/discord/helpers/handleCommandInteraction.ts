@@ -36,12 +36,6 @@ export const handleCommandInteraction = async (
     if (user) dc.AccountLink.execute(interaction, user);
   }
 
-  // command: unlink
-  else if (interaction.commandName === dc.AccountUnlink.getName()) {
-    const user = await findOrCreateDiscordUser(interaction.user);
-    if (user) dc.AccountUnlink.execute(interaction, user);
-  }
-
   // command: help
   else if (interaction.commandName === dc.Help.getName()) {
     return dc.Help.execute(interaction);

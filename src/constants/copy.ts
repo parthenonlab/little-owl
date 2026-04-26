@@ -156,16 +156,4 @@ export const COPY = {
     'Athena streams are rage-free and lurker-friendly! Thank you for your support.',
     `Subscribers can redeem "Join QP + Ranked" to queue with Athena in Overwatch competitive! (Rules apply) ${EMOTES.REDEEM.COMPETITIVE}`,
   ],
-  UNLINK: {
-    NAME: 'unlink',
-    DESCRIPTION: `Unlink your accounts (All ${CONFIG.CURRENCY.PLURAL} stay in your Discord account)`,
-    OPTION_NAME: 'username',
-    OPTION_DESCRIPTION: 'Enter the Twitch username you want to unlink',
-    RESPONSES: {
-      INVALID:
-        'The Twitch username you entered is not linked with your account.',
-      NOLINK: 'Your account is not linked to a Twitch account.',
-      SUCCESS: 'Success! Your accounts are not linked anymore.',
-    },
-  },
 };
