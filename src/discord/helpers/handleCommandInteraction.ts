@@ -75,8 +75,14 @@ export const handleCommandInteraction = async (
     return;
   }
 
+  // command: claim
+  if (interaction.commandName === dc.Claim.getName()) {
+    const member = await interaction.guild?.members.fetch(interaction.user.id);
+    if (member) dc.Claim.execute(interaction, member);
+  }
+
   // command: points
-  if (interaction.commandName === dc.Points.getName()) {
+  else if (interaction.commandName === dc.Points.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);
     if (user) dc.Points.execute(interaction, user);
   }

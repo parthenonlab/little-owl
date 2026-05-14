@@ -4,6 +4,7 @@ import { REST } from '@discordjs/rest';
 import {
   AccountLink,
   Bonus,
+  Claim,
   CoinFlip,
   EightBall,
   Explore,
@@ -55,6 +56,7 @@ export const registerDiscordCommands = (): void => {
   // commands ready for production should be added here
   commands.push(AccountLink.data.toJSON());
   commands.push(Bonus.data.toJSON());
+  commands.push(Claim.data.toJSON());
   commands.push(CoinFlip.data.toJSON());
   commands.push(EightBall.data.toJSON());
   commands.push(Explore.data.toJSON());
