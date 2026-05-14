@@ -4,17 +4,22 @@ import { ShopState } from '@/interfaces/shop';
 import { POKEBALLS } from '@/constants/pokemon';
 
 /**
- * Build an action row of buy buttons for each in-stock item in the shop.
+ * Build an action row of buy buttons for each in-stock item the user can afford.
  *
  * @param shop - Current shop state with stock counts per ball type.
  * @param userId - Discord user ID used to scope button custom IDs.
- * @returns An action row containing buy buttons for available items.
+ * @param userCash - User's current cash balance; buttons are hidden for items they can't afford.
+ * @returns An action row containing buy buttons for available, affordable items.
  */
-export const getShopActions = async (shop: ShopState, userId: string) => {
+export const getShopActions = (
+  shop: ShopState,
+  userId: string,
+  userCash: number,
+) => {
   const row = new ActionRowBuilder<ButtonBuilder>();
 
   POKEBALLS.forEach(ball => {
-    if (shop[ball.type] > 0) {
+    if (shop[ball.type] > 0 && userCash >= ball.price) {
       row.addComponents(
         new ButtonBuilder()
           .setCustomId(`${userId}:shop:${ball.type}`)
