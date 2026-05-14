@@ -25,7 +25,6 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "ignoreDeprecations": "6.0",
     "types": ["jest", "node"]
   },
   "exclude": ["node_modules"],
