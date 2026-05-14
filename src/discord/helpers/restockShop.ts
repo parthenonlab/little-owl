@@ -1,3 +1,5 @@
+import { ColorResolvable, EmbedBuilder } from 'discord.js';
+
 import { CONFIG } from '@/constants';
 import { BotState } from '@/interfaces/bot';
 import { discord } from '@/lib/clients';
@@ -11,7 +13,10 @@ const sendRestockMessage = async (message: string) => {
 
   const channel = server.channels.cache.get(CONFIG.CHANNELS.MAIN.OWL);
   if (channel && channel.isTextBased()) {
-    await channel.send(message);
+    const embed = new EmbedBuilder()
+      .setColor(CONFIG.COLORS.BLUE as ColorResolvable)
+      .setDescription(message);
+    await channel.send({ embeds: [embed] });
   }
 };
 
