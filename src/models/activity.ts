@@ -11,6 +11,9 @@ const activitySchema = new Schema<ActivityDocument>(
     bank: {
       last_used: { type: Date, default: null },
     },
+    claim: {
+      last_used: { type: Date, default: null },
+    },
     gamble: {
       last_used: { type: Date, default: null },
     },

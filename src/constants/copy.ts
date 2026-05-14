@@ -24,6 +24,10 @@ export const COPY = {
     OPTION2_NAME: 'amount',
     OPTION2_DESCRIPTION: '[Admin] Enter a specific amount to give',
   },
+  CLAIM: {
+    NAME: 'claim',
+    DESCRIPTION: `Claim your daily ${CONFIG.CURRENCY.PLURAL}`,
+  },
   COINFLIP: {
     NAME: 'coinflip',
     DESCRIPTION: 'Flip a coin!',
