@@ -1,4 +1,4 @@
-import { getActiveSpawn } from '@/discord/helpers';
+import { getActiveSpawn } from '@/discord/helpers/getActiveSpawn';
 
 const mockHour = (hour: number) => {
   jest.spyOn(Date.prototype, 'getHours').mockReturnValue(hour);
