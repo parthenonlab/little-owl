@@ -1,9 +1,10 @@
 import { UpdateQuery } from 'mongoose';
 
+import { ActivityDocument, ActivityModel } from '@parthenonlab/models';
+import { ActivityFields } from '@parthenonlab/types';
+
 import { log } from '@/discord/helpers';
 import { LogCode } from '@/enums/logs';
-import { ActivityDocument, ActivityFields } from '@/interfaces/activity';
-import { ActivityModel } from '@/models/activity';
 
 /**
  * Delete the activity document for a Discord user.
