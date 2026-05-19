@@ -1,4 +1,11 @@
-import { restockShopDaily, restockShopWeekly } from '@/discord/helpers';
+jest.mock('@/lib/clients', () => ({
+  discord: { guilds: { cache: { get: jest.fn(() => undefined) } } },
+  twitch: {},
+}));
+jest.mock('@/lib/config', () => ({ getENV: jest.fn(() => ({ SERVER_ID: '' })) }));
+jest.mock('@/services/shop', () => ({ updateShopStock: jest.fn() }));
+
+import { restockShopDaily, restockShopWeekly } from '@/discord/helpers/restockShop';
 import { BotState } from '@/interfaces/bot';
 
 const makeState = (overrides: Partial<BotState['shop']> = {}): BotState =>

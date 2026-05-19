@@ -1,5 +1,5 @@
 import { DEFAULT_SHOP_STATE } from '@/constants/pokemon';
-import { log } from '@/discord/helpers';
+import { log } from '@/discord/helpers/log';
 import { LogCode } from '@/enums/logs';
 import { ShopDocument, ShopState } from '@/interfaces/shop';
 import { ShopModel } from '@/models/shop';

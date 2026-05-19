@@ -80,7 +80,7 @@ const renderShop = async (
   let row = null;
 
   if (availableSpace > 0) {
-    row = await getShopActions(state.shop, user.discord_id!);
+    row = getShopActions(state.shop, user.discord_id!, user.cash);
   }
 
   const botEmbed = new EmbedBuilder()

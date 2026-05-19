@@ -1,5 +1,6 @@
 export * from './8ball';
 export * from './bonus';
+export * from './claim';
 export * from './coinflip';
 export * from './explore';
 export * from './gamble';
