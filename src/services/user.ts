@@ -68,24 +68,6 @@ const setUser = async (
 };
 
 /**
- * Create a new user document.
- *
- * @param payload - User fields to save.
- * @returns The created user document, or null on error.
- */
-export const createUser = async (
-  payload: Partial<User>,
-): Promise<UserDocument | null> => {
-  try {
-    const user = new UserModel(payload);
-    return user.save();
-  } catch (error) {
-    log({ type: LogCode.Error, description: JSON.stringify(error) });
-    return null;
-  }
-};
-
-/**
  * Delete a user document by filter.
  *
  * @param filter - Fields to match the user document against.
