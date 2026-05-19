@@ -1,7 +1,7 @@
 import { StatsDocument, StatsModel } from '@parthenonlab/models';
 import { GambleStats } from '@parthenonlab/types';
 
-import { log } from '@/discord/helpers';
+import { log } from '@/discord/helpers/log';
 import { LogCode } from '@/enums/logs';
 
 /**

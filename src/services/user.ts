@@ -1,9 +1,8 @@
 import { User as DiscordUser, Guild } from 'discord.js';
-import { v4 as uuidv4 } from 'uuid';
 import { UserDocument, UserModel } from '@parthenonlab/models';
 import { User } from '@parthenonlab/types';
 
-import { log } from '@/discord/helpers';
+import { log } from '@/discord/helpers/log';
 import { LogCode } from '@/enums/logs';
 import { ObjectProps } from '@/interfaces/bot';
 import { CONFIG } from '@/constants';
@@ -109,7 +108,7 @@ export const findOrCreateDiscordUser = async (
       { discord_id: discordUser.id },
       {
         $setOnInsert: {
-          user_id: uuidv4(),
+          user_id: crypto.randomUUID(),
           discord_id: discordUser.id,
           discord_username: discordUser.username,
           discord_name: discordUser.displayName,
@@ -137,7 +136,7 @@ export const findOrCreateTwitchUser = async (
       { twitch_id: userstate['user-id'] },
       {
         $setOnInsert: {
-          user_id: uuidv4(),
+          user_id: crypto.randomUUID(),
           twitch_id: userstate['user-id'],
           twitch_username: userstate.username,
         },
@@ -291,7 +290,7 @@ export const syncSubscribers = async (guild: Guild) => {
         update: {
           $set: { subscriber: isSubscriber },
           $setOnInsert: {
-            user_id: uuidv4(),
+            user_id: crypto.randomUUID(),
             discord_id: member.id,
             discord_username: member.user.username,
             discord_name: member.displayName,

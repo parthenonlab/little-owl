@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-import { closeBrowser } from '@/discord/helpers';
+import { closeBrowser } from '@/discord/helpers/getBrowser';
 import { BotState } from '@/interfaces/bot';
 
 import { discord, twitch } from '../clients';

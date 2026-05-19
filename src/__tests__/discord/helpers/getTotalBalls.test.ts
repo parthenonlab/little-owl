@@ -1,4 +1,4 @@
-import { getTotalBalls } from '@/discord/helpers';
+import { getTotalBalls } from '@/discord/helpers/getTotalBalls';
 
 describe('getTotalBalls', () => {
   it('sums all ball types', () => {

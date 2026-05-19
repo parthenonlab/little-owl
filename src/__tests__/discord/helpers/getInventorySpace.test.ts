@@ -1,4 +1,4 @@
-import { getInventorySpace } from '@/discord/helpers';
+import { getInventorySpace } from '@/discord/helpers/getInventorySpace';
 import { InventoryDocument } from '@/interfaces/inventory';
 
 const makeInventory = (

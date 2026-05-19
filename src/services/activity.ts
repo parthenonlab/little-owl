@@ -3,7 +3,7 @@ import { UpdateQuery } from 'mongoose';
 import { ActivityDocument, ActivityModel } from '@parthenonlab/models';
 import { ActivityFields } from '@parthenonlab/types';
 
-import { log } from '@/discord/helpers';
+import { log } from '@/discord/helpers/log';
 import { LogCode } from '@/enums/logs';
 
 /**
