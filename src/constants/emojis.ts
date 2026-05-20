@@ -8,7 +8,7 @@ export const EMOJIS = {
     OWL: '<:owlSub:1213997322586038352>',
   },
   GAMBLE: {
-    LOST: ':money_with_wings:',
+    LOST: '<:money_wings:1506505394069962842>',
     INVALID: ':neutral_face:',
     WIN: '<:money_bag:1494638092936806492>',
   },
