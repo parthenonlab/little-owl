@@ -15,7 +15,7 @@ export const getShopActions = (
   shop: ShopState,
   userId: string,
   userCash: number,
-) => {
+): ActionRowBuilder<ButtonBuilder> | null => {
   const row = new ActionRowBuilder<ButtonBuilder>();
 
   POKEBALLS.forEach(ball => {
@@ -30,5 +30,5 @@ export const getShopActions = (
     }
   });
 
-  return row;
+  return row.components.length > 0 ? row : null;
 };
