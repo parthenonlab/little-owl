@@ -1,12 +1,10 @@
 import { UserDocument } from '@parthenonlab/models';
 
 import { CONFIG } from '@/constants';
-
 import { twitch } from '@/lib/clients';
 import { isFeatureEnabled } from '@/lib/config';
 import { getCurrency } from '@/lib/utils';
-
-import { incTwitchUser, setTwitchUser } from '@/services/user';
+import { incTwitchUser } from '@/services/user';
 
 export const onGive = async (
   channel: string,
@@ -28,7 +26,7 @@ export const onGive = async (
   if (user.cash < value) return twitch.say(channel, replies.notEnough);
 
   if (user.twitch_id && recipient.twitch_id) {
-    await setTwitchUser(user.twitch_id, { cash: user.cash - value });
+    await incTwitchUser(user.twitch_id, 'cash', -value);
     await incTwitchUser(recipient.twitch_id, 'cash', value);
 
     twitch.say(channel, replies.success);

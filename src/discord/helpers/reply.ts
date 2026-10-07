@@ -3,6 +3,7 @@ import { ColorResolvable, EmbedBuilder, MessageFlags } from 'discord.js';
 import { CONFIG } from '@/constants';
 import { LogCode } from '@/enums/logs';
 import { ReplyProps } from '@/interfaces/bot';
+import { formatError } from '@/lib/utils';
 
 import { log } from './log';
 
@@ -30,7 +31,7 @@ export const reply = async ({
   } catch (error) {
     log({
       type: LogCode.Error,
-      description: JSON.stringify(error),
+      description: formatError(error),
     });
   }
 };

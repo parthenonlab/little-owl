@@ -2,6 +2,7 @@ import { GuildMember, PartialGuildMember } from 'discord.js';
 
 import { CONFIG } from '@/constants';
 import { LogCode } from '@/enums/logs';
+import { formatError } from '@/lib/utils';
 import { setDiscordUser } from '@/services/user';
 
 import { log } from '../helpers';
@@ -29,7 +30,7 @@ export const onGuildMemberUpdate = async (
   } catch (error) {
     log({
       type: LogCode.Error,
-      description: JSON.stringify(error),
+      description: formatError(error),
     });
   }
 };

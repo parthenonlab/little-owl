@@ -5,6 +5,7 @@ import { ActivityFields } from '@parthenonlab/types';
 
 import { log } from '@/discord/helpers/log';
 import { LogCode } from '@/enums/logs';
+import { formatError } from '@/lib/utils';
 
 /**
  * Delete the activity document for a Discord user.
@@ -18,7 +19,7 @@ export const deleteActivity = async (
   try {
     return await ActivityModel.findOneAndDelete({ discord_id: id });
   } catch (error) {
-    log({ type: LogCode.Error, description: JSON.stringify(error) });
+    log({ type: LogCode.Error, description: formatError(error) });
     return null;
   }
 };
@@ -41,7 +42,7 @@ export const getActivity = async <K extends keyof ActivityFields>(
     ).lean();
     return (activity?.[feature] as ActivityFields[K]) ?? null;
   } catch (error) {
-    log({ type: LogCode.Error, description: JSON.stringify(error) });
+    log({ type: LogCode.Error, description: formatError(error) });
     return null;
   }
 };
@@ -63,7 +64,7 @@ export const updateActivity = async (
       returnDocument: 'after',
     });
   } catch (error) {
-    log({ type: LogCode.Error, description: JSON.stringify(error) });
+    log({ type: LogCode.Error, description: formatError(error) });
     return null;
   }
 };

@@ -15,13 +15,16 @@ import { UserDocument } from '@parthenonlab/models';
 import { CONFIG, COPY } from '@/constants';
 import { POKEBALLS, POKEMON_IMAGE_URLS } from '@/constants/pokemon';
 import { LogCode } from '@/enums/logs';
-
 import { InventoryDocument } from '@/interfaces/inventory';
 import { PokeballObject } from '@/interfaces/pokemon';
+import { formatError, formatNumberToString } from '@/lib/utils';
 
-import { formatNumberToString } from '@/lib/utils';
-import { getInventory, updateCapacity } from '@/services/inventory';
-import { setDiscordUser } from '@/services/user';
+import {
+  findOrCreateInventory,
+  incInventoryCapacity,
+} from '@/services/inventory';
+
+import { incDiscordUser } from '@/services/user';
 
 import {
   checkFeatureEnabled,
@@ -80,7 +83,7 @@ export const Inventory = {
   ) => {
     if (!(await checkFeatureEnabled('INVENTORY', interaction))) return;
 
-    const inventory = await getInventory(interaction.user.id);
+    const inventory = await findOrCreateInventory(interaction.user.id);
 
     if (!inventory) {
       reply({
@@ -120,7 +123,7 @@ export const Inventory = {
     } catch (error) {
       log({
         type: LogCode.Error,
-        description: JSON.stringify(error),
+        description: formatError(error),
       });
     }
   },
@@ -131,7 +134,7 @@ export const Inventory = {
     interaction: ButtonInteraction,
     user: UserDocument,
   ) => {
-    const inventory = await getInventory(interaction.user.id);
+    const inventory = await findOrCreateInventory(interaction.user.id);
 
     if (!inventory) {
       await interaction.reply({
@@ -151,11 +154,13 @@ export const Inventory = {
       return;
     }
 
-    const updatedUser = await setDiscordUser(interaction.user.id, {
-      cash: user.cash - totalPrice,
-    });
+    const updatedUser = await incDiscordUser(
+      interaction.user.id,
+      'cash',
+      -totalPrice,
+    );
 
-    const updatedInventory = await updateCapacity(interaction.user.id);
+    const updatedInventory = await incInventoryCapacity(interaction.user.id);
 
     if (!updatedUser || !updatedInventory) {
       await interaction.reply({
@@ -181,7 +186,7 @@ export const Inventory = {
     } catch (error) {
       log({
         type: LogCode.Error,
-        description: JSON.stringify(error),
+        description: formatError(error),
       });
     }
   },

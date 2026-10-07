@@ -3,7 +3,7 @@ jest.mock('@/lib/clients', () => ({
   twitch: {},
 }));
 jest.mock('@/lib/config', () => ({ getENV: jest.fn(() => ({ SERVER_ID: '' })) }));
-jest.mock('@/services/shop', () => ({ updateShopStock: jest.fn() }));
+jest.mock('@/services/shop', () => ({ setShopStock: jest.fn() }));
 
 import { restockShopDaily, restockShopWeekly } from '@/discord/helpers/restockShop';
 import { BotState } from '@/interfaces/bot';

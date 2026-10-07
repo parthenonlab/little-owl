@@ -1,6 +1,6 @@
 import { log } from '@/discord/helpers';
 import { LogCode } from '@/enums/logs';
-import { deleteUserByTwitchUsername } from '@/services/user';
+import { deleteTwitchUserByName } from '@/services/user';
 
 export const onBan = async (
   channel: string,
@@ -12,7 +12,7 @@ export const onBan = async (
     description: `${username} has been banned from ${channel}!`,
   });
 
-  await deleteUserByTwitchUsername(username);
+  await deleteTwitchUserByName(username);
 
   log({
     type: LogCode.Deleted,

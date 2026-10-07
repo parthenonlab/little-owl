@@ -4,6 +4,7 @@ import { CatchDocument, CatchModel } from '@parthenonlab/models';
 
 import { log } from '@/discord/helpers/log';
 import { LogCode } from '@/enums/logs';
+import { formatError } from '@/lib/utils';
 
 interface CreateCatchParams {
   discord_id: string;
@@ -27,7 +28,7 @@ export const getPCBoxCount = async (discord_id: string): Promise<number> => {
   } catch (error) {
     log({
       type: LogCode.Error,
-      description: JSON.stringify(error),
+      description: formatError(error),
     });
     return 0;
   }
@@ -37,11 +38,11 @@ export const getPCBoxCount = async (discord_id: string): Promise<number> => {
  * Save a caught Pokemon to the database.
  *
  * @param params - The catch data to save.
- * @returns The created catch document, or undefined on error.
+ * @returns The created catch document, or null on error.
  */
-export const saveCatch = async (
+export const createCatch = async (
   params: CreateCatchParams,
-): Promise<CatchDocument | undefined> => {
+): Promise<CatchDocument | null> => {
   try {
     const pokemonCatch = new CatchModel({
       catch_id: `PKM-${nanoid(8)}`,
@@ -55,8 +56,8 @@ export const saveCatch = async (
   } catch (error) {
     log({
       type: LogCode.Error,
-      description: JSON.stringify(error),
+      description: formatError(error),
     });
-    return;
+    return null;
   }
 };

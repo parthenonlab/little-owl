@@ -1,14 +1,12 @@
 import { UserDocument } from '@parthenonlab/models';
 
 import { CONFIG, EMOTES } from '@/constants';
-
 import { twitch } from '@/lib/clients';
 import { isFeatureEnabled } from '@/lib/config';
 import { getCurrency, isNumber, weightedRandom } from '@/lib/utils';
-
 import { updateActivity } from '@/services/activity';
-import { saveGambleStats } from '@/services/stats';
-import { setTwitchUser } from '@/services/user';
+import { updateGambleStats } from '@/services/stats';
+import { incTwitchUser } from '@/services/user';
 
 export const onGamble = async (
   channel: string,
@@ -77,10 +75,10 @@ export const onGamble = async (
     );
   }
 
-  await setTwitchUser(user.twitch_id!, { cash: newBalance });
+  await incTwitchUser(user.twitch_id!, 'cash', won ? wager : -wager);
 
   if (user.discord_id) {
-    await saveGambleStats(user.discord_id, { won, wager });
+    await updateGambleStats(user.discord_id, { won, wager });
     await updateActivity(user.discord_id, {
       $set: { 'gamble.last_used': new Date() },
     });

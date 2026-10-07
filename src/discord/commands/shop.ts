@@ -16,16 +16,19 @@ import { UserDocument } from '@parthenonlab/models';
 
 import { CONFIG, COPY } from '@/constants';
 import { POKEBALLS, POKEMON_IMAGE_URLS } from '@/constants/pokemon';
-
 import { LogCode } from '@/enums/logs';
-import { formatNumberToCode, formatNumberToString } from '@/lib/utils';
-
 import { BotState } from '@/interfaces/bot';
 import { PokeballObject } from '@/interfaces/pokemon';
 
-import { getInventory, updateBalls } from '@/services/inventory';
-import { updateShopStock } from '@/services/shop';
-import { setDiscordUser } from '@/services/user';
+import {
+  formatError,
+  formatNumberToCode,
+  formatNumberToString,
+} from '@/lib/utils';
+
+import { findOrCreateInventory, setInventoryBalls } from '@/services/inventory';
+import { setShopStock } from '@/services/shop';
+import { incDiscordUser } from '@/services/user';
 
 import {
   checkFeatureEnabled,
@@ -122,7 +125,7 @@ export const Shop = {
       return;
     }
 
-    const inventory = await getInventory(interaction.user.id);
+    const inventory = await findOrCreateInventory(interaction.user.id);
 
     if (!inventory) {
       reply({
@@ -150,7 +153,7 @@ export const Shop = {
     } catch (error) {
       log({
         type: LogCode.Error,
-        description: JSON.stringify(error),
+        description: formatError(error),
       });
     }
   },
@@ -219,7 +222,7 @@ export const Shop = {
       return;
     }
 
-    const inventory = await getInventory(interaction.user.id);
+    const inventory = await findOrCreateInventory(interaction.user.id);
 
     if (!inventory) {
       await interaction.reply({
@@ -238,8 +241,8 @@ export const Shop = {
     }
 
     const [updatedUser, updatedInventory] = await Promise.all([
-      setDiscordUser(interaction.user.id, { cash: user.cash - totalPrice }),
-      updateBalls(interaction.user.id, {
+      incDiscordUser(interaction.user.id, 'cash', -totalPrice),
+      setInventoryBalls(interaction.user.id, {
         [pokeball.type]: inventory.balls[pokeball.type] + amount,
       }),
     ]);
@@ -253,7 +256,7 @@ export const Shop = {
     }
 
     state.shop[pokeball.type] -= amount;
-    await updateShopStock({ [pokeball.type]: state.shop[pokeball.type] });
+    await setShopStock({ [pokeball.type]: state.shop[pokeball.type] });
 
     const availableSpace = getInventorySpace(updatedInventory);
 
@@ -282,7 +285,7 @@ export const Shop = {
     } catch (error) {
       log({
         type: LogCode.Error,
-        description: JSON.stringify(error),
+        description: formatError(error),
       });
     }
   },

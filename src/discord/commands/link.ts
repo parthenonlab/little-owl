@@ -9,7 +9,7 @@ import { UserDocument } from '@parthenonlab/models';
 
 import { COPY } from '@/constants';
 import { LogCode } from '@/enums/logs';
-import { deleteUser, getUserById, setDiscordUser } from '@/services/user';
+import { deleteUser, getUser, setDiscordUser } from '@/services/user';
 
 import { checkFeatureEnabled, log, reply } from '../helpers';
 
@@ -41,7 +41,7 @@ export const AccountLink = {
     }
 
     const userId = code?.toString();
-    const twitchUser = userId ? await getUserById(userId) : null;
+    const twitchUser = userId ? await getUser(userId) : null;
 
     if (!twitchUser) {
       await interaction.reply({

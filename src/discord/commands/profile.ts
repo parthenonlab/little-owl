@@ -10,9 +10,9 @@ import { FIGTREE_FONT_FACE } from '@/assets/fonts';
 import { COPY, MONTH_MAP } from '@/constants';
 import { LogCode } from '@/enums/logs';
 import { SilverIcon, StarIcon } from '@/icons';
-
-import { formatNumberToString, parseHexToRGB } from '@/lib/utils';
+import { formatError, formatNumberToString, parseHexToRGB } from '@/lib/utils';
 import { getDiscordUserRank, setDiscordUser } from '@/services/user';
+
 import { checkFeatureEnabled, log, useBrowser } from '../helpers';
 
 export const Profile = {
@@ -36,7 +36,7 @@ export const Profile = {
       return;
     }
 
-    const userRank = (await getDiscordUserRank(user.cash)) ?? 'N/A';
+    const userRank = (await getDiscordUserRank('cash', user.cash)) ?? 'N/A';
 
     const avatarURL = member.displayAvatarURL({ size: 256, extension: 'png' });
     const avatarBase64 = await fetch(avatarURL)
@@ -217,7 +217,7 @@ export const Profile = {
           } catch (error) {
             log({
               type: LogCode.Error,
-              description: JSON.stringify(error),
+              description: formatError(error),
             });
           }
 

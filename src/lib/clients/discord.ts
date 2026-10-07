@@ -1,5 +1,7 @@
-import { syncSubscribers } from '@/services/user';
 import { ActivityType, Client, Events, GatewayIntentBits } from 'discord.js';
+
+import { syncDiscordSubscribers } from '@/services/user';
+
 import { getENV } from '../config';
 
 if (!process.env.DISCORD_TOKEN) {
@@ -31,7 +33,7 @@ discord.on(Events.ClientReady, async () => {
     const guild = await discord.guilds.fetch(SERVER_ID);
 
     if (guild.available) {
-      await syncSubscribers(guild);
+      await syncDiscordSubscribers(guild);
       console.log('🦉 Little Owl: Subscribers Synced');
     } else {
       console.error('🦉 Little Owl: Guild Unavailable for Subscriber Sync');

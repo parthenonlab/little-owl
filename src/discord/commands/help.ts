@@ -8,6 +8,8 @@ import {
 
 import { COPY, URLS } from '@/constants';
 import { LogCode } from '@/enums/logs';
+import { formatError } from '@/lib/utils';
+
 import { checkFeatureEnabled, log } from '../helpers';
 
 export const Help = {
@@ -38,7 +40,7 @@ export const Help = {
     } catch (error) {
       log({
         type: LogCode.Error,
-        description: JSON.stringify(error),
+        description: formatError(error),
       });
     }
   },
