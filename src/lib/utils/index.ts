@@ -6,4 +6,5 @@ export * from './getCurrency';
 export * from './isNumber';
 export * from './parseHexToRGB';
 export * from './parseSubMonths';
+export * from './truncateAtWord';
 export * from './weightedRandom';
