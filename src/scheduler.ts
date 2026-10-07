@@ -1,8 +1,7 @@
 import cron from 'node-cron';
 
-import { BotState } from '@/interfaces/bot';
-
 import {
+  log,
   restockShopDaily,
   restockShopWeekly,
   sendServerGreeting,
@@ -10,15 +9,15 @@ import {
 } from '@/discord/helpers';
 
 import { LogCode } from '@/enums/logs';
-import { log } from '@/discord/helpers';
-
+import { BotState } from '@/interfaces/bot';
+import { formatError } from '@/lib/utils';
 import { chatReminder } from '@/twitch/helpers';
 
 const safe = (fn: () => Promise<void>) => async () => {
   try {
     await fn();
   } catch (error) {
-    log({ type: LogCode.Error, description: JSON.stringify(error) });
+    log({ type: LogCode.Error, description: formatError(error) });
   }
 };
 

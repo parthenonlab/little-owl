@@ -8,6 +8,7 @@ import {
 
 import { CONFIG, COPY } from '@/constants';
 import { LogCode } from '@/enums/logs';
+import { formatError } from '@/lib/utils';
 import { getDiscordLeaderboard } from '@/services/user';
 
 import { checkFeatureEnabled, log } from '../helpers';
@@ -57,7 +58,7 @@ export const Leaderboard = {
     } catch (error) {
       log({
         type: LogCode.Error,
-        description: JSON.stringify(error),
+        description: formatError(error),
       });
     }
   },

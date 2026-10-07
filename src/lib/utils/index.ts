@@ -1,4 +1,5 @@
 export * from './capitalize';
+export * from './formatError';
 export * from './formatNumberToCode';
 export * from './formatNumberToString';
 export * from './getCurrency';

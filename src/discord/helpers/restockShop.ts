@@ -4,7 +4,7 @@ import { CONFIG } from '@/constants';
 import { BotState } from '@/interfaces/bot';
 import { discord } from '@/lib/clients';
 import { getENV } from '@/lib/config';
-import { updateShopStock } from '@/services/shop';
+import { setShopStock } from '@/services/shop';
 
 const sendRestockMessage = async (message: string) => {
   const { SERVER_ID } = getENV();
@@ -37,7 +37,7 @@ export const restockShopDaily = async (state: BotState) => {
   state.shop.greatball = 100;
   state.shop.ultraball = 50;
 
-  await updateShopStock(state.shop);
+  await setShopStock(state.shop);
   await sendRestockMessage('The Poké Mart has been restocked.');
 };
 
@@ -51,6 +51,6 @@ export const restockShopWeekly = async (state: BotState) => {
 
   state.shop.masterball = 1;
 
-  await updateShopStock(state.shop);
+  await setShopStock(state.shop);
   await sendRestockMessage('A Master Ball is now available!');
 };

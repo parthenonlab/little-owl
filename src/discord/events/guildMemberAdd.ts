@@ -2,6 +2,7 @@ import { GuildMember } from 'discord.js';
 
 import { CONFIG } from '@/constants';
 import { LogCode } from '@/enums/logs';
+import { formatError } from '@/lib/utils';
 
 import { log } from '../helpers';
 
@@ -29,7 +30,7 @@ export const onGuildMemberAdd = async (member: GuildMember) => {
   } catch (error) {
     log({
       type: LogCode.Error,
-      description: JSON.stringify(error),
+      description: formatError(error),
     });
   }
 };

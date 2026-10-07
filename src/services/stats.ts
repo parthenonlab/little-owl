@@ -3,6 +3,7 @@ import { GambleStats } from '@parthenonlab/types';
 
 import { log } from '@/discord/helpers/log';
 import { LogCode } from '@/enums/logs';
+import { formatError } from '@/lib/utils';
 
 /**
  * Delete the stats document for a Discord user.
@@ -18,7 +19,7 @@ export const deleteStats = async (
   } catch (error) {
     log({
       type: LogCode.Error,
-      description: JSON.stringify(error),
+      description: formatError(error),
     });
     return null;
   }
@@ -31,7 +32,7 @@ export const deleteStats = async (
  * @param payload - The result of the gamble.
  * @returns The updated stats document, or null on error.
  */
-export const saveGambleStats = async (
+export const updateGambleStats = async (
   id: string,
   { won, wager }: { won: boolean; wager: number },
 ): Promise<StatsDocument | null> => {
@@ -54,7 +55,7 @@ export const saveGambleStats = async (
   } catch (error) {
     log({
       type: LogCode.Error,
-      description: JSON.stringify(error),
+      description: formatError(error),
     });
     return null;
   }

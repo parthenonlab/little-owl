@@ -10,8 +10,6 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 
-import { URLS } from '@/constants/urls';
-
 import { CONFIG, COPY, EMOJIS } from '@/constants';
 
 import {
@@ -24,6 +22,7 @@ import {
   RUN_PROMPTS,
 } from '@/constants/pokemon';
 
+import { URLS } from '@/constants/urls';
 import { LogCode } from '@/enums/logs';
 import { BotState } from '@/interfaces/bot';
 
@@ -33,9 +32,9 @@ import {
   PokemonRarity,
 } from '@/interfaces/pokemon';
 
-import { capitalize, weightedRandom } from '@/lib/utils';
-import { getPCBoxCount, saveCatch } from '@/services/catch';
-import { getInventory, updateBalls } from '@/services/inventory';
+import { capitalize, formatError, weightedRandom } from '@/lib/utils';
+import { getPCBoxCount, createCatch } from '@/services/catch';
+import { findOrCreateInventory, setInventoryBalls } from '@/services/inventory';
 import { findOrCreateDiscordUser } from '@/services/user';
 
 import {
@@ -179,7 +178,7 @@ export const Explore = {
     } catch (error) {
       log({
         type: LogCode.Error,
-        description: JSON.stringify(error),
+        description: formatError(error),
       });
     }
   },
@@ -201,7 +200,7 @@ export const Explore = {
       return;
     }
 
-    const inventory = await getInventory(interaction.user.id);
+    const inventory = await findOrCreateInventory(interaction.user.id);
 
     if (!inventory || inventory.balls[pokeball.type] < 1) {
       await interaction.reply({
@@ -211,7 +210,7 @@ export const Explore = {
       return;
     }
 
-    await updateBalls(interaction.user.id, {
+    await setInventoryBalls(interaction.user.id, {
       [pokeball.type]: inventory.balls[pokeball.type] - 1,
     });
 
@@ -229,8 +228,6 @@ export const Explore = {
       .join(' ');
 
     if (caught) {
-      state.exploreList.delete(interaction.user.id);
-
       const title = `You caught ${payload.shiny ? 'Shiny ' : ''}${payload.name}!`;
       const description = `Pokédex ID: \`${payload.id}\` | Ball Used: ${pokeball.emoji}`;
       const details = `Rarity - \`${rarityLabel}\`\nGender - \`${genderLabel}\`\nVariant - \`${variantLabel}\``;
@@ -248,7 +245,7 @@ export const Explore = {
         .setImage(payload.pokemonImage)
         .setFooter({ text: `Caught: ${new Date()}` });
 
-      await saveCatch({
+      const savedCatch = await createCatch({
         discord_id: interaction.user.id,
         original_trainer: interaction.user.id,
         pokemon_id: payload.id,
@@ -257,6 +254,21 @@ export const Explore = {
         shiny: payload.shiny,
         ball_used: pokeball.type,
       });
+
+      if (!savedCatch) {
+        // refund the ball and keep the encounter so the user can try again
+        await setInventoryBalls(interaction.user.id, {
+          [pokeball.type]: inventory.balls[pokeball.type],
+        });
+
+        await interaction.reply({
+          content: COPY.ERROR.GENERIC,
+          flags: MessageFlags.Ephemeral,
+        });
+        return;
+      }
+
+      state.exploreList.delete(interaction.user.id);
 
       await interaction.deferUpdate();
       await interaction.editReply({ embeds: [embed], components: [] });

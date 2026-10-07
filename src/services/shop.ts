@@ -2,6 +2,7 @@ import { DEFAULT_SHOP_STATE } from '@/constants/pokemon';
 import { log } from '@/discord/helpers/log';
 import { LogCode } from '@/enums/logs';
 import { ShopDocument, ShopState } from '@/interfaces/shop';
+import { formatError } from '@/lib/utils';
 import { ShopModel } from '@/models/shop';
 
 export const findOrCreateShop = async (): Promise<ShopDocument | null> => {
@@ -12,12 +13,12 @@ export const findOrCreateShop = async (): Promise<ShopDocument | null> => {
       { returnDocument: 'after', upsert: true },
     );
   } catch (error) {
-    log({ type: LogCode.Error, description: JSON.stringify(error) });
+    log({ type: LogCode.Error, description: formatError(error) });
     return null;
   }
 };
 
-export const updateShopStock = async (
+export const setShopStock = async (
   stock: Partial<ShopState>,
 ): Promise<ShopDocument | null> => {
   try {
@@ -27,7 +28,7 @@ export const updateShopStock = async (
       { returnDocument: 'after' },
     );
   } catch (error) {
-    log({ type: LogCode.Error, description: JSON.stringify(error) });
+    log({ type: LogCode.Error, description: formatError(error) });
     return null;
   }
 };

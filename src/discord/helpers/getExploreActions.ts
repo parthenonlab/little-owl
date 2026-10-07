@@ -2,7 +2,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 
 import { POKEBALLS } from '@/constants/pokemon';
 import { PokeballObject } from '@/interfaces/pokemon';
-import { getInventory } from '@/services/inventory';
+import { findOrCreateInventory } from '@/services/inventory';
 
 /**
  * Build an action row of pokeball buttons for an active Pokemon encounter.
@@ -12,7 +12,7 @@ import { getInventory } from '@/services/inventory';
  */
 export const getExploreActions = async (userId: string) => {
   const row = new ActionRowBuilder<ButtonBuilder>();
-  const inventory = await getInventory(userId);
+  const inventory = await findOrCreateInventory(userId);
 
   if (inventory) {
     POKEBALLS.forEach((ball: PokeballObject) => {

@@ -1,17 +1,18 @@
 import { log } from '@/discord/helpers/log';
 import { LogCode } from '@/enums/logs';
 import { InventoryDocument, BallInventory } from '@/interfaces/inventory';
+import { formatError } from '@/lib/utils';
 import { InventoryModel } from '@/models/inventory';
 
 /**
  * Get or create inventory for a Discord user.
  *
  * @param discordId - Discord user id to look up inventory for.
- * @returns Inventory document, creates default on missing, or undefined on error.
+ * @returns Inventory document, creates default on missing, or null on error.
  */
-export const getInventory = async (
+export const findOrCreateInventory = async (
   discordId: string,
-): Promise<InventoryDocument | undefined> => {
+): Promise<InventoryDocument | null> => {
   try {
     let inventory = await InventoryModel.findOne({
       discord_id: discordId,
@@ -29,9 +30,9 @@ export const getInventory = async (
   } catch (error) {
     log({
       type: LogCode.Error,
-      description: JSON.stringify(error),
+      description: formatError(error),
     });
-    return;
+    return null;
   }
 };
 
@@ -40,12 +41,12 @@ export const getInventory = async (
  *
  * @param discordId - Discord user id that owns the inventory.
  * @param ballUpdates - Updated values for ball counts.
- * @returns Updated inventory document or undefined on failure.
+ * @returns Updated inventory document or null on failure.
  */
-export const updateBalls = async (
+export const setInventoryBalls = async (
   discordId: string,
   ballUpdates: Partial<BallInventory>,
-): Promise<InventoryDocument | undefined> => {
+): Promise<InventoryDocument | null> => {
   try {
     const updatedBallValues: Record<string, number> = {};
 
@@ -65,9 +66,9 @@ export const updateBalls = async (
   } catch (error) {
     log({
       type: LogCode.Error,
-      description: JSON.stringify(error),
+      description: formatError(error),
     });
-    return;
+    return null;
   }
 };
 
@@ -75,11 +76,11 @@ export const updateBalls = async (
  * Increment a user's inventory capacity by 1.
  *
  * @param discordId - Discord user ID that owns the inventory.
- * @returns Updated inventory document or undefined on error.
+ * @returns Updated inventory document or null on error.
  */
-export const updateCapacity = async (
+export const incInventoryCapacity = async (
   discordId: string,
-): Promise<InventoryDocument | undefined> => {
+): Promise<InventoryDocument | null> => {
   try {
     const inventory = await InventoryModel.findOneAndUpdate(
       { discord_id: discordId },
@@ -91,8 +92,8 @@ export const updateCapacity = async (
   } catch (error) {
     log({
       type: LogCode.Error,
-      description: JSON.stringify(error),
+      description: formatError(error),
     });
-    return;
+    return null;
   }
 };

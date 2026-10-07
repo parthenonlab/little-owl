@@ -8,6 +8,7 @@ import {
 
 import { CONFIG, COPY, EMOJIS } from '@/constants';
 import { LogCode } from '@/enums/logs';
+import { formatError } from '@/lib/utils';
 import { getActivity, updateActivity } from '@/services/activity';
 import { incDiscordUser } from '@/services/user';
 
@@ -107,7 +108,7 @@ export const Claim = {
     try {
       await interaction.reply({ embeds: [embed] });
     } catch (error) {
-      log({ type: LogCode.Error, description: JSON.stringify(error) });
+      log({ type: LogCode.Error, description: formatError(error) });
     }
   },
   getName: (): string => COPY.CLAIM.NAME,

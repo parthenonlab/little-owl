@@ -9,6 +9,7 @@ import {
 import { COPY, EMOJIS, URLS } from '@/constants';
 import { LogCode } from '@/enums/logs';
 import { isFeatureEnabled } from '@/lib/config';
+import { formatError } from '@/lib/utils';
 
 import { checkFeatureEnabled, log } from '../helpers';
 
@@ -42,7 +43,7 @@ export const Pokedex = {
     } catch (error) {
       log({
         type: LogCode.Error,
-        description: JSON.stringify(error),
+        description: formatError(error),
       });
     }
   },

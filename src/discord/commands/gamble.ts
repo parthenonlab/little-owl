@@ -1,12 +1,12 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+
 import { UserDocument } from '@parthenonlab/models';
 
 import { CONFIG, COPY, EMOJIS } from '@/constants';
 import { formatNumberToCode, getCurrency, weightedRandom } from '@/lib/utils';
-
 import { updateActivity } from '@/services/activity';
-import { saveGambleStats } from '@/services/stats';
-import { setDiscordUser } from '@/services/user';
+import { updateGambleStats } from '@/services/stats';
+import { incDiscordUser } from '@/services/user';
 
 import { checkFeatureEnabled, reply } from '../helpers';
 
@@ -113,8 +113,8 @@ export const Gamble = {
       });
     }
 
-    await setDiscordUser(interaction.user.id, { cash: newBalance });
-    await saveGambleStats(interaction.user.id, { won, wager });
+    await incDiscordUser(interaction.user.id, 'cash', won ? wager : -wager);
+    await updateGambleStats(interaction.user.id, { won, wager });
     await updateActivity(interaction.user.id, {
       $set: { 'gamble.last_used': new Date() },
     });
