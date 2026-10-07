@@ -10,14 +10,14 @@ import {
 import { log } from '@/discord/helpers';
 import { LogCode } from '@/enums/logs';
 import { BotState, ObjectProps } from '@/interfaces/bot';
-
 import { twitch } from '@/lib/clients';
-import { getCurrency, isNumber } from '@/lib/utils';
+import { getCurrency, isNumber, parseSubMonths } from '@/lib/utils';
 
 import {
   findOrCreateTwitchUser,
   getTwitchUserByName,
   incTwitchUser,
+  setTwitchUser,
 } from '@/services/user';
 
 import { onBonus, onGamble, onGive } from '../commands';
@@ -34,8 +34,17 @@ export const onChat = async (
   if (self) return;
   if (IGNORE_LIST.includes(userstate.username)) return;
 
-  const user = await findOrCreateTwitchUser(userstate);
+  const user = await findOrCreateTwitchUser(
+    userstate['user-id'],
+    userstate.username,
+  );
   if (!user) return;
+
+  const subMonths = parseSubMonths(userstate['badge-info']?.subscriber);
+
+  if (subMonths > user.sub_months) {
+    await setTwitchUser(userstate['user-id'], { sub_months: subMonths });
+  }
 
   const redeemId = userstate['custom-reward-id'];
 

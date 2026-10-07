@@ -4,7 +4,6 @@ import { User } from '@parthenonlab/types';
 
 import { log } from '@/discord/helpers/log';
 import { LogCode } from '@/enums/logs';
-import { ObjectProps } from '@/interfaces/bot';
 import { CONFIG } from '@/constants';
 
 type NumericUserField = {
@@ -125,20 +124,22 @@ export const findOrCreateDiscordUser = async (
 /**
  * Find or create a user document for a Twitch chatter.
  *
- * @param userstate - TMI.js userstate object containing user-id and username.
+ * @param id - Twitch user ID.
+ * @param username - Twitch login name.
  * @returns The existing or newly created user document, or null on error.
  */
 export const findOrCreateTwitchUser = async (
-  userstate: ObjectProps,
+  id: string,
+  username: string,
 ): Promise<UserDocument | null> => {
   try {
     return await UserModel.findOneAndUpdate(
-      { twitch_id: userstate['user-id'] },
+      { twitch_id: id },
       {
         $setOnInsert: {
           user_id: crypto.randomUUID(),
-          twitch_id: userstate['user-id'],
-          twitch_username: userstate.username,
+          twitch_id: id,
+          twitch_username: username,
         },
       },
       { upsert: true, returnDocument: 'after' },
