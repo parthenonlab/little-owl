@@ -2,6 +2,7 @@ import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 
 import { COPY, EMOJIS } from '@/constants';
 import { weightedRandom } from '@/lib/utils';
+
 import { checkFeatureEnabled, reply } from '../helpers';
 
 export const CoinFlip = {

@@ -8,6 +8,7 @@ import { BotState } from '@/interfaces/bot';
 import { findOrCreateDiscordUser } from '@/services/user';
 
 import * as dc from '../commands';
+
 import { reply } from './reply';
 
 /**

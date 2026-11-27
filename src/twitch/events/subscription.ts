@@ -1,25 +1,21 @@
+import { EventSubChannelChatSubNotificationEvent } from '@twurple/eventsub-base';
+
 import { log } from '@/discord/helpers';
 import { LogCode } from '@/enums/logs';
-import { ObjectProps } from '@/interfaces/bot';
-import { parseSubMonths } from '@/lib/utils';
 import { findOrCreateTwitchUser, setTwitchUser } from '@/services/user';
 
 export const onSubscription = async (
-  _channel: string,
-  username: string,
-  _methods: ObjectProps,
-  message: string,
-  userstate: ObjectProps,
+  event: EventSubChannelChatSubNotificationEvent,
 ) => {
   log({
     type: LogCode.Alert,
-    description: `${username} has subscribed to the channel!\n\nMessage: ${message}`,
+    description: `${event.chatterName} has subscribed to the channel!\n\nMessage: ${event.messageText}`,
   });
 
-  const totalMonths = parseSubMonths(userstate['msg-param-cumulative-months']);
+  // EventSub doesn't include cumulative months for new subs, so only ensure at least 1
+  const user = await findOrCreateTwitchUser(event.chatterId, event.chatterName);
 
-  if (!totalMonths) return;
+  if (!user || user.sub_months >= 1) return;
 
-  await findOrCreateTwitchUser(userstate['user-id'], userstate.login);
-  await setTwitchUser(userstate['user-id'], { sub_months: totalMonths });
+  await setTwitchUser(event.chatterId, { sub_months: 1 });
 };

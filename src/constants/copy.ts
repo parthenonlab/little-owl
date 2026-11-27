@@ -1,3 +1,5 @@
+import { TwitchReminder } from '@/interfaces/twitch';
+
 import { CONFIG } from './config';
 import { EMOTES } from './emojis';
 import { URLS } from './urls';
@@ -152,12 +154,30 @@ export const COPY = {
     OPTION_DESCRIPTION: 'Enter recipient username',
   },
   TWITCH_REMINDERS: [
-    `Reminder: You're awesome! ${EMOTES.REMINDER.POSITIVITY}`,
-    'Check out our community website: https://parthenon.app. Link with your Discord account to play and earn points!',
-    'Enjoying the stream? Drop a follow to get notified next time Athena goes live!',
-    'Earn points by chatting! Type !gamble to try your luck, or !give to share with friends.',
-    `Want to play Overwatch with Athena? Redeem "Join QP Only" in the channel points to hop in! ${EMOTES.REDEEM.QUICKPLAY}`,
-    'Athena streams are rage-free and lurker-friendly! Thank you for your support.',
-    `Subscribers can redeem "Join QP + Ranked" to queue with Athena in Overwatch competitive! (Rules apply) ${EMOTES.REDEEM.COMPETITIVE}`,
-  ],
+    { message: `Reminder: You're awesome! ${EMOTES.REMINDER.POSITIVITY}` },
+    {
+      message:
+        'Check out our community website: https://parthenon.app. Link with your Discord account to play and earn points!',
+    },
+    {
+      message:
+        'Enjoying the stream? Drop a follow to get notified next time Athena goes live!',
+    },
+    {
+      message:
+        'Earn points by chatting! Type !gamble to try your luck, or !give to share with friends.',
+    },
+    {
+      message: `Want to play Overwatch with Athena? Redeem "Join QP Only" in the channel points to hop in! ${EMOTES.REDEEM.QUICKPLAY}`,
+      game: CONFIG.TWITCH_GAMES.OVERWATCH,
+    },
+    {
+      message:
+        'Athena streams are rage-free and lurker-friendly! Thank you for your support.',
+    },
+    {
+      message: `Subscribers can redeem "Join QP + Ranked" to queue with Athena in Overwatch competitive! (Rules apply) ${EMOTES.REDEEM.COMPETITIVE}`,
+      game: CONFIG.TWITCH_GAMES.OVERWATCH,
+    },
+  ] as TwitchReminder[],
 };

@@ -7,4 +7,5 @@ export * from './isNumber';
 export * from './parseHexToRGB';
 export * from './parseSubMonths';
 export * from './truncateAtWord';
+export * from './twitchToken';
 export * from './weightedRandom';

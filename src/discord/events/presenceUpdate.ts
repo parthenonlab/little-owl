@@ -1,157 +1,144 @@
 import {
+  Activity,
   ActivityType,
   ColorResolvable,
   EmbedBuilder,
+  Guild,
+  GuildMember,
   Presence,
+  Role,
 } from 'discord.js';
 
 import { CONFIG } from '@/constants';
 import { LogCode } from '@/enums/logs';
 import { BotState } from '@/interfaces/bot';
+import { formatError } from '@/lib/utils';
 
 import { log } from '../helpers';
+
+const STREAM_ALERT_COOLDOWN_MS = 12 * 60 * 60 * 1000;
+
+const logError = (error: unknown) =>
+  log({ type: LogCode.Error, description: formatError(error) });
+
+const getStreamActivity = (presence: Presence | null) =>
+  presence?.activities.find(activity => activity.type === ActivityType.Streaming);
+
+const findLiveRole = (guild: Guild) =>
+  guild.roles.cache.find(
+    role => CONFIG.ROLES.LIVE.ENABLED && role.id === CONFIG.ROLES.LIVE.ID,
+  );
+
+/**
+ * Add the live role to a member who doesn't have it yet, and log it.
+ *
+ * @param member - The member who started streaming.
+ * @param liveRole - The live role, or undefined if disabled or not manageable.
+ */
+const addLiveRole = (member: GuildMember, liveRole?: Role) => {
+  if (!liveRole) return;
+  if (member.roles.cache.has(liveRole.id)) return;
+
+  member.roles
+    .add(liveRole)
+    .then(() =>
+      log({
+        type: LogCode.Activity,
+        description: `${member.user.username} aka ${member.displayName} has started streaming.`,
+        footer: `Discord User ID: ${member.id}`,
+      }),
+    )
+    .catch(logError);
+};
+
+/**
+ * Remove the live role from a member who has it.
+ *
+ * @param member - The member who is no longer streaming.
+ * @param liveRole - The live role, or undefined if disabled or not manageable.
+ */
+const removeLiveRole = (member: GuildMember, liveRole?: Role) => {
+  if (!liveRole) return;
+  if (!member.roles.cache.has(liveRole.id)) return;
+
+  member.roles.remove(liveRole).catch(logError);
+};
+
+/**
+ * Announce the stream in the alert channel with `@everyone`, then start the cooldown.
+ *
+ * @param state - The bot state holding the alert cooldown.
+ * @param guild - The server the alert is posted in.
+ * @param member - The streaming member (the server owner).
+ * @param streamActivity - The member's streaming activity.
+ */
+const sendStreamAlert = (
+  state: BotState,
+  guild: Guild,
+  member: GuildMember,
+  streamActivity: Activity,
+) => {
+  if (!CONFIG.ALERTS.LIVE.ENABLED) return;
+  if (Date.now() < state.cooldowns.stream.getTime()) return;
+
+  const channel = guild.channels.cache.get(CONFIG.ALERTS.LIVE.ID);
+  if (!channel?.isTextBased()) return;
+
+  let liveMessage = '';
+
+  if (streamActivity.details) liveMessage += streamActivity.details;
+  if (streamActivity.url) liveMessage += `\n\n${streamActivity.url}`;
+
+  const embed = new EmbedBuilder()
+    .setColor(CONFIG.COLORS.BLUE as ColorResolvable)
+    .setAuthor({
+      name: member.displayName,
+      iconURL: member.displayAvatarURL(),
+    })
+    .setTitle(`Now Streaming ${streamActivity.state}`)
+    .setDescription(liveMessage)
+    .setThumbnail(member.user.displayAvatarURL())
+    .setFooter({
+      text: `Posted on ${streamActivity.createdAt.toDateString()}`,
+    });
+
+  const liveImage = streamActivity.assets?.largeImageURL();
+  if (liveImage) embed.setImage(liveImage);
+
+  channel
+    .send({
+      content: `@everyone ${member.displayName} is now live!`,
+      embeds: [embed],
+    })
+    .catch(logError)
+    .finally(() => {
+      state.cooldowns.stream = new Date(Date.now() + STREAM_ALERT_COOLDOWN_MS);
+    });
+};
 
 export const onPresenceUpdate = async (
   state: BotState,
   oldPresence: Presence | null,
-  newPresence: Presence
+  newPresence: Presence,
 ) => {
-  if (!newPresence.guild?.available) return;
-  if (!newPresence.member) return;
+  const { guild, member } = newPresence;
 
-  const liveRole = newPresence.guild.roles.cache.find(
-    role => CONFIG.ROLES.LIVE.ENABLED && role.id === CONFIG.ROLES.LIVE.ID
-  );
+  if (!guild?.available) return;
+  if (!member) return;
 
-  const canBotManage =
-    newPresence.member.manageable ||
-    newPresence.member.id === newPresence.guild.ownerId;
+  const canBotManage = member.manageable || member.id === guild.ownerId;
+  const liveRole = canBotManage ? findLiveRole(guild) : undefined;
 
-  // member has gone offline
-  if (newPresence.status === 'offline' || newPresence.status === 'invisible') {
-    if (
-      liveRole &&
-      canBotManage &&
-      newPresence.member.roles.cache.has(liveRole.id)
-    ) {
-      newPresence.member.roles.remove(liveRole).catch(console.error);
-    }
-    return;
-  }
+  const isOffline =
+    newPresence.status === 'offline' || newPresence.status === 'invisible';
+  const streamActivity = isOffline ? undefined : getStreamActivity(newPresence);
 
-  if (newPresence.activities.length) {
-    const isStreaming = newPresence.activities.some(
-      activity => activity.type === ActivityType.Streaming
-    );
+  if (!streamActivity) return removeLiveRole(member, liveRole);
 
-    const hasBeenStreaming =
-      oldPresence &&
-      oldPresence.activities.some(
-        activity => activity.type === ActivityType.Streaming
-      );
+  addLiveRole(member, liveRole);
 
-    if (isStreaming) {
-      // member has started streaming
-      if (
-        liveRole &&
-        canBotManage &&
-        !newPresence.member.roles.cache.has(liveRole.id)
-      ) {
-        newPresence.member.roles
-          .add(liveRole)
-          .then(_data => {
-            log({
-              type: LogCode.Activity,
-              description: `${newPresence.member?.user.username} aka ${newPresence.member?.displayName} has started streaming.`,
-              footer: `Discord User ID: ${newPresence.member?.id}`,
-            });
-          })
-          .catch(console.error);
-      }
+  if (getStreamActivity(oldPresence)) return;
+  if (member.id !== guild.ownerId) return;
 
-      // stream announcement for server owner
-      if (
-        !hasBeenStreaming &&
-        CONFIG.ALERTS.LIVE.ENABLED &&
-        newPresence.guild.ownerId === newPresence.member.id
-      ) {
-        const streamActivity = newPresence.activities.find(
-          activity => activity.type == ActivityType.Streaming
-        );
-
-        const streamAlertChannelExists = newPresence.guild.channels.cache.find(
-          channel => channel.id === CONFIG.ALERTS.LIVE.ID
-        );
-
-        const isStreamAlertInCooldown =
-          Date.now() < state.cooldowns.stream.getTime();
-
-        if (
-          streamActivity &&
-          streamAlertChannelExists &&
-          !isStreamAlertInCooldown
-        ) {
-          let liveMessage = '';
-
-          if (streamActivity.details) liveMessage += streamActivity.details;
-          if (streamActivity.url) liveMessage += `\n\n${streamActivity.url}`;
-
-          const liveImage = streamActivity.assets?.largeImageURL();
-
-          const botEmbed = new EmbedBuilder()
-            .setColor(CONFIG.COLORS.BLUE as ColorResolvable)
-            .setAuthor({
-              name: newPresence.member.displayName,
-              iconURL: newPresence.member.displayAvatarURL(),
-            })
-            .setTitle(`Now Streaming ${streamActivity.state}`)
-            .setDescription(liveMessage)
-            .setThumbnail(newPresence.member.user.displayAvatarURL())
-            .setFooter({
-              text: `Posted on ${streamActivity.createdAt.toDateString()}`,
-            });
-
-          if (liveImage) botEmbed.setImage(liveImage);
-
-          const streamAlertChannel = newPresence.guild.channels.cache.get(
-            CONFIG.ALERTS.LIVE.ID
-          );
-
-          if (!streamAlertChannel || !streamAlertChannel.isTextBased()) return;
-
-          streamAlertChannel
-            .send({
-              content: `@everyone ${newPresence.member.displayName} is now live!`,
-              embeds: [botEmbed],
-            })
-            .catch(console.error)
-            .finally(() => {
-              state.cooldowns.stream = new Date(
-                Date.now() + 12 * 60 * 60 * 1000
-              );
-            });
-        }
-      }
-      return;
-    }
-
-    // member has ended their stream
-    if (
-      liveRole &&
-      canBotManage &&
-      newPresence.member.roles.cache.has(liveRole.id)
-    ) {
-      newPresence.member.roles.remove(liveRole).catch(console.error);
-    }
-
-    return;
-  }
-
-  if (
-    liveRole &&
-    canBotManage &&
-    newPresence.member.roles.cache.has(liveRole.id)
-  ) {
-    newPresence.member.roles.remove(liveRole).catch(console.error);
-  }
+  sendStreamAlert(state, guild, member, streamActivity);
 };

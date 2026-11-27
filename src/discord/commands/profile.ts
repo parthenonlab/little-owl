@@ -4,6 +4,8 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 
+import { Browser } from 'puppeteer';
+
 import { UserDocument } from '@parthenonlab/models';
 
 import { FIGTREE_FONT_FACE } from '@/assets/fonts';
@@ -14,6 +16,42 @@ import { formatError, formatNumberToString, parseHexToRGB } from '@/lib/utils';
 import { getDiscordUserRank, setDiscordUser } from '@/services/user';
 
 import { checkFeatureEnabled, log, useBrowser } from '../helpers';
+
+/**
+ * Render the profile card HTML and screenshot the `#profile` element.
+ * The page is always closed, even if rendering or the screenshot fails.
+ *
+ * @param browser - The shared Puppeteer browser.
+ * @param html - The profile card HTML.
+ * @returns The PNG image, or null if the `#profile` element can't be measured.
+ */
+const renderProfileImage = async (
+  browser: Browser,
+  html: string,
+): Promise<Buffer | null> => {
+  const page = await browser.newPage();
+
+  try {
+    await page.setViewport({ width: 2560, height: 1440, deviceScaleFactor: 2 });
+    await page.setContent(html, { waitUntil: 'load' });
+    await page.waitForSelector('#profile');
+
+    const element = await page.$('#profile');
+    const boundingBox = await element?.boundingBox();
+
+    if (!boundingBox) return null;
+
+    const screenshot = await page.screenshot({
+      clip: boundingBox,
+      type: 'png',
+      fullPage: false,
+    });
+
+    return Buffer.from(screenshot);
+  } finally {
+    await page.close();
+  }
+};
 
 export const Profile = {
   data: new SlashCommandBuilder()
@@ -176,60 +214,33 @@ export const Profile = {
     `;
 
     await useBrowser(async browser => {
-      const page = await browser.newPage();
+      const buffer = await renderProfileImage(browser, htmlContent);
 
-      await page.setViewport({
-        width: 2560,
-        height: 1440,
-        deviceScaleFactor: 2,
-      });
-
-      await page.setContent(htmlContent, { waitUntil: 'load' });
-
-      await page.waitForSelector('#profile');
-      const element = await page.$('#profile');
-
-      if (element) {
-        const boundingBox = await element.boundingBox();
-        if (boundingBox) {
-          const screenshot = await page.screenshot({
-            clip: boundingBox,
-            type: 'png',
-            fullPage: false,
-          });
-
-          const buffer = Buffer.from(screenshot);
-
-          await page.close();
-
-          const attachment = new AttachmentBuilder(buffer, {
-            name: 'profile.png',
-          });
-
-          try {
-            await interaction.editReply({ files: [attachment] });
-
-            if (user.discord_name !== member.displayName) {
-              await setDiscordUser(interaction.user.id, {
-                discord_name: member.displayName,
-              });
-            }
-          } catch (error) {
-            log({
-              type: LogCode.Error,
-              description: formatError(error),
-            });
-          }
-
-          return;
-        }
+      if (!buffer) {
+        await interaction.editReply({
+          content: 'Failed to generate profile image.',
+        });
+        return;
       }
 
-      await page.close();
-
-      await interaction.editReply({
-        content: 'Failed to generate profile image.',
+      const attachment = new AttachmentBuilder(buffer, {
+        name: 'profile.png',
       });
+
+      try {
+        await interaction.editReply({ files: [attachment] });
+
+        if (user.discord_name !== member.displayName) {
+          await setDiscordUser(interaction.user.id, {
+            discord_name: member.displayName,
+          });
+        }
+      } catch (error) {
+        log({
+          type: LogCode.Error,
+          description: formatError(error),
+        });
+      }
     });
   },
   getName: (): string => {

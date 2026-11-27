@@ -15,7 +15,13 @@ export interface BotState {
   reminderIndex: number;
   shop: ShopState;
   timers: ScheduledTask[];
+  twitch: TwitchIds;
   twitchChatQueue: number;
+}
+
+export interface TwitchIds {
+  botId: string;
+  broadcasterId: string;
 }
 
 export interface LogProps {
@@ -26,10 +32,6 @@ export interface LogProps {
   authorIcon?: string;
   thumbnail?: string;
   footer?: string;
-}
-
-export interface ObjectProps {
-  [key: string]: any;
 }
 
 export interface ReplyProps {

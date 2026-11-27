@@ -1,6 +1,7 @@
 import { Message, PartialMessage } from 'discord.js';
 
 import { LogCode } from '@/enums/logs';
+
 import { log } from '../helpers';
 
 export const onMessageDelete = async (message: Message | PartialMessage) => {

@@ -1,3 +1,5 @@
+import { EventSubChannelChatMessageEvent } from '@twurple/eventsub-base';
+
 import {
   COMMAND_MAP,
   CONFIG,
@@ -9,8 +11,7 @@ import {
 
 import { log } from '@/discord/helpers';
 import { LogCode } from '@/enums/logs';
-import { BotState, ObjectProps } from '@/interfaces/bot';
-import { twitch } from '@/lib/clients';
+import { BotState } from '@/interfaces/bot';
 import { getCurrency, isNumber, parseSubMonths } from '@/lib/utils';
 
 import {
@@ -21,32 +22,35 @@ import {
 } from '@/services/user';
 
 import { onBonus, onGamble, onGive } from '../commands';
+import { say } from '../helpers/say';
+
+import { onCheer } from './cheer';
 
 const infoCommands = ['bsky', 'discord', 'dstmods', 'steam', 'switch', 'web'];
 
 export const onChat = async (
   state: BotState,
-  channel: string,
-  userstate: ObjectProps,
-  message: string,
-  self: boolean,
+  event: EventSubChannelChatMessageEvent,
 ) => {
-  if (self) return;
-  if (IGNORE_LIST.includes(userstate.username)) return;
+  const { chatterDisplayName, chatterId, chatterName } = event;
+  const message = event.messageText;
+  const ids = state.twitch;
 
-  const user = await findOrCreateTwitchUser(
-    userstate['user-id'],
-    userstate.username,
-  );
+  if (chatterId === ids.botId) return;
+  if (IGNORE_LIST.includes(chatterName)) return;
+
+  if (event.isCheer) return onCheer(event);
+
+  const user = await findOrCreateTwitchUser(chatterId, chatterName);
   if (!user) return;
 
-  const subMonths = parseSubMonths(userstate['badge-info']?.subscriber);
+  const subMonths = parseSubMonths(event.getBadgeInfo('subscriber'));
 
   if (subMonths > user.sub_months) {
-    await setTwitchUser(userstate['user-id'], { sub_months: subMonths });
+    await setTwitchUser(chatterId, { sub_months: subMonths });
   }
 
-  const redeemId = userstate['custom-reward-id'];
+  const redeemId = event.rewardId;
 
   if (redeemId) {
     let points = 0;
@@ -67,10 +71,10 @@ export const onChat = async (
 
     log({
       type: LogCode.Activity,
-      description: `${userstate.username} has claimed ${points} channel points to ${points} ${CONFIG.CURRENCY.PLURAL}!`,
+      description: `${chatterName} has claimed ${points} channel points to ${points} ${CONFIG.CURRENCY.PLURAL}!`,
     });
 
-    await incTwitchUser(userstate['user-id'], 'cash', points);
+    await incTwitchUser(chatterId, 'cash', points);
     return;
   }
 
@@ -84,45 +88,43 @@ export const onChat = async (
     // commands that do not expect an argument
 
     if (command === COPY.POINTS.NAME) {
-      return twitch.say(
-        channel,
-        `${userstate['display-name']} you have ${user.cash} ${getCurrency(
-          user.cash,
-        )}`,
+      return say(
+        ids,
+        `${chatterDisplayName} you have ${user.cash} ${getCurrency(user.cash)}`,
       );
     }
 
     if (infoCommands.includes(command)) {
-      return twitch.say(channel, COPY.INFO[command]);
+      return say(ids, COPY.INFO[command]);
     }
 
     if (command === COPY.LURK.NAME) {
-      return twitch.say(
-        channel,
-        `/me ${userstate['display-name']} has disappeared into the shadows ${EMOTES.LURK.DEFAULT}`,
+      return say(
+        ids,
+        `${chatterDisplayName} has disappeared into the shadows ${EMOTES.LURK.DEFAULT}`,
       );
     }
 
     if (command === COPY.COMMANDS.NAME) {
-      return twitch.say(channel, URLS.COMMANDS);
+      return say(ids, URLS.COMMANDS);
     }
 
     // commands that expect at least one (1) argument
 
     if (command === COPY.GAMBLE.NAME) {
-      return onGamble(channel, user, args);
+      return onGamble(ids, user, args);
     }
 
     // commands that expect a recipient in the argument
 
-    const recipientName = args[0].slice(0, 1) === '@' ? args[0].slice(1) : null;
+    const recipientName = args[0]?.startsWith('@') ? args[0].slice(1) : null;
 
     if (!recipientName) return;
 
     if (command === COPY.HUG.NAME) {
-      return twitch.say(
-        channel,
-        `${EMOTES.HUG.LEFT} ${userstate['display-name']} hugs ${recipientName} ${EMOTES.HUG.RIGHT}`,
+      return say(
+        ids,
+        `${EMOTES.HUG.LEFT} ${chatterDisplayName} hugs ${recipientName} ${EMOTES.HUG.RIGHT}`,
       );
     }
 
@@ -141,12 +143,12 @@ export const onChat = async (
     if (!recipient) return;
 
     if (command === COPY.GIVE.NAME) {
-      return onGive(channel, user, recipient, value);
+      return onGive(ids, user, recipient, value);
     }
 
     if (command === COPY.BONUS.NAME) {
-      if (userstate.username !== channel.slice(1)) return;
-      return onBonus(channel, recipient, value);
+      if (chatterId !== event.broadcasterId) return;
+      return onBonus(ids, recipient, value);
     }
   }
 
@@ -161,5 +163,5 @@ export const onChat = async (
 
   if (!isValid) return;
 
-  await incTwitchUser(userstate['user-id'], 'cash', 1);
+  await incTwitchUser(chatterId, 'cash', 1);
 };

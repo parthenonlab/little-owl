@@ -1,22 +1,24 @@
+import { EventSubChannelBanModerationEvent } from '@twurple/eventsub-base';
+
 import { log } from '@/discord/helpers';
 import { LogCode } from '@/enums/logs';
-import { deleteTwitchUserByName } from '@/services/user';
+import { deleteTwitchUser } from '@/services/user';
 
-export const onBan = async (
-  channel: string,
-  username: string,
-  _reason: string,
-) => {
+export const onBan = async (event: EventSubChannelBanModerationEvent) => {
+  const { broadcasterName, userId, userName } = event;
+
   log({
     type: LogCode.Leave,
-    description: `${username} has been banned from ${channel}!`,
+    description: `${userName} has been banned from ${broadcasterName}!`,
   });
 
-  await deleteTwitchUserByName(username);
+  const deleted = await deleteTwitchUser(userId);
+
+  if (!deleted) return;
 
   log({
     type: LogCode.Deleted,
-    description: `Record for ${username} has been removed from the users collection.`,
-    footer: `Twitch Username: ${username}`,
+    description: `Record for ${userName} has been removed from the users collection.`,
+    footer: `Twitch Username: ${userName}`,
   });
 };

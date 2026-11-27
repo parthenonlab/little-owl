@@ -26,7 +26,7 @@ export const scheduleTasks = (state: BotState) => {
   state.timers.push(
     cron.schedule('0,30 * * * *', safe(async () => {
       updateBotActivity(state);
-      chatReminder(state);
+      await chatReminder(state);
     })),
   );
 

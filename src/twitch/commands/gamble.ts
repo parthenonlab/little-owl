@@ -1,15 +1,17 @@
 import { UserDocument } from '@parthenonlab/models';
 
 import { CONFIG, EMOTES } from '@/constants';
-import { twitch } from '@/lib/clients';
+import { TwitchIds } from '@/interfaces/bot';
 import { isFeatureEnabled } from '@/lib/config';
 import { getCurrency, isNumber, weightedRandom } from '@/lib/utils';
 import { updateActivity } from '@/services/activity';
 import { updateGambleStats } from '@/services/stats';
 import { incTwitchUser } from '@/services/user';
 
+import { say } from '../helpers/say';
+
 export const onGamble = async (
-  channel: string,
+  ids: TwitchIds,
   user: UserDocument,
   args: string[],
 ) => {
@@ -22,7 +24,7 @@ export const onGamble = async (
   };
 
   if (user.cash < 1) {
-    twitch.say(channel, replies.noPoints);
+    await say(ids, replies.noPoints);
     return;
   }
 
@@ -49,7 +51,7 @@ export const onGamble = async (
   } else if (value === 'half') {
     wager = Math.round(user.cash / 2);
   } else if (amount > user.cash) {
-    twitch.say(channel, replies.notEnough);
+    await say(ids, replies.notEnough);
     return;
   } else {
     wager = amount;
@@ -58,17 +60,17 @@ export const onGamble = async (
   const newBalance = won ? user.cash + wager : user.cash - wager;
 
   if (won) {
-    twitch.say(
-      channel,
+    await say(
+      ids,
       `${user.twitch_username} won ${wager} ${getCurrency(wager)}! ${
         EMOTES.GAMBLE.WIN
       } Current balance: ${newBalance} ${getCurrency(newBalance)}`,
     );
   } else if (newBalance === 0) {
-    twitch.say(channel, replies.lostAll);
+    await say(ids, replies.lostAll);
   } else {
-    twitch.say(
-      channel,
+    await say(
+      ids,
       `${user.twitch_username} lost ${wager} ${getCurrency(wager)}. ${
         EMOTES.GAMBLE.LOST
       } Current balance: ${newBalance} ${getCurrency(newBalance)}`,

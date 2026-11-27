@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 
 export interface BallInventory {
   pokeball: number;
@@ -7,8 +7,10 @@ export interface BallInventory {
   masterball: number;
 }
 
-export interface InventoryDocument extends Document {
+export interface Inventory {
   discord_id: string;
   capacity: number;
   balls: BallInventory;
 }
+
+export type InventoryDocument = HydratedDocument<Inventory>;

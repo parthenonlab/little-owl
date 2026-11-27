@@ -1,6 +1,7 @@
 import { GuildMember, PartialGuildMember } from 'discord.js';
 
 import { LogCode } from '@/enums/logs';
+
 import { log } from '../helpers';
 
 export const onGuildMemberRemove = async (

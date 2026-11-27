@@ -1,4 +1,5 @@
 import { PokemonType } from '@/interfaces/pokemon';
+
 import { EMOJIS } from '../emojis';
 
 export const POKEMON_TYPE_EMOJIS: Record<PokemonType, string> = {

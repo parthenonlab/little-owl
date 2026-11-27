@@ -1,11 +1,11 @@
-import { model, models, Schema } from 'mongoose';
+import { model, Schema } from 'mongoose';
 
-import { ShopDocument } from '@/interfaces/shop';
+import { ShopState } from '@/interfaces/shop';
 import { getENV } from '@/lib/config';
 
 const { MONGODB_SHOP } = getENV();
 
-const shopSchema = new Schema<ShopDocument>(
+const shopSchema = new Schema<ShopState>(
   {
     pokeball: { type: Number, required: true },
     greatball: { type: Number, required: true },
@@ -15,4 +15,4 @@ const shopSchema = new Schema<ShopDocument>(
   { collection: MONGODB_SHOP, versionKey: false },
 );
 
-export const ShopModel = models.Shop || model<ShopDocument>('Shop', shopSchema);
+export const ShopModel = model<ShopState>('Shop', shopSchema);

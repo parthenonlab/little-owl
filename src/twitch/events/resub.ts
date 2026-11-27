@@ -1,26 +1,23 @@
+import { EventSubChannelChatResubNotificationEvent } from '@twurple/eventsub-base';
+
 import { log } from '@/discord/helpers';
 import { LogCode } from '@/enums/logs';
-import { ObjectProps } from '@/interfaces/bot';
-import { parseSubMonths } from '@/lib/utils';
 import { findOrCreateTwitchUser, setTwitchUser } from '@/services/user';
 
 export const onResub = async (
-  _channel: string,
-  username: string,
-  streakMonths: number,
-  message: string,
-  userstate: ObjectProps,
-  _methods: ObjectProps,
+  event: EventSubChannelChatResubNotificationEvent,
 ) => {
-  const totalMonths = parseSubMonths(userstate['msg-param-cumulative-months']);
+  const { chatterId, chatterName, cumulativeMonths, streakMonths } = event;
 
   log({
     type: LogCode.Alert,
-    description: `${username} has resubbed to the channel!\n\nTotal: ${totalMonths}\nStreak: ${streakMonths}\nMessage: ${message}`,
+    description: `${chatterName} has resubbed to the channel!\n\nTotal: ${cumulativeMonths}\nStreak: ${
+      streakMonths ?? 'not shared'
+    }\nMessage: ${event.messageText}`,
   });
 
-  if (!totalMonths) return;
+  if (!cumulativeMonths) return;
 
-  await findOrCreateTwitchUser(userstate['user-id'], userstate.login);
-  await setTwitchUser(userstate['user-id'], { sub_months: totalMonths });
+  await findOrCreateTwitchUser(chatterId, chatterName);
+  await setTwitchUser(chatterId, { sub_months: cumulativeMonths });
 };

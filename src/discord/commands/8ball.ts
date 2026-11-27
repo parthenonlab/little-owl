@@ -5,6 +5,7 @@ import {
 } from 'discord.js';
 
 import { COPY } from '@/constants';
+
 import { checkFeatureEnabled, reply } from '../helpers';
 
 export const EightBall = {

@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 
 export interface ShopState {
   pokeball: number;
@@ -7,4 +7,4 @@ export interface ShopState {
   masterball: number;
 }
 
-export interface ShopDocument extends Document, ShopState {}
+export type ShopDocument = HydratedDocument<ShopState>;

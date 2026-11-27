@@ -3,11 +3,11 @@ import mongoose from 'mongoose';
 import { closeBrowser } from '@/discord/helpers/getBrowser';
 import { BotState } from '@/interfaces/bot';
 
-import { discord, twitch } from '../clients';
+import { discord, eventsub } from '../clients';
 
 /**
  * Gracefully shut down the bot by stopping all scheduled tasks and disconnecting all clients.
- * Stops cron jobs, disconnects Discord.js, TMI.js, and MongoDB, then exits the process.
+ * Stops cron jobs, disconnects Discord.js, EventSub, and MongoDB, then exits the process.
  *
  * @param state - The current bot state containing active timers.
  */
@@ -26,11 +26,9 @@ export const sleepTime = async (state: BotState) => {
   discord.destroy();
   console.log('🦉 Little Owl: Discord.js Disconnected');
 
-  // disconnect TMI.js client
-  if (twitch.readyState() === 'OPEN') {
-    await twitch.disconnect();
-    console.log('🦉 Little Owl: TMI.js Disconnected');
-  }
+  // stop EventSub listener (closes its WebSockets)
+  eventsub.stop();
+  console.log('🦉 Little Owl: EventSub Stopped');
 
   // disconnect MongoDB client
   if (mongoose.connection.readyState === 1) {
