@@ -1,7 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 
-import { ShopState } from '@/interfaces/shop';
 import { POKEBALLS } from '@/constants/pokemon';
+import { ShopState } from '@/interfaces/shop';
 
 /**
  * Build an action row of buy buttons for each in-stock item the user can afford.

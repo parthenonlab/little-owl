@@ -1,7 +1,8 @@
+import { ActivityType } from 'discord.js';
+
 import { COPY } from '@/constants';
 import { BotState } from '@/interfaces/bot';
 import { discord } from '@/lib/clients';
-import { ActivityType } from 'discord.js';
 
 /**
  * Cycle the bot's Discord activity status to the next entry in the activity list.
