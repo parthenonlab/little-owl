@@ -97,9 +97,8 @@ export const deleteUser = (id: string) => deleteUserBy({ user_id: id });
 export const deleteDiscordUser = (id: string) =>
   deleteUserBy({ discord_id: id });
 
-/** Delete a user document by Twitch username. */
-export const deleteTwitchUserByName = (username: string) =>
-  deleteUserBy({ twitch_username: username });
+/** Delete a user document by Twitch user ID. */
+export const deleteTwitchUser = (id: string) => deleteUserBy({ twitch_id: id });
 
 /**
  * Find a user document by platform filter, creating it if it doesn't exist.

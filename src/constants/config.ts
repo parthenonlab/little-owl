@@ -44,7 +44,7 @@ export const CONFIG = {
     SINGLE: 'silver coin',
   },
   GAMBLE: {
-    WIN_PERCENT: 40,
+    WIN_PERCENT: 45,
   },
   ROLES: {
     DEFAULT: {
@@ -62,6 +62,9 @@ export const CONFIG = {
       TWITCH_TIER2: '689247928518443136',
       TWITCH_TIER3: '689247928518443170',
     },
+  },
+  TWITCH_GAMES: {
+    OVERWATCH: '515025',
   },
   TWITCH_REWARDS: {
     REDEEM100: 'af2d04b1-2cc6-4f09-a555-954ff7e3aadb',

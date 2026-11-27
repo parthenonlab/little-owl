@@ -1,32 +1,26 @@
+import { EventSubChannelChatSubGiftNotificationEvent } from '@twurple/eventsub-base';
+
 import { log } from '@/discord/helpers';
 import { LogCode } from '@/enums/logs';
-import { ObjectProps } from '@/interfaces/bot';
-import { parseSubMonths } from '@/lib/utils';
 import { findOrCreateTwitchUser, setTwitchUser } from '@/services/user';
 
 export const onSubGift = async (
-  _channel: string,
-  username: string,
-  _streakMonths: number,
-  recipient: string,
-  _methods: ObjectProps,
-  userstate: ObjectProps,
+  event: EventSubChannelChatSubGiftNotificationEvent,
 ) => {
+  const { recipientId, recipientName } = event;
+  const gifter = event.chatterIsAnonymous
+    ? 'An anonymous gifter'
+    : event.chatterName;
+
   log({
     type: LogCode.Alert,
-    description: `${username} gifted a subscription to ${recipient}!`,
+    description: `${gifter} gifted a subscription to ${recipientName}!`,
   });
 
-  // msg-param-months is the recipient's total months, not the gifter's
-  const totalMonths = parseSubMonths(userstate['msg-param-months']);
+  // EventSub doesn't include the recipient's cumulative months, so only ensure at least 1
+  const recipient = await findOrCreateTwitchUser(recipientId, recipientName);
 
-  if (!totalMonths) return;
+  if (!recipient || recipient.sub_months >= 1) return;
 
-  const recipientId = userstate['msg-param-recipient-id'];
-
-  await findOrCreateTwitchUser(
-    recipientId,
-    userstate['msg-param-recipient-user-name'],
-  );
-  await setTwitchUser(recipientId, { sub_months: totalMonths });
+  await setTwitchUser(recipientId, { sub_months: 1 });
 };

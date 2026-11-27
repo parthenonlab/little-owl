@@ -1,2 +1,3 @@
 export * from './discord';
-export * from './twitch';
+export * from './eventsub';
+export * from './helix';

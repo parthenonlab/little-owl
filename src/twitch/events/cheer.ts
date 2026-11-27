@@ -1,14 +1,11 @@
+import { EventSubChannelChatMessageEvent } from '@twurple/eventsub-base';
+
 import { log } from '@/discord/helpers';
 import { LogCode } from '@/enums/logs';
-import { ObjectProps } from '@/interfaces/bot';
 
-export const onCheer = (
-  _channel: string,
-  userstate: ObjectProps,
-  message: string,
-) => {
+export const onCheer = (event: EventSubChannelChatMessageEvent) => {
   log({
     type: LogCode.Alert,
-    description: `${userstate.username} cheered ${userstate.bits} in the chat!\n\nMessage: ${message}`,
+    description: `${event.chatterName} cheered ${event.bits} in the chat!\n\nMessage: ${event.messageText}`,
   });
 };

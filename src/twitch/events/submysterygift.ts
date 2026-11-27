@@ -1,18 +1,19 @@
+import { EventSubChannelChatCommunitySubGiftNotificationEvent } from '@twurple/eventsub-base';
+
 import { log } from '@/discord/helpers';
 import { LogCode } from '@/enums/logs';
-import { ObjectProps } from '@/interfaces/bot';
 
 export const onSubMysteryGift = (
-  _channel: string,
-  username: string,
-  numOfSubs: number,
-  _methods: ObjectProps,
-  _userstate: ObjectProps,
+  event: EventSubChannelChatCommunitySubGiftNotificationEvent,
 ) => {
+  const gifter = event.chatterIsAnonymous
+    ? 'An anonymous gifter'
+    : event.chatterName;
+
   log({
     type: LogCode.Alert,
-    description: `${username} is gifting ${numOfSubs} subscription${
-      numOfSubs > 1 ? 's' : ''
+    description: `${gifter} is gifting ${event.amount} subscription${
+      event.amount > 1 ? 's' : ''
     } in the channel!`,
   });
 };
