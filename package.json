@@ -34,6 +34,8 @@
     "dev": "STAGING=true ts-node -r tsconfig-paths/register src/index.ts",
     "dev:register": "REGISTER=true STAGING=true ts-node -r tsconfig-paths/register src/index.ts",
     "start": "ts-node -r tsconfig-paths/register -T src/index.ts",
-    "test": "jest"
+    "test": "jest",
+    "twitch:auth": "ts-node -r tsconfig-paths/register src/scripts/twitchAuth.ts",
+    "twitch:auth:staging": "STAGING=true ts-node -r tsconfig-paths/register src/scripts/twitchAuth.ts"
   }
 }
