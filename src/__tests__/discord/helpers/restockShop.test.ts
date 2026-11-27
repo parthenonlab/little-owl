@@ -1,6 +1,5 @@
 jest.mock('@/lib/clients', () => ({
   discord: { guilds: { cache: { get: jest.fn(() => undefined) } } },
-  twitch: {},
 }));
 jest.mock('@/lib/config', () => ({ getENV: jest.fn(() => ({ SERVER_ID: '' })) }));
 jest.mock('@/services/shop', () => ({ setShopStock: jest.fn() }));
@@ -8,8 +7,10 @@ jest.mock('@/services/shop', () => ({ setShopStock: jest.fn() }));
 import { restockShopDaily, restockShopWeekly } from '@/discord/helpers/restockShop';
 import { BotState } from '@/interfaces/bot';
 
-const makeState = (overrides: Partial<BotState['shop']> = {}): BotState =>
-  ({
+import { makeBotState } from '../../fixtures';
+
+const makeState = (overrides: Partial<BotState['shop']> = {}) =>
+  makeBotState({
     shop: {
       pokeball: 0,
       greatball: 0,
@@ -17,7 +18,7 @@ const makeState = (overrides: Partial<BotState['shop']> = {}): BotState =>
       masterball: 0,
       ...overrides,
     },
-  }) as unknown as BotState;
+  });
 
 describe('restockShopDaily', () => {
   it('resets pokeball, greatball, and ultraball to default quantities', () => {

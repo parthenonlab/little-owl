@@ -1,11 +1,11 @@
-import { model, models, Schema } from 'mongoose';
+import { model, Schema } from 'mongoose';
 
-import { InventoryDocument } from '@/interfaces/inventory';
+import { Inventory } from '@/interfaces/inventory';
 import { getENV } from '@/lib/config';
 
 const { MONGODB_INVENTORY } = getENV();
 
-const inventorySchema = new Schema<InventoryDocument>(
+const inventorySchema = new Schema<Inventory>(
   {
     discord_id: { type: String, required: true, unique: true },
     capacity: { type: Number, default: 5 },
@@ -19,5 +19,4 @@ const inventorySchema = new Schema<InventoryDocument>(
   { collection: MONGODB_INVENTORY, versionKey: false },
 );
 
-export const InventoryModel =
-  models.Inventory || model<InventoryDocument>('Inventory', inventorySchema);
+export const InventoryModel = model<Inventory>('Inventory', inventorySchema);

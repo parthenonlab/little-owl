@@ -1,5 +1,4 @@
 import { getInventorySpace } from '@/discord/helpers/getInventorySpace';
-import { InventoryDocument } from '@/interfaces/inventory';
 
 const makeInventory = (
   capacity: number,
@@ -7,11 +6,10 @@ const makeInventory = (
   greatball = 0,
   ultraball = 0,
   masterball = 0,
-) =>
-  ({
-    capacity,
-    balls: { pokeball, greatball, ultraball, masterball },
-  }) as unknown as InventoryDocument;
+) => ({
+  capacity,
+  balls: { pokeball, greatball, ultraball, masterball },
+});
 
 describe('getInventorySpace', () => {
   it('returns remaining space', () => {
