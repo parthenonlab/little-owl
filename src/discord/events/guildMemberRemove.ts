@@ -5,7 +5,7 @@ import { LogCode } from '@/enums/logs';
 import { log } from '../helpers';
 
 export const onGuildMemberRemove = async (
-  member: GuildMember | PartialGuildMember
+  member: GuildMember | PartialGuildMember,
 ) => {
   if (!member.guild?.available) return;
 

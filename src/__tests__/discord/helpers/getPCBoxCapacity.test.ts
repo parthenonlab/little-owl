@@ -45,7 +45,12 @@ describe('getPCBoxCapacity', () => {
   it('stacks all bonuses', () => {
     expect(
       getPCBoxCapacity(
-        makeUser({ subscriber: true, discord_id: 'abc', twitch_id: 'xyz', box_space: 25 }),
+        makeUser({
+          subscriber: true,
+          discord_id: 'abc',
+          twitch_id: 'xyz',
+          box_space: 25,
+        }),
       ),
     ).toBe(375);
   });

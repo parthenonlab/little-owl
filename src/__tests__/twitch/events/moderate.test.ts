@@ -83,8 +83,12 @@ describe('onModerate', () => {
 
   // Literal actions per case so each fake matches one member of the event union
   const IGNORED: EventSubChannelModerationEvent[] = [
-    fake<EventSubChannelModerationEvent>({ moderationAction: 'shared_chat_ban' }),
-    fake<EventSubChannelModerationEvent>({ moderationAction: 'shared_chat_timeout' }),
+    fake<EventSubChannelModerationEvent>({
+      moderationAction: 'shared_chat_ban',
+    }),
+    fake<EventSubChannelModerationEvent>({
+      moderationAction: 'shared_chat_timeout',
+    }),
     fake<EventSubChannelModerationEvent>({ moderationAction: 'delete' }),
     fake<EventSubChannelModerationEvent>({ moderationAction: 'unban' }),
   ];

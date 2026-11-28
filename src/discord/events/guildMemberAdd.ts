@@ -10,7 +10,7 @@ export const onGuildMemberAdd = async (member: GuildMember) => {
   if (!CONFIG.ROLES.DEFAULT.ENABLED || !CONFIG.ROLES.DEFAULT.ID) return;
 
   const welcomeRole = member.guild?.roles.cache.find(
-    role => role.id === CONFIG.ROLES.DEFAULT.ID
+    role => role.id === CONFIG.ROLES.DEFAULT.ID,
   );
 
   if (

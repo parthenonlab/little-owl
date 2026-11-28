@@ -22,36 +22,36 @@ Create a `.env` file in the project root. Ask Athena for the values.
 
 ### MongoDB
 
-| Variable | Description |
-| --- | --- |
-| `MONGODB_URL` | Cluster connection URL, without the database name |
-| `MONGODB_DB` | Production database name |
-| `MONGODB_DB_TEST` | Staging database name, used when `STAGING=true` |
-| `MONGODB_ACTS` | Collection name for activities |
-| `MONGODB_INVENTORY` | Collection name for inventories |
-| `MONGODB_SHOP` | Collection name for the shop |
-| `MONGODB_TOKENS` | Collection name for Twitch OAuth tokens |
+| Variable            | Description                                       |
+| ------------------- | ------------------------------------------------- |
+| `MONGODB_URL`       | Cluster connection URL, without the database name |
+| `MONGODB_DB`        | Production database name                          |
+| `MONGODB_DB_TEST`   | Staging database name, used when `STAGING=true`   |
+| `MONGODB_ACTS`      | Collection name for activities                    |
+| `MONGODB_INVENTORY` | Collection name for inventories                   |
+| `MONGODB_SHOP`      | Collection name for the shop                      |
+| `MONGODB_TOKENS`    | Collection name for Twitch OAuth tokens           |
 
 ### Discord
 
-| Variable | Description |
-| --- | --- |
-| `DISCORD_TOKEN` | Bot token |
-| `DISCORD_CLIENT_ID` | Application ID |
-| `SERVER_ID` | Community server ID |
-| `ADMIN_SERVER_ID` | Admin server ID (log channels and stage commands) |
+| Variable            | Description                                       |
+| ------------------- | ------------------------------------------------- |
+| `DISCORD_TOKEN`     | Bot token                                         |
+| `DISCORD_CLIENT_ID` | Application ID                                    |
+| `SERVER_ID`         | Community server ID                               |
+| `ADMIN_SERVER_ID`   | Admin server ID (log channels and stage commands) |
 
 Discord channel and role IDs are not environment variables. They are hardcoded in `src/constants/config.ts`.
 
 ### Twitch
 
-| Variable | Description |
-| --- | --- |
-| `USERNAME` | The bot account's Twitch login |
-| `CHANNELS` | The broadcaster's Twitch login (only the first entry is used) |
-| `TWITCH_CLIENT_ID` | Twitch application client ID |
-| `TWITCH_CLIENT_SECRET` | Twitch application client secret |
-| `TWITCH_REDIRECT_URI` | OAuth redirect URL; only needed to run `yarn twitch:auth` (see [Twitch](twitch.md)) |
+| Variable               | Description                                                                         |
+| ---------------------- | ----------------------------------------------------------------------------------- |
+| `USERNAME`             | The bot account's Twitch login                                                      |
+| `CHANNELS`             | The broadcaster's Twitch login (only the first entry is used)                       |
+| `TWITCH_CLIENT_ID`     | Twitch application client ID                                                        |
+| `TWITCH_CLIENT_SECRET` | Twitch application client secret                                                    |
+| `TWITCH_REDIRECT_URI`  | OAuth redirect URL; only needed to run `yarn twitch:auth` (see [Twitch](twitch.md)) |
 
 ### Feature Flags
 

@@ -237,7 +237,8 @@ export const incDiscordUser = async (
   id: string,
   field: NumericUserField,
   amount: number,
-): Promise<UserDocument | null> => incUser({ discord_id: id }, field, amount, 'Discord User');
+): Promise<UserDocument | null> =>
+  incUser({ discord_id: id }, field, amount, 'Discord User');
 
 /**
  * Increment a field on a Twitch user document.
@@ -251,7 +252,8 @@ export const incTwitchUser = async (
   id: string,
   field: NumericUserField,
   amount: number,
-): Promise<UserDocument | null> => incUser({ twitch_id: id }, field, amount, 'Twitch User');
+): Promise<UserDocument | null> =>
+  incUser({ twitch_id: id }, field, amount, 'Twitch User');
 
 /**
  * Set fields on a Discord user document.

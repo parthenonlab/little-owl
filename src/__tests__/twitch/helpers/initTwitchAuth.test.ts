@@ -69,7 +69,8 @@ describe('initTwitchAuth', () => {
   it('logs refresh failures', async () => {
     await initTwitchAuth();
 
-    const onFailure = (twitchAuth.onRefreshFailure as jest.Mock).mock.calls[0][0];
+    const onFailure = (twitchAuth.onRefreshFailure as jest.Mock).mock
+      .calls[0][0];
     onFailure('143', new Error('invalid refresh token'));
 
     expect(log).toHaveBeenCalled();
@@ -78,7 +79,9 @@ describe('initTwitchAuth', () => {
   it('throws when USERNAME or CHANNELS is missing', async () => {
     delete process.env.CHANNELS;
 
-    await expect(initTwitchAuth()).rejects.toThrow('Missing USERNAME or CHANNELS');
+    await expect(initTwitchAuth()).rejects.toThrow(
+      'Missing USERNAME or CHANNELS',
+    );
   });
 
   it('throws when the bot user does not exist', async () => {

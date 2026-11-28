@@ -23,7 +23,10 @@ describe('say', () => {
   });
 
   it('logs when Twitch drops the message', async () => {
-    send.mockResolvedValue({ isSent: false, dropReasonMessage: 'msg_duplicate' });
+    send.mockResolvedValue({
+      isSent: false,
+      dropReasonMessage: 'msg_duplicate',
+    });
 
     await say(IDS, 'hello');
 

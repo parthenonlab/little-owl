@@ -4,7 +4,9 @@ import { BotState } from '@/interfaces/bot';
  * `Partial<T>` without the Object built-ins that classes like discord.js override
  * with narrower types (e.g. `toString(): '<@id>'`), which plain object literals can't satisfy.
  */
-type FakeFields<T> = Partial<Omit<T, 'constructor' | 'toJSON' | 'toString' | 'valueOf'>>;
+type FakeFields<T> = Partial<
+  Omit<T, 'constructor' | 'toJSON' | 'toString' | 'valueOf'>
+>;
 
 /**
  * Build a typed stand-in for a class that can't be constructed in tests (e.g. Twurple events, discord.js objects).

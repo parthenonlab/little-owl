@@ -68,10 +68,7 @@ describe('chatReminder', () => {
 
     await chatReminder(state);
 
-    expect(say).not.toHaveBeenCalledWith(
-      IDS,
-      REMINDERS[owIndex].message,
-    );
+    expect(say).not.toHaveBeenCalledWith(IDS, REMINDERS[owIndex].message);
   });
 
   it('sends an Overwatch reminder when live in Overwatch', async () => {
@@ -80,10 +77,7 @@ describe('chatReminder', () => {
 
     await chatReminder(state);
 
-    expect(say).toHaveBeenCalledWith(
-      IDS,
-      REMINDERS[owIndex].message,
-    );
+    expect(say).toHaveBeenCalledWith(IDS, REMINDERS[owIndex].message);
     expect(state).toEqual(makeState(owIndex + 1, 0));
   });
 
@@ -104,9 +98,6 @@ describe('chatReminder', () => {
     await chatReminder(state);
 
     expect(log).toHaveBeenCalled();
-    expect(say).toHaveBeenCalledWith(
-      IDS,
-      REMINDERS[owIndex + 1].message,
-    );
+    expect(say).toHaveBeenCalledWith(IDS, REMINDERS[owIndex + 1].message);
   });
 });

@@ -19,14 +19,16 @@ export const initTwitchAuth = async (): Promise<TwitchIds> => {
     .replace(/^#/, '')
     .toLowerCase();
 
-  if (!botName || !broadcasterName) throw new Error('Missing USERNAME or CHANNELS');
+  if (!botName || !broadcasterName)
+    throw new Error('Missing USERNAME or CHANNELS');
 
   const users = await helix.users.getUsersByNames([botName, broadcasterName]);
   const bot = users.find(user => user.name === botName);
   const broadcaster = users.find(user => user.name === broadcasterName);
 
   if (!bot) throw new Error(`Twitch user "${botName}" not found`);
-  if (!broadcaster) throw new Error(`Twitch user "${broadcasterName}" not found`);
+  if (!broadcaster)
+    throw new Error(`Twitch user "${broadcasterName}" not found`);
 
   const token = await getTwitchToken(bot.id);
 

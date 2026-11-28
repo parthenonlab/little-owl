@@ -16,13 +16,13 @@ export const EightBall = {
       option
         .setName(COPY.EIGHTBALL.OPTION_NAME)
         .setDescription(COPY.EIGHTBALL.OPTION_DESCRIPTION)
-        .setRequired(true)
+        .setRequired(true),
     ),
   execute: async (interaction: ChatInputCommandInteraction) => {
-    if (!await checkFeatureEnabled('8BALL', interaction)) return;
+    if (!(await checkFeatureEnabled('8BALL', interaction))) return;
 
     const randomNum = Math.floor(
-      Math.random() * COPY.EIGHTBALL.RESPONSES.length
+      Math.random() * COPY.EIGHTBALL.RESPONSES.length,
     );
 
     const answer = COPY.EIGHTBALL.RESPONSES[randomNum];

@@ -31,12 +31,7 @@ export interface PokeballObject {
 }
 
 export type PokemonRarity =
-  | 'common'
-  | 'uncommon'
-  | 'rare'
-  | 'very rare'
-  | 'legendary'
-  | 'mythical';
+  'common' | 'uncommon' | 'rare' | 'very rare' | 'legendary' | 'mythical';
 
 export interface PokemonObject {
   id: number;

@@ -68,7 +68,11 @@ const addTwitchListeners = () => {
   eventsub.onChannelChatMessage(broadcasterId, botId, event =>
     te.onChat(state, event),
   );
-  eventsub.onChannelChatNotification(broadcasterId, botId, te.onChatNotification);
+  eventsub.onChannelChatNotification(
+    broadcasterId,
+    botId,
+    te.onChatNotification,
+  );
   eventsub.onChannelModerate(broadcasterId, botId, te.onModerate);
 
   eventsub.start();

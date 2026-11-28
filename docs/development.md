@@ -2,14 +2,14 @@
 
 ## Scripts
 
-| Command | Description |
-| --- | --- |
-| `yarn dev` | Run the bot in staging mode |
-| `yarn dev:register` | Register Discord slash commands, then keep running in staging mode |
-| `yarn start` | Run the bot in production mode |
-| `yarn test` | Run the Jest tests |
-| `yarn twitch:auth:staging` | Authorize the bot's Twitch account for the staging database |
-| `yarn twitch:auth` | Authorize the bot's Twitch account for the production database |
+| Command                    | Description                                                        |
+| -------------------------- | ------------------------------------------------------------------ |
+| `yarn dev`                 | Run the bot in staging mode                                        |
+| `yarn dev:register`        | Register Discord slash commands, then keep running in staging mode |
+| `yarn start`               | Run the bot in production mode                                     |
+| `yarn test`                | Run the Jest tests                                                 |
+| `yarn twitch:auth:staging` | Authorize the bot's Twitch account for the staging database        |
+| `yarn twitch:auth`         | Authorize the bot's Twitch account for the production database     |
 
 ## Staging vs Production
 

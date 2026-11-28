@@ -13,7 +13,9 @@ eventsub.onUserSocketConnect(() => {
 });
 
 eventsub.onUserSocketDisconnect((_userId, error) => {
-  console.error(`🦉 Little Owl: EventSub Disconnected${error ? ` (${error.message})` : ''}`);
+  console.error(
+    `🦉 Little Owl: EventSub Disconnected${error ? ` (${error.message})` : ''}`,
+  );
 });
 
 export { eventsub };

@@ -22,7 +22,9 @@ const logError = (error: unknown) =>
   log({ type: LogCode.Error, description: formatError(error) });
 
 const getStreamActivity = (presence: Presence | null) =>
-  presence?.activities.find(activity => activity.type === ActivityType.Streaming);
+  presence?.activities.find(
+    activity => activity.type === ActivityType.Streaming,
+  );
 
 const findLiveRole = (guild: Guild) =>
   guild.roles.cache.find(

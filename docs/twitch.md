@@ -35,10 +35,10 @@ Re-run it when:
 
 ## Scopes
 
-| Scope | Used for |
-| --- | --- |
-| `user:read:chat` | Reading chat messages and notifications |
-| `user:write:chat`, `user:bot` | Sending chat messages with the Chat Bot badge |
+| Scope                                                                                                                                                                                                                                         | Used for                                                              |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `user:read:chat`                                                                                                                                                                                                                              | Reading chat messages and notifications                               |
+| `user:write:chat`, `user:bot`                                                                                                                                                                                                                 | Sending chat messages with the Chat Bot badge                         |
 | `moderator:read:banned_users`, `moderator:read:blocked_terms`, `moderator:read:chat_messages`, `moderator:read:chat_settings`, `moderator:read:moderators`, `moderator:read:unban_requests`, `moderator:read:vips`, `moderator:read:warnings` | `channel.moderate` v2 (bans and timeouts), which requires all of them |
 
 ## Stream Status
@@ -55,9 +55,9 @@ There's no API that returns a user's total subscribed months on demand. `sub_mon
 
 ## Troubleshooting
 
-| Symptom | Cause and fix |
-| --- | --- |
-| `redirect_mismatch` during authorization | `TWITCH_REDIRECT_URI` doesn't exactly match the URL in the Developer Console |
+| Symptom                                                    | Cause and fix                                                                   |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `redirect_mismatch` during authorization                   | `TWITCH_REDIRECT_URI` doesn't exactly match the URL in the Developer Console    |
 | `403 subscription missing proper authorization` on startup | The stored token is missing a scope. Re-run `yarn twitch:auth` (or `:staging`). |
-| `Twitch Disabled — No Twitch token stored` on startup | No token in this database. Run the auth script for it. |
-| Bot replies twice to commands | Staging and production are both running |
+| `Twitch Disabled — No Twitch token stored` on startup      | No token in this database. Run the auth script for it.                          |
+| Bot replies twice to commands                              | Staging and production are both running                                         |

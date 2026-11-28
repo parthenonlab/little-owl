@@ -1,10 +1,15 @@
 jest.mock('@/lib/clients', () => ({
   discord: { guilds: { cache: { get: jest.fn(() => undefined) } } },
 }));
-jest.mock('@/lib/config', () => ({ getENV: jest.fn(() => ({ SERVER_ID: '' })) }));
+jest.mock('@/lib/config', () => ({
+  getENV: jest.fn(() => ({ SERVER_ID: '' })),
+}));
 jest.mock('@/services/shop', () => ({ setShopStock: jest.fn() }));
 
-import { restockShopDaily, restockShopWeekly } from '@/discord/helpers/restockShop';
+import {
+  restockShopDaily,
+  restockShopWeekly,
+} from '@/discord/helpers/restockShop';
 import { BotState } from '@/interfaces/bot';
 
 import { makeBotState } from '../../fixtures';

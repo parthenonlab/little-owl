@@ -192,7 +192,11 @@ describe('onPresenceUpdate', () => {
     });
 
     it('does nothing when the bot cannot manage the member', async () => {
-      const ctx = setup({ hasRole: true, manageable: false, status: 'offline' });
+      const ctx = setup({
+        hasRole: true,
+        manageable: false,
+        status: 'offline',
+      });
 
       await run(ctx);
 
@@ -306,7 +310,9 @@ describe('onPresenceUpdate', () => {
 
     it('does not announce during the cooldown', async () => {
       const ctx = setup({ memberId: OWNER_ID, activities: [streaming()] });
-      const state = makeBotState({ cooldowns: { stream: new Date(NOW + 1000) } });
+      const state = makeBotState({
+        cooldowns: { stream: new Date(NOW + 1000) },
+      });
 
       await run(ctx, state);
 

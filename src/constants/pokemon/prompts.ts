@@ -15,5 +15,5 @@ export const FLEE_PROMPTS: Record<PokemonRarity, string> = {
   rare: 'It disappeared into the wild before you could catch it.',
   'very rare': "It escaped. That kind of encounter won't come easily again.",
   legendary: 'It vanished, leaving you wondering if it was ever really there.',
-  mythical: "It was gone in an instant, like it was never there at all.",
+  mythical: 'It was gone in an instant, like it was never there at all.',
 };
