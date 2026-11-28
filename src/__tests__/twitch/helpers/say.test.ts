@@ -1,10 +1,10 @@
-jest.mock('@/discord/helpers', () => ({ log: jest.fn() }));
+jest.mock('@/lib/logger', () => ({ logger: { error: jest.fn() } }));
 jest.mock('@/lib/clients', () => ({
   helix: { chat: { sendChatMessageAsApp: jest.fn() } },
 }));
 
-import { log } from '@/discord/helpers';
 import { helix } from '@/lib/clients';
+import { logger } from '@/lib/logger';
 import { say } from '@/twitch/helpers/say';
 
 const send = helix.chat.sendChatMessageAsApp as jest.Mock;
@@ -19,15 +19,18 @@ describe('say', () => {
     await say(IDS, 'hello');
 
     expect(send).toHaveBeenCalledWith('143', '999', 'hello');
-    expect(log).not.toHaveBeenCalled();
+    expect(logger.error).not.toHaveBeenCalled();
   });
 
   it('logs when Twitch drops the message', async () => {
-    send.mockResolvedValue({ isSent: false, dropReasonMessage: 'msg_duplicate' });
+    send.mockResolvedValue({
+      isSent: false,
+      dropReasonMessage: 'msg_duplicate',
+    });
 
     await say(IDS, 'hello');
 
-    expect((log as jest.Mock).mock.calls[0][0].description).toContain(
+    expect((logger.error as jest.Mock).mock.calls[0][0].dropReason).toBe(
       'msg_duplicate',
     );
   });
@@ -36,6 +39,6 @@ describe('say', () => {
     send.mockRejectedValue(new Error('boom'));
 
     await expect(say(IDS, 'hello')).resolves.toBeUndefined();
-    expect(log).toHaveBeenCalled();
+    expect(logger.error).toHaveBeenCalled();
   });
 });

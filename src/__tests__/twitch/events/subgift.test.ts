@@ -34,7 +34,7 @@ describe('onSubGift', () => {
     expect(setTwitchUser).toHaveBeenCalledWith('123', { sub_months: 1 });
   });
 
-  it('keeps the recipient\'s existing sub_months', async () => {
+  it("keeps the recipient's existing sub_months", async () => {
     (findOrCreateTwitchUser as jest.Mock).mockResolvedValue({ sub_months: 8 });
 
     await onSubGift(makeEvent());

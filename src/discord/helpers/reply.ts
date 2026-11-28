@@ -1,11 +1,8 @@
 import { ColorResolvable, EmbedBuilder, MessageFlags } from 'discord.js';
 
 import { CONFIG } from '@/constants';
-import { LogCode } from '@/enums/logs';
 import { ReplyProps } from '@/interfaces/bot';
-import { formatError } from '@/lib/utils';
-
-import { log } from './log';
+import { logger } from '@/lib/logger';
 
 /**
  * Send an embed reply to a Discord interaction.
@@ -29,9 +26,13 @@ export const reply = async ({
       ...(ephemeral && { flags: MessageFlags.Ephemeral }),
     });
   } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: formatError(error),
-    });
+    logger.error(
+      {
+        err: error,
+        command: interaction.commandName,
+        discordId: interaction.user.id,
+      },
+      'Failed to send reply',
+    );
   }
 };

@@ -1,83 +1,125 @@
 import { ColorResolvable, EmbedBuilder } from 'discord.js';
 
 import { CONFIG } from '@/constants';
-import { LogProps } from '@/interfaces/bot';
-
+import { ErrorLogProps, LogProps, LogType, Platform } from '@/interfaces/bot';
 import { discord } from '@/lib/clients';
 import { getENV } from '@/lib/config';
+import { logger } from '@/lib/logger';
 
-const typeMap = {
-  activity: {
-    channel: CONFIG.CHANNELS.LOGS.ACTIVITY,
+interface Destination {
+  channel: string;
+  color: string;
+}
+
+const LOG_DESTINATIONS = {
+  accounts: {
+    channel: CONFIG.CHANNELS.LOGS.ACCOUNTS,
     color: CONFIG.COLORS.BLUE,
   },
-  alert: {
-    channel: CONFIG.CHANNELS.LOGS.ALERT,
-    color: CONFIG.COLORS.PINK,
-  },
-  announce: {
-    channel: process.env.STAGING
-      ? CONFIG.CHANNELS.ADMIN.STAGE
-      : CONFIG.CHANNELS.ADMIN.OWL,
+  members: {
+    channel: CONFIG.CHANNELS.LOGS.MEMBERS,
     color: CONFIG.COLORS.BLUE,
   },
-  deleted: {
-    channel: CONFIG.CHANNELS.LOGS.DELETED,
+  messages: {
+    channel: CONFIG.CHANNELS.LOGS.MESSAGES,
     color: CONFIG.COLORS.RED,
   },
-  error: {
-    channel: CONFIG.CHANNELS.LOGS.ERROR,
-    color: CONFIG.COLORS.RED,
-  },
-  leave: {
-    channel: CONFIG.CHANNELS.LOGS.LEAVE,
+  moderation: {
+    channel: CONFIG.CHANNELS.LOGS.MODERATION,
     color: CONFIG.COLORS.YELLOW,
   },
-  user: {
-    channel: CONFIG.CHANNELS.LOGS.USER,
-    color: CONFIG.COLORS.BLUE,
+  twitchNotifications: {
+    channel: CONFIG.CHANNELS.LOGS.TWITCH_NOTIFICATIONS,
+    color: CONFIG.COLORS.PINK,
   },
+} satisfies Record<LogType, Destination>;
+
+const ERRORS: Destination = {
+  channel: CONFIG.CHANNELS.LOGS.ERRORS,
+  color: CONFIG.COLORS.RED,
+};
+
+const PLATFORM_LABELS: Record<Platform, string> = {
+  discord: 'Discord',
+  twitch: 'Twitch',
+};
+
+/** Write a log to the app logger when it can't be delivered to Discord. */
+const fallback = (
+  destination: string,
+  props: ErrorLogProps,
+  reason: string,
+) => {
+  const { title, description } = props;
+  logger.warn(
+    { destination, title, description, reason },
+    'Discord log undelivered',
+  );
 };
 
 /**
- * Send an embed message to a Discord log channel based on log type.
- *
- * @param props - Log properties including type, title, description, and optional media fields.
+ * Build and send a log embed. Staging uses the same channels as production.
+ * Falls back to the app logger when the message can't be delivered, and never rejects.
  */
-export const log = ({
-  type,
-  title,
-  description,
-  image,
-  authorIcon,
-  thumbnail,
-  footer,
-}: LogProps) => {
+const send = async (
+  name: string,
+  { channel: channelId, color }: Destination,
+  props: ErrorLogProps,
+  authorName?: string,
+): Promise<void> => {
+  const { title, description, image, authorIcon, thumbnail, footer } = props;
   const { ADMIN_SERVER_ID } = getENV();
 
   const server = discord.guilds.cache.get(ADMIN_SERVER_ID);
+  if (!server?.available)
+    return fallback(name, props, 'admin server unavailable');
 
-  if (server && server.available) {
-    const channel = server.channels.cache.get(typeMap[type].channel);
+  const channel = server.channels.cache.get(channelId);
+  if (!channel?.isTextBased())
+    return fallback(name, props, 'log channel unavailable');
 
-    if (channel) {
-      const botEmbed = new EmbedBuilder()
-        .setColor(typeMap[type].color as ColorResolvable)
-        .setDescription(description);
+  const botEmbed = new EmbedBuilder()
+    .setColor(color as ColorResolvable)
+    .setDescription(description);
 
-      if (authorIcon) {
-        botEmbed.setAuthor({
-          name: `${server.name} Server`,
-          iconURL: authorIcon || server.iconURL() || '',
-        });
-      }
+  if (authorName || authorIcon) {
+    botEmbed.setAuthor({
+      name: authorName ?? `${server.name} Server`,
+      iconURL: authorIcon,
+    });
+  }
 
-      if (title) botEmbed.setTitle(title);
-      if (image) botEmbed.setImage(image);
-      if (thumbnail) botEmbed.setThumbnail(thumbnail);
-      if (footer) botEmbed.setFooter({ text: footer });
+  if (title) botEmbed.setTitle(title);
+  if (image) botEmbed.setImage(image);
+  if (thumbnail) botEmbed.setThumbnail(thumbnail);
+  if (footer) botEmbed.setFooter({ text: footer });
 
-      if (channel.isTextBased()) channel.send({ embeds: [botEmbed] });
-    }
+  try {
+    await channel.send({ embeds: [botEmbed] });
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : String(error);
+    fallback(name, props, `send failed: ${reason}`);
   }
 };
+
+/**
+ * Send an audit log embed to the channel for its type.
+ * Moderation embeds show their platform in the author line.
+ * For errors, use `logger.error()`: it reaches the errors channel via `forwardErrorsToDiscord()`.
+ *
+ * @param props - Log properties including type, title, description, and optional media fields.
+ */
+export const log = (props: LogProps): Promise<void> => {
+  const authorName = props.platform
+    ? PLATFORM_LABELS[props.platform]
+    : undefined;
+  return send(props.type, LOG_DESTINATIONS[props.type], props, authorName);
+};
+
+/**
+ * Send an embed to the errors channel. Only for `forwardErrorsToDiscord()`.
+ *
+ * @param props - Embed title, description, and footer.
+ */
+export const logToErrorsChannel = (props: ErrorLogProps): Promise<void> =>
+  send('errors', ERRORS, props);

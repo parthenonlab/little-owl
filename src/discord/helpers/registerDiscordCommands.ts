@@ -1,6 +1,8 @@
 import { Routes } from 'discord.js';
 import { REST } from '@discordjs/rest';
 
+import { logger } from '@/lib/logger';
+
 import {
   AccountLink,
   Bonus,
@@ -28,24 +30,22 @@ import {
  */
 export const registerDiscordCommands = (): void => {
   if (!process.env.DISCORD_TOKEN) {
-    console.error('🦉 Error: Discord Register Command Missing Token.');
+    logger.fatal('Discord register command missing token');
     process.exit(1);
   }
 
   if (!process.env.DISCORD_CLIENT_ID) {
-    console.error('🦉 Error: Discord Register Command Missing Client ID.');
+    logger.fatal('Discord register command missing client ID');
     process.exit(1);
   }
 
   if (!process.env.SERVER_ID) {
-    console.error('🦉 Error: Discord Register Command Missing Server ID.');
+    logger.fatal('Discord register command missing server ID');
     process.exit(1);
   }
 
   if (!process.env.ADMIN_SERVER_ID) {
-    console.error(
-      '🦉 Error: Discord Register Command Missing Admin Server ID.',
-    );
+    logger.fatal('Discord register command missing admin server ID');
     process.exit(1);
   }
 
@@ -87,20 +87,26 @@ export const registerDiscordCommands = (): void => {
         ),
         { body: commands },
       )
-      .then(_data =>
-        console.log('🦉 Little Owl: Discord PROD Commands Registered'),
-      )
-      .catch(console.error);
+      .then(_data => logger.info('Discord PROD commands registered'))
+      .catch(error =>
+        logger.error(
+          { err: error },
+          'Discord PROD command registration failed',
+        ),
+      );
 
   if (commandsGlobal.length > 0)
     rest
       .put(Routes.applicationCommands(process.env.DISCORD_CLIENT_ID), {
         body: commandsGlobal,
       })
-      .then(_data =>
-        console.log('🦉 Little Owl: Discord GLOBAL Commands Registered'),
-      )
-      .catch(console.error);
+      .then(_data => logger.info('Discord GLOBAL commands registered'))
+      .catch(error =>
+        logger.error(
+          { err: error },
+          'Discord GLOBAL command registration failed',
+        ),
+      );
 
   if (commandsStage.length > 0)
     rest
@@ -111,8 +117,11 @@ export const registerDiscordCommands = (): void => {
         ),
         { body: commandsStage },
       )
-      .then(_data =>
-        console.log('🦉 Little Owl: Discord STAGE Commands Registered'),
-      )
-      .catch(console.error);
+      .then(_data => logger.info('Discord STAGE commands registered'))
+      .catch(error =>
+        logger.error(
+          { err: error },
+          'Discord STAGE command registration failed',
+        ),
+      );
 };

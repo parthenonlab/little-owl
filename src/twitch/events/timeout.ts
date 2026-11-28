@@ -1,7 +1,6 @@
 import { EventSubChannelTimeoutModerationEvent } from '@twurple/eventsub-base';
 
 import { log } from '@/discord/helpers';
-import { LogCode } from '@/enums/logs';
 
 export const onTimeout = (event: EventSubChannelTimeoutModerationEvent) => {
   const duration = Math.max(
@@ -10,7 +9,8 @@ export const onTimeout = (event: EventSubChannelTimeoutModerationEvent) => {
   );
 
   log({
-    type: LogCode.Leave,
+    type: 'moderation',
+    platform: 'twitch',
     description: `${event.userName} has been timed out for ${duration}s.\n\nReason: ${
       event.reason || 'None'
     }`,

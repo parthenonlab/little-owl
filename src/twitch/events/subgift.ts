@@ -1,7 +1,6 @@
 import { EventSubChannelChatSubGiftNotificationEvent } from '@twurple/eventsub-base';
 
 import { log } from '@/discord/helpers';
-import { LogCode } from '@/enums/logs';
 import { findOrCreateTwitchUser, setTwitchUser } from '@/services/user';
 
 export const onSubGift = async (
@@ -13,7 +12,7 @@ export const onSubGift = async (
     : event.chatterName;
 
   log({
-    type: LogCode.Alert,
+    type: 'twitchNotifications',
     description: `${gifter} gifted a subscription to ${recipientName}!`,
   });
 

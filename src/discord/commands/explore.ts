@@ -23,7 +23,6 @@ import {
 } from '@/constants/pokemon';
 
 import { URLS } from '@/constants/urls';
-import { LogCode } from '@/enums/logs';
 import { BotState } from '@/interfaces/bot';
 
 import {
@@ -32,7 +31,8 @@ import {
   PokemonRarity,
 } from '@/interfaces/pokemon';
 
-import { capitalize, formatError, weightedRandom } from '@/lib/utils';
+import { logger } from '@/lib/logger';
+import { capitalize, weightedRandom } from '@/lib/utils';
 import { getPCBoxCount, createCatch } from '@/services/catch';
 import { findOrCreateInventory, setInventoryBalls } from '@/services/inventory';
 import { findOrCreateDiscordUser } from '@/services/user';
@@ -42,7 +42,6 @@ import {
   getActiveSpawn,
   getExploreActions,
   getPCBoxCapacity,
-  log,
   reply,
 } from '../helpers';
 
@@ -176,10 +175,14 @@ export const Explore = {
         await interaction.reply({ embeds: [embed], components: [row] });
       }
     } catch (error) {
-      log({
-        type: LogCode.Error,
-        description: formatError(error),
-      });
+      logger.error(
+        {
+          err: error,
+          command: COPY.EXPLORE.NAME,
+          discordId: interaction.user.id,
+        },
+        'Failed to reply to command',
+      );
     }
   },
   getName: (): string => {

@@ -15,6 +15,7 @@
     "discord.js": "^14.27.0",
     "mongoose": "^9.11.0",
     "nanoid": "^6.0.2",
+    "pino": "^10.4.0",
     "puppeteer": "^24.40.0"
   },
   "devDependencies": {
@@ -26,6 +27,8 @@
     "dotenv": "^18.0.6",
     "jest": "^30.5.2",
     "node-cron": "^4.6.0",
+    "pino-pretty": "^13.2.0",
+    "prettier": "3.10.1",
     "ts-jest": "^29.4.14",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
@@ -36,6 +39,8 @@
     "dev:register": "REGISTER=true STAGING=true ts-node -r tsconfig-paths/register src/index.ts",
     "start": "ts-node -r tsconfig-paths/register -T src/index.ts",
     "test": "jest",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "twitch:auth": "ts-node -r tsconfig-paths/register src/scripts/twitchAuth.ts",
     "twitch:auth:staging": "STAGING=true ts-node -r tsconfig-paths/register src/scripts/twitchAuth.ts"
   }

@@ -10,19 +10,20 @@ import {
 } from 'discord.js';
 
 import { CONFIG } from '@/constants';
-import { LogCode } from '@/enums/logs';
 import { BotState } from '@/interfaces/bot';
-import { formatError } from '@/lib/utils';
+import { logger } from '@/lib/logger';
 
 import { log } from '../helpers';
 
 const STREAM_ALERT_COOLDOWN_MS = 12 * 60 * 60 * 1000;
 
 const logError = (error: unknown) =>
-  log({ type: LogCode.Error, description: formatError(error) });
+  logger.error({ err: error }, 'Presence update failed');
 
 const getStreamActivity = (presence: Presence | null) =>
-  presence?.activities.find(activity => activity.type === ActivityType.Streaming);
+  presence?.activities.find(
+    activity => activity.type === ActivityType.Streaming,
+  );
 
 const findLiveRole = (guild: Guild) =>
   guild.roles.cache.find(
@@ -43,7 +44,7 @@ const addLiveRole = (member: GuildMember, liveRole?: Role) => {
     .add(liveRole)
     .then(() =>
       log({
-        type: LogCode.Activity,
+        type: 'members',
         description: `${member.user.username} aka ${member.displayName} has started streaming.`,
         footer: `Discord User ID: ${member.id}`,
       }),

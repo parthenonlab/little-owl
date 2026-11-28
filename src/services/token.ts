@@ -1,8 +1,7 @@
 import { AccessToken } from '@twurple/auth';
 
-import { log } from '@/discord/helpers/log';
-import { LogCode } from '@/enums/logs';
-import { formatError, fromTokenFields, toTokenFields } from '@/lib/utils';
+import { logger } from '@/lib/logger';
+import { fromTokenFields, toTokenFields } from '@/lib/utils';
 import { TokenModel } from '@/models/token';
 
 /**
@@ -21,7 +20,10 @@ export const getTwitchToken = async (
 
     return fromTokenFields(token);
   } catch (error) {
-    log({ type: LogCode.Error, description: formatError(error) });
+    logger.error(
+      { err: error, twitchId: userId },
+      'Failed to get Twitch token',
+    );
     return null;
   }
 };
@@ -43,6 +45,9 @@ export const saveTwitchToken = async (
       { upsert: true },
     );
   } catch (error) {
-    log({ type: LogCode.Error, description: formatError(error) });
+    logger.error(
+      { err: error, twitchId: userId },
+      'Failed to save Twitch token',
+    );
   }
 };

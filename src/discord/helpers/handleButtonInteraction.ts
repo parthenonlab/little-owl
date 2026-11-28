@@ -39,6 +39,6 @@ export const handleButtonInteraction = async (
   // command: inventory
   else if (command === dc.Inventory.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);
-    if (user) dc.Inventory.onUpgradeClick(interaction, user);
+    if (user) await dc.Inventory.onUpgradeClick(interaction, user);
   }
 };

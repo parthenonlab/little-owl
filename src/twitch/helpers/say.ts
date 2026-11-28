@@ -1,8 +1,6 @@
-import { log } from '@/discord/helpers';
-import { LogCode } from '@/enums/logs';
 import { TwitchIds } from '@/interfaces/bot';
 import { helix } from '@/lib/clients';
-import { formatError } from '@/lib/utils';
+import { logger } from '@/lib/logger';
 
 /**
  * Send a message to the broadcaster's chat as the bot, using an app token so it shows the Chat Bot badge.
@@ -21,13 +19,15 @@ export const say = async (ids: TwitchIds, message: string): Promise<void> => {
 
     if (sent.isSent) return;
 
-    log({
-      type: LogCode.Error,
-      description: `Twitch chat message dropped: ${
-        sent.dropReasonMessage ?? sent.dropReasonCode ?? 'unknown reason'
-      }\n\nMessage: ${message}`,
-    });
+    logger.error(
+      {
+        dropReason:
+          sent.dropReasonMessage ?? sent.dropReasonCode ?? 'unknown reason',
+        message,
+      },
+      'Twitch chat message dropped',
+    );
   } catch (error) {
-    log({ type: LogCode.Error, description: formatError(error) });
+    logger.error({ err: error, message }, 'Failed to send Twitch chat message');
   }
 };

@@ -7,10 +7,9 @@ import {
 } from 'discord.js';
 
 import { COPY, URLS } from '@/constants';
-import { LogCode } from '@/enums/logs';
-import { formatError } from '@/lib/utils';
+import { logger } from '@/lib/logger';
 
-import { checkFeatureEnabled, log } from '../helpers';
+import { checkFeatureEnabled } from '../helpers';
 
 export const Help = {
   data: new SlashCommandBuilder()
@@ -38,10 +37,10 @@ export const Help = {
     try {
       await interaction.reply({ components: [row] });
     } catch (error) {
-      log({
-        type: LogCode.Error,
-        description: formatError(error),
-      });
+      logger.error(
+        { err: error, command: COPY.HELP.NAME, discordId: interaction.user.id },
+        'Failed to reply to command',
+      );
     }
   },
   getName: (): string => {

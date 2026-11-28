@@ -1,47 +1,36 @@
 import { GuildBan } from 'discord.js';
 
-import { LogCode } from '@/enums/logs';
 import { deleteActivity } from '@/services/activity';
 import { deleteStats } from '@/services/stats';
 import { deleteDiscordUser } from '@/services/user';
 
-import { log } from '../helpers/log';
+import { log } from '../helpers';
 
 export const onGuildBanAdd = async (guildBan: GuildBan) => {
   const { user, reason } = guildBan;
   const reasonStr = reason ? `\nReason: ${reason}` : '';
+  const thumbnail = user.displayAvatarURL() || undefined;
 
   log({
-    type: LogCode.Leave,
+    type: 'moderation',
+    platform: 'discord',
     description: `${user.username} has been banned from the server.${reasonStr}`,
-    thumbnail: user.displayAvatarURL() || undefined,
+    thumbnail,
     footer: `Discord User ID: ${user.id}`,
   });
 
-  await deleteActivity(user.id);
+  const removed = [
+    (await deleteActivity(user.id)) && 'activities',
+    (await deleteStats(user.id)) && 'stats',
+    (await deleteDiscordUser(user.id)) && 'users',
+  ].filter(Boolean);
+
+  if (!removed.length) return;
 
   log({
-    type: LogCode.Deleted,
-    description: `Record for ${user.username} has been removed from the activities collection.`,
-    thumbnail: user.displayAvatarURL() || undefined,
-    footer: `Discord User ID: ${user.id} | Display Name: ${user.displayName}`,
-  });
-
-  await deleteStats(user.id);
-
-  log({
-    type: LogCode.Deleted,
-    description: `Record for ${user.username} has been removed from the stats collection.`,
-    thumbnail: user.displayAvatarURL() || undefined,
-    footer: `Discord User ID: ${user.id} | Display Name: ${user.displayName}`,
-  });
-
-  await deleteDiscordUser(user.id);
-
-  log({
-    type: LogCode.Deleted,
-    description: `Record for ${user.username} has been removed from the users collection.`,
-    thumbnail: user.displayAvatarURL() || undefined,
+    type: 'accounts',
+    description: `Records for ${user.username} have been removed from: ${removed.join(', ')}.`,
+    thumbnail,
     footer: `Discord User ID: ${user.id} | Display Name: ${user.displayName}`,
   });
 };

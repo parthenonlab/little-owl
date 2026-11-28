@@ -115,7 +115,10 @@ describe('onChat', () => {
   it('replies to !points with the balance', async () => {
     await onChat(makeState(), makeEvent({ messageText: '!points' }));
 
-    expect(say).toHaveBeenCalledWith(IDS, expect.stringContaining('OwlFan you have 50'));
+    expect(say).toHaveBeenCalledWith(
+      IDS,
+      expect.stringContaining('OwlFan you have 50'),
+    );
   });
 
   it('replies to !lurk without the unsupported /me prefix', async () => {

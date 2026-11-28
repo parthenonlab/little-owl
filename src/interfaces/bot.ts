@@ -1,8 +1,6 @@
 import { CommandInteraction } from 'discord.js';
 import { ScheduledTask } from 'node-cron';
 
-import { LogCode } from '@/enums/logs';
-
 import { PokemonExplorePayload } from './pokemon';
 import { ShopState } from './shop';
 
@@ -24,8 +22,16 @@ export interface TwitchIds {
   broadcasterId: string;
 }
 
-export interface LogProps {
-  type: LogCode;
+/**
+ * Discord audit log channels. Errors aren't a log type: they go through the app logger,
+ * which forwards them to the errors channel.
+ */
+export type LogType =
+  'accounts' | 'members' | 'messages' | 'moderation' | 'twitchNotifications';
+
+export type Platform = 'discord' | 'twitch';
+
+interface BaseLogProps {
   title?: string;
   description: string;
   image?: string;
@@ -33,6 +39,16 @@ export interface LogProps {
   thumbnail?: string;
   footer?: string;
 }
+
+/** Moderation covers both platforms, so it must say which one. */
+export type LogProps = BaseLogProps &
+  (
+    | { type: 'moderation'; platform: Platform }
+    | { type: Exclude<LogType, 'moderation'>; platform?: never }
+  );
+
+/** An embed for the errors channel. Only sent by the error forwarder. */
+export type ErrorLogProps = BaseLogProps;
 
 export interface ReplyProps {
   content: string;

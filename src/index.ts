@@ -7,17 +7,22 @@ if (parseInt(version.slice(1).split('.')[0], 10) < 22) {
 
 require('dotenv').config();
 
-import { Events } from 'discord.js';
+import { ClientEvents } from 'discord.js';
 
 import { DEFAULT_SHOP_STATE } from '@/constants/pokemon';
 import * as de from '@/discord/events';
-import { log, registerDiscordCommands } from '@/discord/helpers';
-import { LogCode } from '@/enums/logs';
-import { BotState, LogProps } from '@/interfaces/bot';
+
+import {
+  flushDiscordErrors,
+  forwardErrorsToDiscord,
+  registerDiscordCommands,
+} from '@/discord/helpers';
+
+import { BotState } from '@/interfaces/bot';
 import { PokemonExplorePayload } from '@/interfaces/pokemon';
 import { discord, eventsub } from '@/lib/clients';
 import { connectDatabase, sleepTime } from '@/lib/config';
-import { formatError } from '@/lib/utils';
+import { logger, withErrorLogging } from '@/lib/logger';
 import { scheduleTasks } from '@/scheduler';
 import { findOrCreateShop } from '@/services/shop';
 import * as te from '@/twitch/events';
@@ -36,63 +41,105 @@ const state: BotState = {
   twitchChatQueue: 0,
 };
 
-const addEventListeners = async () => {
-  discord.on('guildBanAdd', de.onGuildBanAdd);
-  discord.on('guildMemberAdd', de.onGuildMemberAdd);
-  discord.on('guildMemberRemove', de.onGuildMemberRemove);
-  discord.on('guildMemberUpdate', de.onGuildMemberUpdate);
-  discord.on('interactionCreate', de.onInteractionCreate.bind(null, state));
-  discord.on('messageCreate', de.onMessageCreate);
-  discord.on('messageDelete', de.onMessageDelete);
-  discord.on('presenceUpdate', de.onPresenceUpdate.bind(null, state));
+/** Add a Discord.js listener whose errors are logged with the event name. */
+const onDiscord = <K extends keyof ClientEvents>(
+  event: K,
+  handler: (...args: ClientEvents[K]) => unknown,
+) => {
+  discord.on(
+    event,
+    withErrorLogging('Discord event handler failed', { event }, handler),
+  );
+};
 
-  console.log('🦉 Little Owl: Discord.js Event Listeners Added');
+/** Wrap an EventSub handler so its errors are logged with the subscription type. */
+const safeEventSub = <A extends unknown[]>(
+  event: string,
+  handler: (...args: A) => unknown,
+) => withErrorLogging('EventSub handler failed', { event }, handler);
+
+const addEventListeners = async () => {
+  onDiscord('guildBanAdd', de.onGuildBanAdd);
+  onDiscord('guildBanRemove', de.onGuildBanRemove);
+  onDiscord('guildMemberAdd', de.onGuildMemberAdd);
+  onDiscord('guildMemberRemove', de.onGuildMemberRemove);
+  onDiscord('guildMemberUpdate', de.onGuildMemberUpdate);
+  onDiscord('interactionCreate', interaction =>
+    de.onInteractionCreate(state, interaction),
+  );
+  onDiscord('messageCreate', de.onMessageCreate);
+  onDiscord('messageDelete', de.onMessageDelete);
+  onDiscord('messageDeleteBulk', de.onMessageDeleteBulk);
+  onDiscord('messageUpdate', de.onMessageUpdate);
+  onDiscord('presenceUpdate', (oldPresence, newPresence) =>
+    de.onPresenceUpdate(state, oldPresence, newPresence),
+  );
+
+  logger.info('Discord.js event listeners added');
 };
 
 const addTwitchListeners = () => {
   eventsub.onSubscriptionCreateFailure((subscription, error) =>
-    log({
-      type: LogCode.Error,
-      description: `EventSub subscription ${subscription.id} failed: ${formatError(error)}`,
-    }),
+    logger.error(
+      { err: error, subscriptionId: subscription.id },
+      'EventSub subscription failed',
+    ),
   );
   eventsub.onRevoke((subscription, status) =>
-    log({
-      type: LogCode.Error,
-      description: `EventSub subscription ${subscription.id} revoked: ${status}`,
-    }),
+    logger.error(
+      { subscriptionId: subscription.id, status },
+      'EventSub subscription revoked',
+    ),
   );
 
   const { botId, broadcasterId } = state.twitch;
 
-  eventsub.onChannelChatMessage(broadcasterId, botId, event =>
-    te.onChat(state, event),
+  eventsub.onChannelChatMessage(
+    broadcasterId,
+    botId,
+    safeEventSub('channel.chat.message', event => te.onChat(state, event)),
   );
-  eventsub.onChannelChatNotification(broadcasterId, botId, te.onChatNotification);
-  eventsub.onChannelModerate(broadcasterId, botId, te.onModerate);
+  eventsub.onChannelChatNotification(
+    broadcasterId,
+    botId,
+    safeEventSub('channel.chat.notification', te.onChatNotification),
+  );
+  eventsub.onChannelModerate(
+    broadcasterId,
+    botId,
+    safeEventSub('channel.moderate', te.onModerate),
+  );
 
   eventsub.start();
 
-  console.log('🦉 Little Owl: EventSub Listener Started');
+  logger.info('EventSub listener started');
 };
 
 const addSleepListeners = async () => {
   process.on('SIGINT', async () => {
-    console.log('🦉 Little Owl: Received SIGINT');
+    logger.info('Received SIGINT');
     await sleepTime(state);
   });
   process.on('SIGTERM', async () => {
-    console.log('🦉 Little Owl: Received SIGTERM');
+    logger.info('Received SIGTERM');
     await sleepTime(state);
   });
 
-  console.log('🦉 Little Owl: Sleep Listeners Added');
+  logger.info('Sleep listeners added');
 };
 
-/** Log to Discord now, or once the client is ready (log() drops messages before then). */
-const logWhenReady = (props: LogProps) => {
-  if (discord.isReady()) return log(props);
-  discord.once(Events.ClientReady, () => log(props));
+const addCrashListeners = () => {
+  // Log and keep running; a stray rejection shouldn't take the bot down.
+  process.on('unhandledRejection', reason => {
+    logger.error({ err: reason }, 'Unhandled rejection');
+  });
+
+  // Process state is unknown after an uncaught exception, so log and exit.
+  process.on('uncaughtException', async error => {
+    logger.fatal({ err: error }, 'Uncaught exception');
+    await flushDiscordErrors();
+    process.exit(1);
+  });
 };
 
 /**
@@ -103,21 +150,17 @@ const logWhenReady = (props: LogProps) => {
 const initTwitch = async (): Promise<boolean> => {
   try {
     state.twitch = await initTwitchAuth();
-    console.log('🦉 Little Owl: Twitch Auth Initialized');
+    logger.info('Twitch auth initialized');
     return true;
   } catch (error) {
-    const reason = error instanceof Error ? error.message : String(error);
-
-    console.error(`🦉 Error: Twitch Disabled — ${reason}`);
-    logWhenReady({
-      type: LogCode.Error,
-      description: `Twitch features are disabled until the bot is restarted.\n\nReason: ${reason}`,
-    });
+    logger.error({ err: error }, 'Twitch disabled until the bot is restarted');
     return false;
   }
 };
 
 const init = async () => {
+  forwardErrorsToDiscord();
+  addCrashListeners();
   await connectDatabase();
 
   const isTwitchReady = await initTwitch();

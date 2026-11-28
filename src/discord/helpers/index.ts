@@ -1,5 +1,6 @@
 export * from './checkFeatureEnabled';
 export * from './fixTwitterLinks';
+export * from './forwardErrors';
 export * from './getActiveSpawn';
 export * from './getBrowser';
 export * from './getPCBoxCapacity';

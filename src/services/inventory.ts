@@ -1,7 +1,5 @@
-import { log } from '@/discord/helpers/log';
-import { LogCode } from '@/enums/logs';
 import { InventoryDocument, BallInventory } from '@/interfaces/inventory';
-import { formatError } from '@/lib/utils';
+import { logger } from '@/lib/logger';
 import { InventoryModel } from '@/models/inventory';
 
 /**
@@ -28,10 +26,10 @@ export const findOrCreateInventory = async (
 
     return inventory;
   } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: formatError(error),
-    });
+    logger.error(
+      { err: error, discordId },
+      'Failed to find or create inventory',
+    );
     return null;
   }
 };
@@ -64,10 +62,10 @@ export const setInventoryBalls = async (
 
     return inventory;
   } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: formatError(error),
-    });
+    logger.error(
+      { err: error, discordId, ballUpdates },
+      'Failed to set inventory balls',
+    );
     return null;
   }
 };
@@ -90,10 +88,10 @@ export const incInventoryCapacity = async (
 
     return inventory;
   } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: formatError(error),
-    });
+    logger.error(
+      { err: error, discordId },
+      'Failed to increment inventory capacity',
+    );
     return null;
   }
 };

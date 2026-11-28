@@ -1,4 +1,5 @@
 jest.mock('@/discord/helpers', () => ({ log: jest.fn() }));
+jest.mock('@/lib/logger', () => ({ logger: { error: jest.fn() } }));
 
 import {
   Activity,
@@ -17,7 +18,7 @@ import {
 import { CONFIG } from '@/constants';
 import { onPresenceUpdate } from '@/discord/events/presenceUpdate';
 import { log } from '@/discord/helpers';
-import { LogCode } from '@/enums/logs';
+import { logger } from '@/lib/logger';
 
 import { fake, makeBotState } from '../../fixtures';
 
@@ -192,7 +193,11 @@ describe('onPresenceUpdate', () => {
     });
 
     it('does nothing when the bot cannot manage the member', async () => {
-      const ctx = setup({ hasRole: true, manageable: false, status: 'offline' });
+      const ctx = setup({
+        hasRole: true,
+        manageable: false,
+        status: 'offline',
+      });
 
       await run(ctx);
 
@@ -222,7 +227,7 @@ describe('onPresenceUpdate', () => {
       expect(ctx.add).toHaveBeenCalledWith(ctx.liveRole);
       expect(log).toHaveBeenCalledWith(
         expect.objectContaining({
-          type: LogCode.Activity,
+          type: 'members',
           description: 'athena aka Athena has started streaming.',
         }),
       );
@@ -242,9 +247,7 @@ describe('onPresenceUpdate', () => {
 
       await run(ctx);
 
-      expect(log).toHaveBeenCalledWith(
-        expect.objectContaining({ type: LogCode.Error }),
-      );
+      expect(logger.error).toHaveBeenCalled();
     });
   });
 
@@ -306,7 +309,9 @@ describe('onPresenceUpdate', () => {
 
     it('does not announce during the cooldown', async () => {
       const ctx = setup({ memberId: OWNER_ID, activities: [streaming()] });
-      const state = makeBotState({ cooldowns: { stream: new Date(NOW + 1000) } });
+      const state = makeBotState({
+        cooldowns: { stream: new Date(NOW + 1000) },
+      });
 
       await run(ctx, state);
 

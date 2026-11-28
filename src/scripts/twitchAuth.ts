@@ -57,9 +57,13 @@ const main = async () => {
     force_verify: 'true',
   }).toString();
 
-  console.log(`\n1. Open this URL in a private window, logged in as "${username}":\n`);
+  console.log(
+    `\n1. Open this URL in a private window, logged in as "${username}":\n`,
+  );
   console.log(authorizeUrl.toString());
-  console.log('\n2. Authorize, then copy the full URL you are redirected to.\n');
+  console.log(
+    '\n2. Authorize, then copy the full URL you are redirected to.\n',
+  );
 
   const rl = createInterface({ input: stdin, output: stdout });
   const pasted = await rl.question('Paste the redirect URL: ');
@@ -97,12 +101,16 @@ const main = async () => {
   );
 
   const database = process.env.STAGING ? 'staging' : 'production';
-  console.log(`\n🦉 Saved token for ${info.userName} (${info.userId}) to ${database}.`);
+  console.log(
+    `\n🦉 Saved token for ${info.userName} (${info.userId}) to ${database}.`,
+  );
 };
 
 main()
   .catch(error => {
-    console.error(`\n🦉 Error: ${error instanceof Error ? error.message : error}`);
+    console.error(
+      `\n🦉 Error: ${error instanceof Error ? error.message : error}`,
+    );
     process.exitCode = 1;
   })
   .finally(() => mongoose.disconnect());

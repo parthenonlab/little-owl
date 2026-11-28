@@ -8,7 +8,6 @@ import {
 import { UserDocument } from '@parthenonlab/models';
 
 import { COPY } from '@/constants';
-import { LogCode } from '@/enums/logs';
 import { deleteUser, getUser, setDiscordUser } from '@/services/user';
 
 import { checkFeatureEnabled, log, reply } from '../helpers';
@@ -75,7 +74,7 @@ export const AccountLink = {
     });
 
     log({
-      type: LogCode.Activity,
+      type: 'accounts',
       description: `${user.discord_username} aka ${user.discord_name} has linked their Twitch account: ${twitchUser.twitch_username}`,
     });
   },

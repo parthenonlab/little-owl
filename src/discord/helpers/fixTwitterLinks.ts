@@ -1,4 +1,5 @@
-const TWITTER_LINK_REGEX = /https?:\/\/(?:www\.|mobile\.)?(?:x|twitter)\.com\//gi;
+const TWITTER_LINK_REGEX =
+  /https?:\/\/(?:www\.|mobile\.)?(?:x|twitter)\.com\//gi;
 
 /**
  * Replace x.com and twitter.com links with fixvx.com for proper embeds.
