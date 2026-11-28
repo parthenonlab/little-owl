@@ -1,8 +1,10 @@
 import { ApiClient } from '@twurple/api';
 import { RefreshingAuthProvider } from '@twurple/auth';
 
+import { logger } from '@/lib/logger';
+
 if (!process.env.TWITCH_CLIENT_ID || !process.env.TWITCH_CLIENT_SECRET) {
-  console.error('🦉 Error: Twurple Missing Environment Variables');
+  logger.fatal('Twurple missing environment variables');
   process.exit(1);
 }
 

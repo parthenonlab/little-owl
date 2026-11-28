@@ -1,8 +1,7 @@
 import { GuildMember } from 'discord.js';
 
 import { CONFIG } from '@/constants';
-import { LogCode } from '@/enums/logs';
-import { formatError } from '@/lib/utils';
+import { logger } from '@/lib/logger';
 
 import { log } from '../helpers';
 
@@ -23,14 +22,14 @@ export const onGuildMemberAdd = async (member: GuildMember) => {
     await member.roles.add(welcomeRole.id || CONFIG.ROLES.DEFAULT.ID);
 
     log({
-      type: LogCode.Activity,
+      type: 'members',
       description: `${member.user.username} aka ${member.displayName} has joined the server.`,
       footer: `Discord User ID: ${member.id}`,
     });
   } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: formatError(error),
-    });
+    logger.error(
+      { err: error, discordId: member.id },
+      'Failed to add welcome role',
+    );
   }
 };

@@ -1,5 +1,18 @@
 import mongoose from 'mongoose';
 
+import { logger } from '@/lib/logger';
+
+/** Log connection drops and recoveries after the initial connect. */
+const addConnectionListeners = () => {
+  const { connection } = mongoose;
+
+  connection.on('disconnected', () => logger.warn('Database connection lost'));
+  connection.on('reconnected', () => logger.info('Database reconnected'));
+  connection.on('error', error =>
+    logger.error({ err: error }, 'Database connection error'),
+  );
+};
+
 /**
  * Connect to MongoDB using environment variables.
  * Selects the test database when STAGING is set, otherwise production.
@@ -12,7 +25,7 @@ export const connectDatabase = async () => {
     : process.env.MONGODB_DB;
 
   if (!mongodbURL || !databaseName) {
-    console.error('🦉 Error: MongoDB Missing Environment Variables');
+    logger.fatal('MongoDB missing environment variables');
     process.exit(1);
   }
 
@@ -20,9 +33,10 @@ export const connectDatabase = async () => {
 
   try {
     await mongoose.connect(dbURL);
-    console.log('🦉 Little Owl: Database Connected');
+    logger.info({ database: databaseName }, 'Database connected');
+    addConnectionListeners();
   } catch (error) {
-    console.error('🦉 Error: ' + error);
+    logger.fatal({ err: error }, 'Database connection failed');
     process.exit(1);
   }
 };

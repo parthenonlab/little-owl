@@ -7,12 +7,11 @@ import {
 } from 'discord.js';
 
 import { CONFIG, COPY, EMOJIS } from '@/constants';
-import { LogCode } from '@/enums/logs';
-import { formatError } from '@/lib/utils';
+import { logger } from '@/lib/logger';
 import { getActivity, updateActivity } from '@/services/activity';
 import { incDiscordUser } from '@/services/user';
 
-import { checkFeatureEnabled, log, reply } from '../helpers';
+import { checkFeatureEnabled, reply } from '../helpers';
 
 const CLAIM_AMOUNTS = {
   BASE: 250,
@@ -108,7 +107,14 @@ export const Claim = {
     try {
       await interaction.reply({ embeds: [embed] });
     } catch (error) {
-      log({ type: LogCode.Error, description: formatError(error) });
+      logger.error(
+        {
+          err: error,
+          command: COPY.CLAIM.NAME,
+          discordId: interaction.user.id,
+        },
+        'Failed to reply to command',
+      );
     }
   },
   getName: (): string => COPY.CLAIM.NAME,

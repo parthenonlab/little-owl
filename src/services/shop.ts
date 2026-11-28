@@ -1,8 +1,6 @@
 import { DEFAULT_SHOP_STATE } from '@/constants/pokemon';
-import { log } from '@/discord/helpers/log';
-import { LogCode } from '@/enums/logs';
 import { ShopDocument, ShopState } from '@/interfaces/shop';
-import { formatError } from '@/lib/utils';
+import { logger } from '@/lib/logger';
 import { ShopModel } from '@/models/shop';
 
 export const findOrCreateShop = async (): Promise<ShopDocument | null> => {
@@ -13,7 +11,7 @@ export const findOrCreateShop = async (): Promise<ShopDocument | null> => {
       { returnDocument: 'after', upsert: true },
     );
   } catch (error) {
-    log({ type: LogCode.Error, description: formatError(error) });
+    logger.error({ err: error }, 'Failed to find or create shop');
     return null;
   }
 };
@@ -28,7 +26,7 @@ export const setShopStock = async (
       { returnDocument: 'after' },
     );
   } catch (error) {
-    log({ type: LogCode.Error, description: formatError(error) });
+    logger.error({ err: error, stock }, 'Failed to set shop stock');
     return null;
   }
 };

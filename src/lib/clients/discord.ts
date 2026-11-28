@@ -1,11 +1,12 @@
 import { ActivityType, Client, Events, GatewayIntentBits } from 'discord.js';
 
+import { logger, withErrorLogging } from '@/lib/logger';
 import { syncDiscordSubscribers } from '@/services/user';
 
 import { getENV } from '../config';
 
 if (!process.env.DISCORD_TOKEN) {
-  console.error('🦉 Error: Discord.js Missing Environment Variables');
+  logger.fatal('Discord.js missing environment variables');
   process.exit(1);
 }
 
@@ -23,8 +24,8 @@ const discord = new Client({
   ],
 });
 
-discord.on(Events.ClientReady, async () => {
-  console.log('🦉 Little Owl: Discord.js Connected');
+const onReady = async () => {
+  logger.info('Discord.js connected');
 
   const isStaging = process.env.STAGING;
 
@@ -34,9 +35,12 @@ discord.on(Events.ClientReady, async () => {
 
     if (guild.available) {
       await syncDiscordSubscribers(guild);
-      console.log('🦉 Little Owl: Subscribers Synced');
+      logger.info('Subscribers synced');
     } else {
-      console.error('🦉 Little Owl: Guild Unavailable for Subscriber Sync');
+      logger.error(
+        { guildId: SERVER_ID },
+        'Guild unavailable for subscriber sync',
+      );
     }
   }
 
@@ -44,8 +48,32 @@ discord.on(Events.ClientReady, async () => {
     name: isStaging ? 'IN DEV MODE' : `I'm Athena's little companion. <3`,
     type: ActivityType.Custom,
   });
-});
+};
 
-discord.login(process.env.DISCORD_TOKEN);
+discord.on(
+  Events.ClientReady,
+  withErrorLogging('Discord event handler failed', { event: 'ready' }, onReady),
+);
+
+discord.on(Events.Error, error =>
+  logger.error({ err: error }, 'Discord.js client error'),
+);
+discord.on(Events.Warn, warning =>
+  logger.warn({ warning }, 'Discord.js warning'),
+);
+discord.on(Events.ShardDisconnect, ({ code }, shardId) =>
+  logger.warn({ code, shardId }, 'Discord.js shard disconnected'),
+);
+discord.on(Events.ShardReconnecting, shardId =>
+  logger.info({ shardId }, 'Discord.js shard reconnecting'),
+);
+discord.on(Events.ShardResume, (shardId, replayedEvents) =>
+  logger.info({ shardId, replayedEvents }, 'Discord.js shard resumed'),
+);
+
+discord.login(process.env.DISCORD_TOKEN).catch(error => {
+  logger.fatal({ err: error }, 'Discord.js login failed');
+  process.exit(1);
+});
 
 export { discord };

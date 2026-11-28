@@ -1,32 +1,25 @@
 import cron from 'node-cron';
 
 import {
-  log,
   restockShopDaily,
   restockShopWeekly,
   sendServerGreeting,
   updateBotActivity,
 } from '@/discord/helpers';
 
-import { LogCode } from '@/enums/logs';
 import { BotState } from '@/interfaces/bot';
-import { formatError } from '@/lib/utils';
+import { logger, withErrorLogging } from '@/lib/logger';
 import { chatReminder } from '@/twitch/helpers';
 
-const safe = (fn: () => Promise<void>) => async () => {
-  try {
-    await fn();
-  } catch (error) {
-    log({ type: LogCode.Error, description: formatError(error) });
-  }
-};
+const safe = (task: string, fn: () => Promise<void>) =>
+  withErrorLogging('Scheduled task failed', { task }, fn);
 
 export const scheduleTasks = (state: BotState) => {
   // Update bot activity and send Twitch chat reminder every HH:00 and HH:30
   state.timers.push(
     cron.schedule(
       '0,30 * * * *',
-      safe(async () => {
+      safe('activityAndReminder', async () => {
         updateBotActivity(state);
         await chatReminder(state);
       }),
@@ -37,7 +30,7 @@ export const scheduleTasks = (state: BotState) => {
   state.timers.push(
     cron.schedule(
       '0 7 * * *',
-      safe(() => sendServerGreeting()),
+      safe('serverGreeting', () => sendServerGreeting()),
     ),
   );
 
@@ -45,7 +38,7 @@ export const scheduleTasks = (state: BotState) => {
   state.timers.push(
     cron.schedule(
       '0 0 * * *',
-      safe(() => restockShopDaily(state)),
+      safe('restockDaily', () => restockShopDaily(state)),
     ),
   );
 
@@ -53,9 +46,9 @@ export const scheduleTasks = (state: BotState) => {
   state.timers.push(
     cron.schedule(
       '0 12 * * 0',
-      safe(() => restockShopWeekly(state)),
+      safe('restockWeekly', () => restockShopWeekly(state)),
     ),
   );
 
-  console.log('🦉 Little Owl: Scheduled Tasks Added');
+  logger.info('Scheduled tasks added');
 };

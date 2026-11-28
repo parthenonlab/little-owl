@@ -2,7 +2,7 @@
 
 Little Owl uses [Twurple](https://twurple.js.org/) for Twitch:
 
-- **Reading:** EventSub over WebSocket. The bot subscribes to `channel.chat.message`, `channel.chat.notification` (subs, resubs, gifts, raids), and `channel.moderate` (bans, timeouts).
+- **Reading:** EventSub over WebSocket. The bot subscribes to `channel.chat.message`, `channel.chat.notification` (subs, resubs, gifts, raids), and `channel.moderate` (bans, unbans, timeouts, untimeouts, message deletions).
 - **Sending:** the Helix Send Chat Message API with an app token, so messages show the Chat Bot badge. Chat commands like `/me` aren't supported.
 
 Everything runs on the bot account's token, so **the bot account must be a moderator in the channel**.
@@ -35,11 +35,11 @@ Re-run it when:
 
 ## Scopes
 
-| Scope                                                                                                                                                                                                                                         | Used for                                                              |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| `user:read:chat`                                                                                                                                                                                                                              | Reading chat messages and notifications                               |
-| `user:write:chat`, `user:bot`                                                                                                                                                                                                                 | Sending chat messages with the Chat Bot badge                         |
-| `moderator:read:banned_users`, `moderator:read:blocked_terms`, `moderator:read:chat_messages`, `moderator:read:chat_settings`, `moderator:read:moderators`, `moderator:read:unban_requests`, `moderator:read:vips`, `moderator:read:warnings` | `channel.moderate` v2 (bans and timeouts), which requires all of them |
+| Scope                                                                                                                                                                                                                                         | Used for                                                                                                  |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `user:read:chat`                                                                                                                                                                                                                              | Reading chat messages and notifications                                                                   |
+| `user:write:chat`, `user:bot`                                                                                                                                                                                                                 | Sending chat messages with the Chat Bot badge                                                             |
+| `moderator:read:banned_users`, `moderator:read:blocked_terms`, `moderator:read:chat_messages`, `moderator:read:chat_settings`, `moderator:read:moderators`, `moderator:read:unban_requests`, `moderator:read:vips`, `moderator:read:warnings` | `channel.moderate` v2 (bans, unbans, timeouts, untimeouts, message deletions), which requires all of them |
 
 ## Stream Status
 

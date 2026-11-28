@@ -1,7 +1,6 @@
 import { EventSubChannelChatResubNotificationEvent } from '@twurple/eventsub-base';
 
 import { log } from '@/discord/helpers';
-import { LogCode } from '@/enums/logs';
 import { findOrCreateTwitchUser, setTwitchUser } from '@/services/user';
 
 export const onResub = async (
@@ -10,7 +9,7 @@ export const onResub = async (
   const { chatterId, chatterName, cumulativeMonths, streakMonths } = event;
 
   log({
-    type: LogCode.Alert,
+    type: 'twitchNotifications',
     description: `${chatterName} has resubbed to the channel!\n\nTotal: ${cumulativeMonths}\nStreak: ${
       streakMonths ?? 'not shared'
     }\nMessage: ${event.messageText}`,

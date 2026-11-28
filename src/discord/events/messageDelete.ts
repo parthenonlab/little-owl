@@ -1,29 +1,42 @@
 import { Message, PartialMessage } from 'discord.js';
 
-import { LogCode } from '@/enums/logs';
+import { truncateAtWord } from '@/lib/utils';
 
 import { log } from '../helpers';
 
+// Keeps the content within the 4096-character embed description limit
+const MAX_CONTENT_LENGTH = 3500;
+
 export const onMessageDelete = async (message: Message | PartialMessage) => {
-  let logMessage = `Message Deleted In: ${message.channel}\nAuthor: ${message.author?.username}`;
+  const { attachments, author, cleanContent } = message;
 
-  if (message.cleanContent) {
-    const text = message.cleanContent.length > 0 ? message.cleanContent : null;
-    if (text) logMessage += `\n\nContent: ${text}`;
+  const lines = [
+    `Message Deleted In: ${message.channel}`,
+    `Author: ${author?.username ?? 'Unknown'}`,
+  ];
+
+  if (cleanContent) {
+    lines.push(
+      `\nContent: ${truncateAtWord(cleanContent, MAX_CONTENT_LENGTH)}`,
+    );
   }
 
-  if (message.attachments.size > 0) {
-    logMessage += `\n\nAttached Files:`;
-    message.attachments.forEach(message => {
-      logMessage += `\n${message.url}`;
-    });
+  if (attachments.size > 0) {
+    lines.push('\nAttached Files:', ...attachments.map(file => file.url));
   }
+
+  const footer = [
+    author && `Discord User ID: ${author.id}`,
+    `Posted on ${message.createdAt}`,
+  ]
+    .filter(Boolean)
+    .join('\n');
 
   log({
-    type: LogCode.Deleted,
-    description: logMessage,
+    type: 'messages',
+    description: lines.join('\n'),
     authorIcon: message.guild?.iconURL() || undefined,
-    thumbnail: message.author?.displayAvatarURL() || undefined,
-    footer: `Discord User ID: ${message.author?.id}\nPosted on ${message.createdAt}`,
+    thumbnail: author?.displayAvatarURL() || undefined,
+    footer,
   });
 };

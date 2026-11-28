@@ -4,9 +4,7 @@ import { UserDocument, UserModel } from '@parthenonlab/models';
 import { User } from '@parthenonlab/types';
 
 import { CONFIG } from '@/constants';
-import { log } from '@/discord/helpers/log';
-import { LogCode } from '@/enums/logs';
-import { formatError } from '@/lib/utils';
+import { logger } from '@/lib/logger';
 
 type NumericUserField = {
   [K in keyof User]: User[K] extends number ? K : never;
@@ -37,15 +35,18 @@ const incUser = async (
     );
 
     if (!user) {
-      log({
-        type: LogCode.Error,
-        description: `Increment ${label}: No user found with filter: ${JSON.stringify(filter)}`,
-      });
+      logger.warn(
+        { filter, field, amount },
+        `Increment ${label}: no user found`,
+      );
     }
 
     return user;
   } catch (error) {
-    log({ type: LogCode.Error, description: formatError(error) });
+    logger.error(
+      { err: error, filter, field, amount },
+      `Increment ${label} failed`,
+    );
     return null;
   }
 };
@@ -68,7 +69,7 @@ const setUser = async (
       { returnDocument: 'after' },
     );
   } catch (error) {
-    log({ type: LogCode.Error, description: formatError(error) });
+    logger.error({ err: error, filter, payload }, 'Failed to set user');
     return null;
   }
 };
@@ -85,7 +86,7 @@ const deleteUserBy = async (
   try {
     return await UserModel.findOneAndDelete(filter);
   } catch (error) {
-    log({ type: LogCode.Error, description: formatError(error) });
+    logger.error({ err: error, filter }, 'Failed to delete user');
     return null;
   }
 };
@@ -124,7 +125,7 @@ const findOrCreateUser = async (
       { upsert: true, returnDocument: 'after' },
     );
   } catch (error) {
-    log({ type: LogCode.Error, description: formatError(error) });
+    logger.error({ err: error, filter }, 'Failed to find or create user');
     return null;
   }
 };
@@ -166,7 +167,7 @@ const getUserBy = async (
   try {
     return await UserModel.findOne(filter);
   } catch (error) {
-    log({ type: LogCode.Error, description: formatError(error) });
+    logger.error({ err: error, filter }, 'Failed to get user');
     return null;
   }
 };
@@ -197,7 +198,10 @@ export const getDiscordLeaderboard = async (
       .sort([[category, -1]])
       .limit(max);
   } catch (error) {
-    log({ type: LogCode.Error, description: formatError(error) });
+    logger.error(
+      { err: error, category, max },
+      'Failed to get Discord leaderboard',
+    );
     return [];
   }
 };
@@ -220,7 +224,10 @@ export const getDiscordUserRank = async (
     });
     return rank + 1;
   } catch (error) {
-    log({ type: LogCode.Error, description: formatError(error) });
+    logger.error(
+      { err: error, category, value },
+      'Failed to get Discord user rank',
+    );
     return null;
   }
 };
@@ -317,6 +324,9 @@ export const syncDiscordSubscribers = async (guild: Guild) => {
 
     await UserModel.bulkWrite(operations);
   } catch (error) {
-    log({ type: LogCode.Error, description: formatError(error) });
+    logger.error(
+      { err: error, guildId: guild.id },
+      'Failed to sync Discord subscribers',
+    );
   }
 };

@@ -1,4 +1,4 @@
-jest.mock('@/discord/helpers', () => ({ log: jest.fn() }));
+jest.mock('@/lib/logger', () => ({ logger: { error: jest.fn() } }));
 jest.mock('@/lib/clients', () => ({
   helix: { users: { getUsersByNames: jest.fn() } },
   twitchAuth: {
@@ -12,8 +12,8 @@ jest.mock('@/services/token', () => ({
   saveTwitchToken: jest.fn(),
 }));
 
-import { log } from '@/discord/helpers';
 import { helix, twitchAuth } from '@/lib/clients';
+import { logger } from '@/lib/logger';
 import { getTwitchToken, saveTwitchToken } from '@/services/token';
 import { initTwitchAuth } from '@/twitch/helpers/initTwitchAuth';
 
@@ -73,7 +73,7 @@ describe('initTwitchAuth', () => {
       .calls[0][0];
     onFailure('143', new Error('invalid refresh token'));
 
-    expect(log).toHaveBeenCalled();
+    expect(logger.error).toHaveBeenCalled();
   });
 
   it('throws when USERNAME or CHANNELS is missing', async () => {

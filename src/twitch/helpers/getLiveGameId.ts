@@ -1,7 +1,5 @@
-import { log } from '@/discord/helpers';
-import { LogCode } from '@/enums/logs';
 import { helix } from '@/lib/clients';
-import { formatError } from '@/lib/utils';
+import { logger } from '@/lib/logger';
 
 /**
  * Get the Twitch category ID the broadcaster is currently streaming in.
@@ -17,7 +15,7 @@ export const getLiveGameId = async (
 
     return stream?.gameId ?? null;
   } catch (error) {
-    log({ type: LogCode.Error, description: formatError(error) });
+    logger.error({ err: error, broadcasterId }, 'Failed to get live game ID');
     return null;
   }
 };

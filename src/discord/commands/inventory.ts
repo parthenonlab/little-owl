@@ -14,10 +14,10 @@ import { UserDocument } from '@parthenonlab/models';
 
 import { CONFIG, COPY } from '@/constants';
 import { POKEBALLS, POKEMON_IMAGE_URLS } from '@/constants/pokemon';
-import { LogCode } from '@/enums/logs';
 import { InventoryDocument } from '@/interfaces/inventory';
 import { PokeballObject } from '@/interfaces/pokemon';
-import { formatError, formatNumberToString } from '@/lib/utils';
+import { logger } from '@/lib/logger';
+import { formatNumberToString } from '@/lib/utils';
 
 import {
   findOrCreateInventory,
@@ -30,7 +30,6 @@ import {
   checkFeatureEnabled,
   getTotalBalls,
   getUpgradePrice,
-  log,
   reply,
 } from '../helpers';
 
@@ -121,10 +120,14 @@ export const Inventory = {
         components: row ? [row] : [],
       });
     } catch (error) {
-      log({
-        type: LogCode.Error,
-        description: formatError(error),
-      });
+      logger.error(
+        {
+          err: error,
+          command: COPY.INVENTORY.NAME,
+          discordId: interaction.user.id,
+        },
+        'Failed to reply to command',
+      );
     }
   },
   getName: (): string => {
@@ -184,10 +187,14 @@ export const Inventory = {
         components: [],
       });
     } catch (error) {
-      log({
-        type: LogCode.Error,
-        description: formatError(error),
-      });
+      logger.error(
+        {
+          err: error,
+          command: COPY.INVENTORY.NAME,
+          discordId: interaction.user.id,
+        },
+        'Failed to update interaction',
+      );
     }
   },
 };

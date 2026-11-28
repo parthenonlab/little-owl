@@ -1,3 +1,5 @@
+import { logger } from '@/lib/logger';
+
 const ADMIN_SERVER_ID = process.env.ADMIN_SERVER_ID;
 
 const MONGODB_ACTS = process.env.MONGODB_ACTS;
@@ -22,7 +24,7 @@ export const getENV = () => {
     !MONGODB_TOKENS ||
     !SERVER_ID
   ) {
-    console.error('🦉 Error: Missing Necessary Environment Variables');
+    logger.fatal('Missing necessary environment variables');
     process.exit(1);
   }
 

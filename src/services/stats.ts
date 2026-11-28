@@ -1,9 +1,7 @@
 import { StatsDocument, StatsModel } from '@parthenonlab/models';
 import { GambleStats } from '@parthenonlab/types';
 
-import { log } from '@/discord/helpers/log';
-import { LogCode } from '@/enums/logs';
-import { formatError } from '@/lib/utils';
+import { logger } from '@/lib/logger';
 
 /**
  * Delete the stats document for a Discord user.
@@ -17,10 +15,7 @@ export const deleteStats = async (
   try {
     return await StatsModel.findOneAndDelete({ discord_id: id });
   } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: formatError(error),
-    });
+    logger.error({ err: error, discordId: id }, 'Failed to delete stats');
     return null;
   }
 };
@@ -53,10 +48,10 @@ export const updateGambleStats = async (
       { returnDocument: 'after', upsert: true },
     );
   } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: formatError(error),
-    });
+    logger.error(
+      { err: error, discordId: id, won, wager },
+      'Failed to update gamble stats',
+    );
     return null;
   }
 };

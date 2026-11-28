@@ -16,15 +16,10 @@ import { UserDocument } from '@parthenonlab/models';
 
 import { CONFIG, COPY } from '@/constants';
 import { POKEBALLS, POKEMON_IMAGE_URLS } from '@/constants/pokemon';
-import { LogCode } from '@/enums/logs';
 import { BotState } from '@/interfaces/bot';
 import { PokeballObject } from '@/interfaces/pokemon';
-
-import {
-  formatError,
-  formatNumberToCode,
-  formatNumberToString,
-} from '@/lib/utils';
+import { logger } from '@/lib/logger';
+import { formatNumberToCode, formatNumberToString } from '@/lib/utils';
 
 import { findOrCreateInventory, setInventoryBalls } from '@/services/inventory';
 import { setShopStock } from '@/services/shop';
@@ -34,7 +29,6 @@ import {
   checkFeatureEnabled,
   getInventorySpace,
   getShopActions,
-  log,
   reply,
 } from '../helpers';
 
@@ -151,10 +145,10 @@ export const Shop = {
         components: row ? [row] : [],
       });
     } catch (error) {
-      log({
-        type: LogCode.Error,
-        description: formatError(error),
-      });
+      logger.error(
+        { err: error, command: COPY.SHOP.NAME, discordId: interaction.user.id },
+        'Failed to reply to command',
+      );
     }
   },
   getName: (): string => {
@@ -283,10 +277,10 @@ export const Shop = {
         components: row ? [row] : [],
       });
     } catch (error) {
-      log({
-        type: LogCode.Error,
-        description: formatError(error),
-      });
+      logger.error(
+        { err: error, command: COPY.SHOP.NAME, discordId: interaction.user.id },
+        'Failed to update interaction',
+      );
     }
   },
 };

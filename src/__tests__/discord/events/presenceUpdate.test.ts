@@ -1,4 +1,5 @@
 jest.mock('@/discord/helpers', () => ({ log: jest.fn() }));
+jest.mock('@/lib/logger', () => ({ logger: { error: jest.fn() } }));
 
 import {
   Activity,
@@ -17,7 +18,7 @@ import {
 import { CONFIG } from '@/constants';
 import { onPresenceUpdate } from '@/discord/events/presenceUpdate';
 import { log } from '@/discord/helpers';
-import { LogCode } from '@/enums/logs';
+import { logger } from '@/lib/logger';
 
 import { fake, makeBotState } from '../../fixtures';
 
@@ -226,7 +227,7 @@ describe('onPresenceUpdate', () => {
       expect(ctx.add).toHaveBeenCalledWith(ctx.liveRole);
       expect(log).toHaveBeenCalledWith(
         expect.objectContaining({
-          type: LogCode.Activity,
+          type: 'members',
           description: 'athena aka Athena has started streaming.',
         }),
       );
@@ -246,9 +247,7 @@ describe('onPresenceUpdate', () => {
 
       await run(ctx);
 
-      expect(log).toHaveBeenCalledWith(
-        expect.objectContaining({ type: LogCode.Error }),
-      );
+      expect(logger.error).toHaveBeenCalled();
     });
   });
 

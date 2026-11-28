@@ -7,11 +7,10 @@ import {
 } from 'discord.js';
 
 import { COPY, EMOJIS, URLS } from '@/constants';
-import { LogCode } from '@/enums/logs';
 import { isFeatureEnabled } from '@/lib/config';
-import { formatError } from '@/lib/utils';
+import { logger } from '@/lib/logger';
 
-import { checkFeatureEnabled, log } from '../helpers';
+import { checkFeatureEnabled } from '../helpers';
 
 export const Pokedex = {
   data: new SlashCommandBuilder()
@@ -41,10 +40,14 @@ export const Pokedex = {
     try {
       await interaction.reply({ components: [row] });
     } catch (error) {
-      log({
-        type: LogCode.Error,
-        description: formatError(error),
-      });
+      logger.error(
+        {
+          err: error,
+          command: COPY.POKEDEX.NAME,
+          discordId: interaction.user.id,
+        },
+        'Failed to reply to command',
+      );
     }
   },
   getName: (): string => {

@@ -10,7 +10,6 @@ import {
 } from '@/constants';
 
 import { log } from '@/discord/helpers';
-import { LogCode } from '@/enums/logs';
 import { BotState } from '@/interfaces/bot';
 import { getCurrency, isNumber, parseSubMonths } from '@/lib/utils';
 
@@ -70,7 +69,7 @@ export const onChat = async (
     if (!points) return;
 
     log({
-      type: LogCode.Activity,
+      type: 'accounts',
       description: `${chatterName} has claimed ${points} channel points to ${points} ${CONFIG.CURRENCY.PLURAL}!`,
     });
 

@@ -3,9 +3,7 @@ import { UpdateQuery } from 'mongoose';
 import { ActivityDocument, ActivityModel } from '@parthenonlab/models';
 import { ActivityFields } from '@parthenonlab/types';
 
-import { log } from '@/discord/helpers/log';
-import { LogCode } from '@/enums/logs';
-import { formatError } from '@/lib/utils';
+import { logger } from '@/lib/logger';
 
 /**
  * Delete the activity document for a Discord user.
@@ -19,7 +17,7 @@ export const deleteActivity = async (
   try {
     return await ActivityModel.findOneAndDelete({ discord_id: id });
   } catch (error) {
-    log({ type: LogCode.Error, description: formatError(error) });
+    logger.error({ err: error, discordId: id }, 'Failed to delete activity');
     return null;
   }
 };
@@ -42,7 +40,10 @@ export const getActivity = async <K extends keyof ActivityFields>(
     ).lean();
     return (activity?.[feature] as ActivityFields[K]) ?? null;
   } catch (error) {
-    log({ type: LogCode.Error, description: formatError(error) });
+    logger.error(
+      { err: error, discordId: id, feature },
+      'Failed to get activity',
+    );
     return null;
   }
 };
@@ -64,7 +65,10 @@ export const updateActivity = async (
       returnDocument: 'after',
     });
   } catch (error) {
-    log({ type: LogCode.Error, description: formatError(error) });
+    logger.error(
+      { err: error, discordId: id, update },
+      'Failed to update activity',
+    );
     return null;
   }
 };

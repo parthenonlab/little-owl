@@ -8,6 +8,8 @@
 | `yarn dev:register`        | Register Discord slash commands, then keep running in staging mode |
 | `yarn start`               | Run the bot in production mode                                     |
 | `yarn test`                | Run the Jest tests                                                 |
+| `yarn format`              | Format the codebase with Prettier                                  |
+| `yarn format:check`        | Check formatting without changing files                            |
 | `yarn twitch:auth:staging` | Authorize the bot's Twitch account for the staging database        |
 | `yarn twitch:auth`         | Authorize the bot's Twitch account for the production database     |
 
@@ -18,8 +20,11 @@
 - **Database:** `MONGODB_DB_TEST` instead of `MONGODB_DB`
 - **Browser:** profile cards use Puppeteer's bundled Chromium. Production expects a system Chromium at `/usr/lib/chromium/chromium`.
 - **Discord:** skips the subscriber sync on startup and sets the bot's status to "IN DEV MODE"
+- **Console:** the app logger (pino) prints readable, colorized output at `debug` level. Production writes JSON lines to stdout at `info` level. Tests are silent.
 
 Staging and production join the same Twitch channel. Stop the production bot before testing Twitch features locally, or both bots will reply to every command.
+
+Staging also posts to the same Discord log channels as production. If both bots are running, every audit log and forwarded error from events both bots receive is posted twice.
 
 ## Discord Commands
 

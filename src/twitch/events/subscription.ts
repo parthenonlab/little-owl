@@ -1,14 +1,13 @@
 import { EventSubChannelChatSubNotificationEvent } from '@twurple/eventsub-base';
 
 import { log } from '@/discord/helpers';
-import { LogCode } from '@/enums/logs';
 import { findOrCreateTwitchUser, setTwitchUser } from '@/services/user';
 
 export const onSubscription = async (
   event: EventSubChannelChatSubNotificationEvent,
 ) => {
   log({
-    type: LogCode.Alert,
+    type: 'twitchNotifications',
     description: `${event.chatterName} has subscribed to the channel!\n\nMessage: ${event.messageText}`,
   });
 

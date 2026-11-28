@@ -10,12 +10,12 @@ import { UserDocument } from '@parthenonlab/models';
 
 import { FIGTREE_FONT_FACE } from '@/assets/fonts';
 import { COPY, MONTH_MAP } from '@/constants';
-import { LogCode } from '@/enums/logs';
 import { SilverIcon, StarIcon } from '@/icons';
-import { formatError, formatNumberToString, parseHexToRGB } from '@/lib/utils';
+import { logger } from '@/lib/logger';
+import { formatNumberToString, parseHexToRGB } from '@/lib/utils';
 import { getDiscordUserRank, setDiscordUser } from '@/services/user';
 
-import { checkFeatureEnabled, log, useBrowser } from '../helpers';
+import { checkFeatureEnabled, useBrowser } from '../helpers';
 
 /**
  * Render the profile card HTML and screenshot the `#profile` element.
@@ -236,10 +236,14 @@ export const Profile = {
           });
         }
       } catch (error) {
-        log({
-          type: LogCode.Error,
-          description: formatError(error),
-        });
+        logger.error(
+          {
+            err: error,
+            command: COPY.PROFILE.NAME,
+            discordId: interaction.user.id,
+          },
+          'Failed to send profile card',
+        );
       }
     });
   },

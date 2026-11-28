@@ -3,8 +3,11 @@ jest.mock('@/services/user', () => ({ deleteTwitchUser: jest.fn() }));
 
 import {
   EventSubChannelBanModerationEvent,
+  EventSubChannelDeleteModerationEvent,
   EventSubChannelModerationEvent,
   EventSubChannelTimeoutModerationEvent,
+  EventSubChannelUnbanModerationEvent,
+  EventSubChannelUntimeoutModerationEvent,
 } from '@twurple/eventsub-base';
 
 import { log } from '@/discord/helpers';
@@ -30,6 +33,11 @@ const makeTimeout = (expiryDate: Date, reason = '') =>
     reason,
   });
 
+const platforms = () =>
+  (log as jest.Mock).mock.calls.map(
+    ([props]) => `${props.type}:${props.platform}`,
+  );
+
 const descriptions = () =>
   (log as jest.Mock).mock.calls.map(([props]) => props.description);
 
@@ -43,6 +51,7 @@ describe('onModerate', () => {
       await onModerate(makeBan());
 
       expect(deleteTwitchUser).toHaveBeenCalledWith('123');
+      expect(platforms()).toEqual(['moderation:twitch', 'accounts:undefined']);
       expect(descriptions()).toEqual([
         'troll has been banned from athena!',
         'Record for troll has been removed from the users collection.',
@@ -81,6 +90,52 @@ describe('onModerate', () => {
     });
   });
 
+  describe('delete', () => {
+    it('logs the deleted message as Twitch moderation', async () => {
+      await onModerate(
+        fake<EventSubChannelDeleteModerationEvent>({
+          ...TARGET,
+          moderationAction: 'delete',
+          moderatorName: 'mod',
+          messageText: 'spam spam',
+        }),
+      );
+
+      expect(descriptions()).toEqual([
+        'mod deleted a message from troll.\n\nMessage: spam spam',
+      ]);
+      expect(platforms()).toEqual(['moderation:twitch']);
+    });
+  });
+
+  describe('unban', () => {
+    it('logs the unban as Twitch moderation', async () => {
+      await onModerate(
+        fake<EventSubChannelUnbanModerationEvent>({
+          ...TARGET,
+          moderationAction: 'unban',
+        }),
+      );
+
+      expect(descriptions()).toEqual(['troll has been unbanned from athena.']);
+      expect(platforms()).toEqual(['moderation:twitch']);
+    });
+  });
+
+  describe('untimeout', () => {
+    it('logs the removed timeout as Twitch moderation', async () => {
+      await onModerate(
+        fake<EventSubChannelUntimeoutModerationEvent>({
+          ...TARGET,
+          moderationAction: 'untimeout',
+        }),
+      );
+
+      expect(descriptions()).toEqual(["troll's timeout has been removed."]);
+      expect(platforms()).toEqual(['moderation:twitch']);
+    });
+  });
+
   // Literal actions per case so each fake matches one member of the event union
   const IGNORED: EventSubChannelModerationEvent[] = [
     fake<EventSubChannelModerationEvent>({
@@ -89,8 +144,12 @@ describe('onModerate', () => {
     fake<EventSubChannelModerationEvent>({
       moderationAction: 'shared_chat_timeout',
     }),
-    fake<EventSubChannelModerationEvent>({ moderationAction: 'delete' }),
-    fake<EventSubChannelModerationEvent>({ moderationAction: 'unban' }),
+    fake<EventSubChannelModerationEvent>({
+      moderationAction: 'shared_chat_delete',
+    }),
+    fake<EventSubChannelModerationEvent>({
+      moderationAction: 'shared_chat_unban',
+    }),
   ];
 
   it.each(IGNORED.map(event => [event.moderationAction, event] as const))(

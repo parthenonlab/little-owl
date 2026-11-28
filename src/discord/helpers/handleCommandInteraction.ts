@@ -34,7 +34,7 @@ export const handleCommandInteraction = async (
   // command: link
   if (interaction.commandName === dc.AccountLink.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);
-    if (user) dc.AccountLink.execute(interaction, user);
+    if (user) await dc.AccountLink.execute(interaction, user);
   }
 
   // command: help
@@ -79,13 +79,13 @@ export const handleCommandInteraction = async (
   // command: claim
   if (interaction.commandName === dc.Claim.getName()) {
     const member = await interaction.guild?.members.fetch(interaction.user.id);
-    if (member) dc.Claim.execute(interaction, member);
+    if (member) await dc.Claim.execute(interaction, member);
   }
 
   // command: points
   else if (interaction.commandName === dc.Points.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);
-    if (user) dc.Points.execute(interaction, user);
+    if (user) await dc.Points.execute(interaction, user);
   }
 
   // command: explore
@@ -105,19 +105,19 @@ export const handleCommandInteraction = async (
     }
 
     const user = await findOrCreateDiscordUser(interaction.user);
-    if (user) dc.Gamble.execute(interaction, user);
+    if (user) await dc.Gamble.execute(interaction, user);
   }
 
   // command: inventory
   else if (interaction.commandName === dc.Inventory.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);
-    if (user) dc.Inventory.execute(interaction, user);
+    if (user) await dc.Inventory.execute(interaction, user);
   }
 
   // command: shop
   else if (interaction.commandName === dc.Shop.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);
-    if (user) dc.Shop.execute(state, interaction, user);
+    if (user) await dc.Shop.execute(state, interaction, user);
   }
 
   // command: pokedex
@@ -128,7 +128,7 @@ export const handleCommandInteraction = async (
   // command: profile
   else if (interaction.commandName === dc.Profile.getName()) {
     const user = await findOrCreateDiscordUser(interaction.user);
-    if (user) dc.Profile.execute(interaction, user);
+    if (user) await dc.Profile.execute(interaction, user);
   }
 
   // command: leaderboard

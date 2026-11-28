@@ -2,9 +2,7 @@ import { nanoid } from 'nanoid';
 
 import { CatchDocument, CatchModel } from '@parthenonlab/models';
 
-import { log } from '@/discord/helpers/log';
-import { LogCode } from '@/enums/logs';
-import { formatError } from '@/lib/utils';
+import { logger } from '@/lib/logger';
 
 interface CreateCatchParams {
   discord_id: string;
@@ -26,10 +24,10 @@ export const getPCBoxCount = async (discord_id: string): Promise<number> => {
   try {
     return await CatchModel.countDocuments({ discord_id });
   } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: formatError(error),
-    });
+    logger.error(
+      { err: error, discordId: discord_id },
+      'Failed to count PC Box',
+    );
     return 0;
   }
 };
@@ -54,10 +52,7 @@ export const createCatch = async (
 
     return pokemonCatch;
   } catch (error) {
-    log({
-      type: LogCode.Error,
-      description: formatError(error),
-    });
+    logger.error({ err: error, catch: params }, 'Failed to create catch');
     return null;
   }
 };

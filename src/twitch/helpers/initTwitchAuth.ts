@@ -1,8 +1,6 @@
-import { log } from '@/discord/helpers';
-import { LogCode } from '@/enums/logs';
 import { TwitchIds } from '@/interfaces/bot';
 import { helix, twitchAuth } from '@/lib/clients';
-import { formatError } from '@/lib/utils';
+import { logger } from '@/lib/logger';
 import { getTwitchToken, saveTwitchToken } from '@/services/token';
 
 /**
@@ -42,10 +40,10 @@ export const initTwitchAuth = async (): Promise<TwitchIds> => {
 
   twitchAuth.onRefresh((userId, newToken) => saveTwitchToken(userId, newToken));
   twitchAuth.onRefreshFailure((userId, error) =>
-    log({
-      type: LogCode.Error,
-      description: `Twitch token refresh failed for ${userId}: ${formatError(error)}`,
-    }),
+    logger.error(
+      { err: error, twitchId: userId },
+      'Twitch token refresh failed',
+    ),
   );
   twitchAuth.addUser(bot.id, token);
 

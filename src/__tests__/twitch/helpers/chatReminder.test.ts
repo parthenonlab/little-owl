@@ -1,12 +1,12 @@
-jest.mock('@/discord/helpers', () => ({ log: jest.fn() }));
+jest.mock('@/lib/logger', () => ({ logger: { error: jest.fn() } }));
 jest.mock('@/lib/clients', () => ({
   helix: { streams: { getStreamByUserId: jest.fn() } },
 }));
 jest.mock('@/twitch/helpers/say', () => ({ say: jest.fn() }));
 
 import { CONFIG, COPY } from '@/constants';
-import { log } from '@/discord/helpers';
 import { helix } from '@/lib/clients';
+import { logger } from '@/lib/logger';
 import { chatReminder } from '@/twitch/helpers/chatReminder';
 import { say } from '@/twitch/helpers/say';
 
@@ -97,7 +97,7 @@ describe('chatReminder', () => {
 
     await chatReminder(state);
 
-    expect(log).toHaveBeenCalled();
+    expect(logger.error).toHaveBeenCalled();
     expect(say).toHaveBeenCalledWith(IDS, REMINDERS[owIndex + 1].message);
   });
 });

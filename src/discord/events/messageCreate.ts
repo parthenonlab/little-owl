@@ -1,13 +1,13 @@
 import { Message } from 'discord.js';
 
 import { CONFIG, EMOJIS } from '@/constants';
-import { LogCode } from '@/enums/logs';
 import { discord } from '@/lib/clients';
 import { getENV, isFeatureEnabled } from '@/lib/config';
-import { formatError, truncateAtWord } from '@/lib/utils';
+import { logger } from '@/lib/logger';
+import { truncateAtWord } from '@/lib/utils';
 import { findOrCreateDiscordUser, incDiscordUser } from '@/services/user';
 
-import { fixTwitterLinks, log } from '../helpers';
+import { fixTwitterLinks } from '../helpers';
 
 const MAX_MESSAGE_LENGTH = 2000;
 
@@ -39,7 +39,10 @@ const repostFixedTwitterLinks = async (message: Message): Promise<boolean> => {
     await message.delete();
     return true;
   } catch (error) {
-    log({ type: LogCode.Error, description: formatError(error) });
+    logger.error(
+      { err: error, discordId: message.author.id },
+      'Failed to repost fixed Twitter links',
+    );
     return false;
   }
 };

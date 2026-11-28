@@ -1,5 +1,7 @@
 import { EventSubWsListener } from '@twurple/eventsub-ws';
 
+import { logger } from '@/lib/logger';
+
 import { helix } from './helix';
 
 /**
@@ -9,13 +11,16 @@ import { helix } from './helix';
 const eventsub = new EventSubWsListener({ apiClient: helix });
 
 eventsub.onUserSocketConnect(() => {
-  console.log('🦉 Little Owl: EventSub Connected');
+  logger.info('EventSub connected');
 });
 
 eventsub.onUserSocketDisconnect((_userId, error) => {
-  console.error(
-    `🦉 Little Owl: EventSub Disconnected${error ? ` (${error.message})` : ''}`,
-  );
+  if (error) {
+    logger.error({ err: error }, 'EventSub disconnected');
+    return;
+  }
+
+  logger.warn('EventSub disconnected');
 });
 
 export { eventsub };

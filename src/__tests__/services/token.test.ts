@@ -1,9 +1,9 @@
-jest.mock('@/discord/helpers/log', () => ({ log: jest.fn() }));
+jest.mock('@/lib/logger', () => ({ logger: { error: jest.fn() } }));
 jest.mock('@/models/token', () => ({
   TokenModel: { findOne: jest.fn(), updateOne: jest.fn() },
 }));
 
-import { log } from '@/discord/helpers/log';
+import { logger } from '@/lib/logger';
 import { TokenModel } from '@/models/token';
 import { getTwitchToken, saveTwitchToken } from '@/services/token';
 
@@ -50,7 +50,7 @@ describe('token service', () => {
       });
 
       await expect(getTwitchToken('123')).resolves.toBeNull();
-      expect(log).toHaveBeenCalled();
+      expect(logger.error).toHaveBeenCalled();
     });
   });
 
@@ -71,7 +71,7 @@ describe('token service', () => {
 
       await saveTwitchToken('123', TOKEN);
 
-      expect(log).toHaveBeenCalled();
+      expect(logger.error).toHaveBeenCalled();
     });
   });
 });
