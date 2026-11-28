@@ -1,9 +1,6 @@
 import { model, Schema } from 'mongoose';
 
 import { Inventory } from '@/interfaces/inventory';
-import { getENV } from '@/lib/config';
-
-const { MONGODB_INVENTORY } = getENV();
 
 const inventorySchema = new Schema<Inventory>(
   {
@@ -16,7 +13,7 @@ const inventorySchema = new Schema<Inventory>(
       masterball: { type: Number, default: 0 },
     },
   },
-  { collection: MONGODB_INVENTORY, versionKey: false },
+  { collection: 'inventories', versionKey: false },
 );
 
 export const InventoryModel = model<Inventory>('Inventory', inventorySchema);

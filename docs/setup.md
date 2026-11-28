@@ -22,15 +22,11 @@ Create a `.env` file in the project root. Ask Athena for the values.
 
 ### MongoDB
 
-| Variable            | Description                                       |
-| ------------------- | ------------------------------------------------- |
-| `MONGODB_URL`       | Cluster connection URL, without the database name |
-| `MONGODB_DB`        | Production database name                          |
-| `MONGODB_DB_TEST`   | Staging database name, used when `STAGING=true`   |
-| `MONGODB_ACTS`      | Collection name for activities                    |
-| `MONGODB_INVENTORY` | Collection name for inventories                   |
-| `MONGODB_SHOP`      | Collection name for the shop                      |
-| `MONGODB_TOKENS`    | Collection name for Twitch OAuth tokens           |
+| Variable          | Description                                       |
+| ----------------- | ------------------------------------------------- |
+| `MONGODB_URL`     | Cluster connection URL, without the database name |
+| `MONGODB_DB`      | Production database name                          |
+| `MONGODB_DB_TEST` | Staging database name, used when `STAGING=true`   |
 
 ### Discord
 

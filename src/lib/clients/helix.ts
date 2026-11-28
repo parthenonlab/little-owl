@@ -1,19 +1,16 @@
 import { ApiClient } from '@twurple/api';
 import { RefreshingAuthProvider } from '@twurple/auth';
 
-import { logger } from '@/lib/logger';
+import { getENV } from '@/lib/config';
 
-if (!process.env.TWITCH_CLIENT_ID || !process.env.TWITCH_CLIENT_SECRET) {
-  logger.fatal('Twurple missing environment variables');
-  process.exit(1);
-}
+const { TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET } = getENV();
 
 /**
  * Uses the bot's user token once added via `initTwitchAuth()`, and an app token otherwise.
  */
 const twitchAuth = new RefreshingAuthProvider({
-  clientId: process.env.TWITCH_CLIENT_ID,
-  clientSecret: process.env.TWITCH_CLIENT_SECRET,
+  clientId: TWITCH_CLIENT_ID,
+  clientSecret: TWITCH_CLIENT_SECRET,
 });
 
 const helix = new ApiClient({ authProvider: twitchAuth });

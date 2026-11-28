@@ -1,5 +1,6 @@
 import { TwitchIds } from '@/interfaces/bot';
 import { helix, twitchAuth } from '@/lib/clients';
+import { getENV } from '@/lib/config';
 import { logger } from '@/lib/logger';
 import { getTwitchToken, saveTwitchToken } from '@/services/token';
 
@@ -8,17 +9,17 @@ import { getTwitchToken, saveTwitchToken } from '@/services/token';
  * Must run after the database is connected.
  *
  * @returns The bot's and broadcaster's Twitch user IDs. The broadcaster is the first entry in `CHANNELS`.
- * @throws If either user can't be found or no token is stored for the bot.
+ * @throws If `CHANNELS` has no broadcaster, either user can't be found, or no token is stored for the bot.
  */
 export const initTwitchAuth = async (): Promise<TwitchIds> => {
-  const botName = process.env.USERNAME?.toLowerCase();
-  const broadcasterName = process.env.CHANNELS?.split(',')[0]
+  const { CHANNELS, USERNAME } = getENV();
+  const botName = USERNAME.toLowerCase();
+  const broadcasterName = CHANNELS.split(',')[0]
     .trim()
     .replace(/^#/, '')
     .toLowerCase();
 
-  if (!botName || !broadcasterName)
-    throw new Error('Missing USERNAME or CHANNELS');
+  if (!broadcasterName) throw new Error('CHANNELS has no broadcaster');
 
   const users = await helix.users.getUsersByNames([botName, broadcasterName]);
   const bot = users.find(user => user.name === botName);

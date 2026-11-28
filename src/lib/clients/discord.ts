@@ -1,14 +1,10 @@
 import { ActivityType, Client, Events, GatewayIntentBits } from 'discord.js';
 
+import { getENV } from '@/lib/config';
 import { logger, withErrorLogging } from '@/lib/logger';
 import { syncDiscordSubscribers } from '@/services/user';
 
-import { getENV } from '../config';
-
-if (!process.env.DISCORD_TOKEN) {
-  logger.fatal('Discord.js missing environment variables');
-  process.exit(1);
-}
+const { DISCORD_TOKEN, SERVER_ID } = getENV();
 
 const discord = new Client({
   intents: [
@@ -30,7 +26,6 @@ const onReady = async () => {
   const isStaging = process.env.STAGING;
 
   if (!isStaging) {
-    const { SERVER_ID } = getENV();
     const guild = await discord.guilds.fetch(SERVER_ID);
 
     if (guild.available) {
@@ -71,7 +66,7 @@ discord.on(Events.ShardResume, (shardId, replayedEvents) =>
   logger.info({ shardId, replayedEvents }, 'Discord.js shard resumed'),
 );
 
-discord.login(process.env.DISCORD_TOKEN).catch(error => {
+discord.login(DISCORD_TOKEN).catch(error => {
   logger.fatal({ err: error }, 'Discord.js login failed');
   process.exit(1);
 });

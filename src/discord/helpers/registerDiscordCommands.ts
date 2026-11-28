@@ -1,6 +1,7 @@
 import { Routes } from 'discord.js';
 import { REST } from '@discordjs/rest';
 
+import { getENV } from '@/lib/config';
 import { logger } from '@/lib/logger';
 
 import {
@@ -29,25 +30,8 @@ import {
  * and global commands application-wide.
  */
 export const registerDiscordCommands = (): void => {
-  if (!process.env.DISCORD_TOKEN) {
-    logger.fatal('Discord register command missing token');
-    process.exit(1);
-  }
-
-  if (!process.env.DISCORD_CLIENT_ID) {
-    logger.fatal('Discord register command missing client ID');
-    process.exit(1);
-  }
-
-  if (!process.env.SERVER_ID) {
-    logger.fatal('Discord register command missing server ID');
-    process.exit(1);
-  }
-
-  if (!process.env.ADMIN_SERVER_ID) {
-    logger.fatal('Discord register command missing admin server ID');
-    process.exit(1);
-  }
+  const { ADMIN_SERVER_ID, DISCORD_CLIENT_ID, DISCORD_TOKEN, SERVER_ID } =
+    getENV();
 
   const commands = [];
   const commandsGlobal = [];
@@ -76,17 +60,13 @@ export const registerDiscordCommands = (): void => {
   // global commands should be added here
   commandsGlobal.push(Help.data.toJSON());
 
-  const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
+  const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
 
   if (commands.length > 0)
     rest
-      .put(
-        Routes.applicationGuildCommands(
-          process.env.DISCORD_CLIENT_ID,
-          process.env.SERVER_ID,
-        ),
-        { body: commands },
-      )
+      .put(Routes.applicationGuildCommands(DISCORD_CLIENT_ID, SERVER_ID), {
+        body: commands,
+      })
       .then(_data => logger.info('Discord PROD commands registered'))
       .catch(error =>
         logger.error(
@@ -97,7 +77,7 @@ export const registerDiscordCommands = (): void => {
 
   if (commandsGlobal.length > 0)
     rest
-      .put(Routes.applicationCommands(process.env.DISCORD_CLIENT_ID), {
+      .put(Routes.applicationCommands(DISCORD_CLIENT_ID), {
         body: commandsGlobal,
       })
       .then(_data => logger.info('Discord GLOBAL commands registered'))
@@ -111,10 +91,7 @@ export const registerDiscordCommands = (): void => {
   if (commandsStage.length > 0)
     rest
       .put(
-        Routes.applicationGuildCommands(
-          process.env.DISCORD_CLIENT_ID,
-          process.env.ADMIN_SERVER_ID,
-        ),
+        Routes.applicationGuildCommands(DISCORD_CLIENT_ID, ADMIN_SERVER_ID),
         { body: commandsStage },
       )
       .then(_data => logger.info('Discord STAGE commands registered'))

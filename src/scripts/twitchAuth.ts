@@ -14,15 +14,15 @@ import { exchangeCode, getTokenInfo } from '@twurple/auth';
 import mongoose from 'mongoose';
 
 import { connectDatabase } from '@/lib/config/db';
+import { requireEnv } from '@/lib/config/env';
 import { toTokenFields } from '@/lib/utils/twitchToken';
 import { TokenModel } from '@/models/token';
 
+// Keep in sync with the Scopes table in docs/twitch.md
 const SCOPES = [
-  // Chat
   'user:read:chat',
   'user:write:chat',
   'user:bot',
-  // channel.moderate v2 (bans and timeouts) as a moderator; v2 also requires the warnings scope
   'moderator:read:banned_users',
   'moderator:read:blocked_terms',
   'moderator:read:chat_messages',
@@ -34,16 +34,18 @@ const SCOPES = [
 ];
 
 const main = async () => {
-  const clientId = process.env.TWITCH_CLIENT_ID;
-  const clientSecret = process.env.TWITCH_CLIENT_SECRET;
-  const redirectUri = process.env.TWITCH_REDIRECT_URI;
-  const username = process.env.USERNAME?.toLowerCase();
-
-  if (!clientId || !clientSecret || !redirectUri || !username) {
-    throw new Error(
-      'Missing TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET, TWITCH_REDIRECT_URI, or USERNAME',
-    );
-  }
+  const {
+    TWITCH_CLIENT_ID: clientId,
+    TWITCH_CLIENT_SECRET: clientSecret,
+    TWITCH_REDIRECT_URI: redirectUri,
+    USERNAME,
+  } = requireEnv(
+    'TWITCH_CLIENT_ID',
+    'TWITCH_CLIENT_SECRET',
+    'TWITCH_REDIRECT_URI',
+    'USERNAME',
+  );
+  const username = USERNAME.toLowerCase();
 
   const state = randomBytes(16).toString('hex');
   const authorizeUrl = new URL('https://id.twitch.tv/oauth2/authorize');

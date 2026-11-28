@@ -15,7 +15,7 @@ The OAuth redirect URL registered there must match `TWITCH_REDIRECT_URI` exactly
 
 ## Authorizing the Bot
 
-The bot's OAuth token is stored in MongoDB (`MONGODB_TOKENS`) and refreshed automatically. Each database needs its own token, so authorize once per database:
+The bot's OAuth token is stored in MongoDB (`tokens` collection) and refreshed automatically. Each database needs its own token, so authorize once per database:
 
 ```bash
 yarn twitch:auth:staging   # staging database

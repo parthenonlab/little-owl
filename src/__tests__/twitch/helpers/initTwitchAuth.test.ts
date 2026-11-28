@@ -7,18 +7,21 @@ jest.mock('@/lib/clients', () => ({
     onRefreshFailure: jest.fn(),
   },
 }));
+jest.mock('@/lib/config', () => ({ getENV: jest.fn() }));
 jest.mock('@/services/token', () => ({
   getTwitchToken: jest.fn(),
   saveTwitchToken: jest.fn(),
 }));
 
 import { helix, twitchAuth } from '@/lib/clients';
+import { getENV } from '@/lib/config';
 import { logger } from '@/lib/logger';
 import { getTwitchToken, saveTwitchToken } from '@/services/token';
 import { initTwitchAuth } from '@/twitch/helpers/initTwitchAuth';
 
 const getUsersByNames = helix.users.getUsersByNames as jest.Mock;
 const getToken = getTwitchToken as jest.Mock;
+const mockGetENV = getENV as jest.Mock;
 
 const TOKEN = {
   accessToken: 'access',
@@ -33,8 +36,12 @@ describe('initTwitchAuth', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    process.env = { ...env, USERNAME: 'LittleOwl', CHANNELS: '#athena,other' };
+    process.env = { ...env };
     delete process.env.STAGING;
+    mockGetENV.mockReturnValue({
+      CHANNELS: '#athena,other',
+      USERNAME: 'LittleOwl',
+    });
     getUsersByNames.mockResolvedValue([
       { id: '143', name: 'littleowl' },
       { id: '999', name: 'athena' },
@@ -76,11 +83,11 @@ describe('initTwitchAuth', () => {
     expect(logger.error).toHaveBeenCalled();
   });
 
-  it('throws when USERNAME or CHANNELS is missing', async () => {
-    delete process.env.CHANNELS;
+  it('throws when CHANNELS has no broadcaster', async () => {
+    mockGetENV.mockReturnValue({ CHANNELS: ' ,other', USERNAME: 'LittleOwl' });
 
     await expect(initTwitchAuth()).rejects.toThrow(
-      'Missing USERNAME or CHANNELS',
+      'CHANNELS has no broadcaster',
     );
   });
 
